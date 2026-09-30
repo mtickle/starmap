@@ -170,7 +170,7 @@ const StarMap = () => {
         // Draw Interactive Foreground Stars
 
         stars.forEach((star) => {
-            console.log('Rendering star:', star);
+            //console.log('Rendering star:', star);
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
             ctx.fillStyle = star.color;

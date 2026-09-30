@@ -3,6 +3,8 @@ import React from 'react';
 const StarSystemViewer = ({ activeSystem, onClose }) => {
     if (!activeSystem) return null;
 
+    console.log('Rendering StarSystemViewer for system:', activeSystem);
+
     return (
         <div className="flex flex-col h-full w-full bg-gray-900 text-gray-200 p-6 overflow-y-auto">
             {/* Header */}
@@ -90,14 +92,22 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
                                         <div className="bg-gray-900 p-2 rounded">
                                             <span className="block text-gray-500 mb-1">Resources</span>
                                             {planet.resourceList?.length > 0 ? (
-                                                <ul className="text-blue-300">
+                                                <ul className="text-blue-300 space-y-1">
                                                     {planet.resourceList.map((res, rIdx) => (
-                                                        <li key={rIdx}>{res.name} ({res.elements?.join(', ')})</li>
+                                                        <li key={rIdx} className="flex items-center justify-between">
+                                                            <span>
+                                                                {res.specificName} <span className="text-gray-500 text-[10px]">({res.baseMaterial})</span>
+                                                            </span>
+                                                            {res.rarity === 'rare' && (
+                                                                <span className="px-1.5 py-0.5 bg-purple-900/50 text-purple-300 text-[9px] rounded uppercase border border-purple-700">
+                                                                    Rare
+                                                                </span>
+                                                            )}
+                                                        </li>
                                                     ))}
                                                 </ul>
                                             ) : <span className="text-gray-600">Depleted</span>}
                                         </div>
-
                                         <div className="bg-gray-900 p-2 rounded">
                                             <span className="block text-gray-500 mb-1">Biosphere</span>
                                             <ul className="text-green-300">

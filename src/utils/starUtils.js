@@ -82,24 +82,41 @@ export function synthesizeStar(coordinate) {
     }] : [];
 
     // 4. Generate Planets
+    // 4. Generate Planets
     const numPlanets = Math.floor(rng() * 9); // 0 to 8 planets
     const planets = [];
 
+    // Roman numeral lookup for catalog designations
+    const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+
     for (let i = 0; i < numPlanets; i++) {
-        // Create a unique PRNG for each planet so they remain deterministic
+        // Create a unique PRNG for each planet
         const planetSeed = hashString(`${coordinate}_P${i}`);
         const pRng = mulberry32(planetSeed);
 
         const planetType = getRandomItem(planetTypes, pRng);
 
-        let pName = '';
-        for (let j = 0; j < (Math.floor(pRng() * 2) + 2); j++) {
-            pName += getRandomItem(nameSyllables, pRng);
-        }
-        pName = pName.charAt(0).toUpperCase() + pName.slice(1) + ` ${i + 1}`;
-
-        // Determine if it has advanced civilization (for settlements/economy)
+        // ROLL FOR CIVILIZATION FIRST so it dictates the naming convention
         const hasCivilization = pRng() > 0.7;
+
+        let pName = '';
+        if (hasCivilization) {
+            // Inhabited World: Generates a unique "real" name from syllables with no numbers
+            for (let j = 0; j < (Math.floor(pRng() * 2) + 2); j++) {
+                pName += getRandomItem(nameSyllables, pRng);
+            }
+            pName = pName.charAt(0).toUpperCase() + pName.slice(1);
+        } else {
+            // Uninhabited World: Uses a catalog designation based on the parent star
+            // Mixes between formats like "Sirgeu IV" and "Sirgeu-4" for flavor
+            // const isRoman = pRng() > 0.5;
+            // if (isRoman) {
+            const suffix = romanNumerals[i] || (i + 1);
+            pName = `${starName} ${suffix}`;
+            // } else {
+            //     pName = `${starName}-${i + 1}`;
+            //}
+        }
 
         // Number of moons
         const numMoons = (planetType === 'Gas Giant') ? Math.floor(pRng() * 6) + 1 : Math.floor(pRng() * 3);
@@ -113,7 +130,7 @@ export function synthesizeStar(coordinate) {
             gravity: (pRng() * 2 + 0.5).toFixed(2),
             orbitalPeriod: Math.floor(pRng() * 800) + 50,
 
-            // Nested generation passing the planet-specific PRNG
+            // Nested generation
             atmosphere: generateAtmosphere(planetType, pRng),
             conditions: generateConditions(planetType, pRng),
             faunaList: generateFauna(planetType, pRng),
