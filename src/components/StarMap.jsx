@@ -173,36 +173,42 @@ const StarMap = () => {
         // Draw Interactive Foreground Stars
 
         stars.forEach((star) => {
-            //console.log('Rendering star:', star);
+          //console.log("Rendering star:", star);
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+          ctx.fillStyle = star.color;
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = star.color;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+
+          ctx.fillStyle = "#FFFFFF";
+          ctx.font = `${12 / scale}px Courier New, monospace`;
+          ctx.textAlign = "center";
+          ctx.fillText(star.name, star.x, star.y - star.size - 6 / scale);
+
+          // Home System Ring
+          if (home.id === star.id) {
             ctx.beginPath();
-            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-            ctx.fillStyle = star.color;
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = star.color;
+            ctx.arc(star.x, star.y, star.size + 4 / scale, 0, Math.PI * 2);
+            ctx.strokeStyle = "#FFFFFF";
+            ctx.lineWidth = 1 / scale;
+            ctx.stroke();
+          }
+
+          // Visited System Indicator (Green Dot)
+          if (visited.includes(star.id)) {
+            ctx.beginPath();
+            ctx.arc(
+              star.x,
+              star.y + star.size + 5 / scale,
+              2 / scale,
+              0,
+              Math.PI * 2
+            );
+            ctx.fillStyle = "#00FF00";
             ctx.fill();
-            ctx.shadowBlur = 0;
-
-            ctx.fillStyle = '#FFFFFF';
-            ctx.font = `${12 / scale}px Courier New, monospace`;
-            ctx.textAlign = 'center';
-            ctx.fillText(star.name, star.x, star.y - star.size - 6 / scale);
-
-            // Home System Ring
-            if (home.id === star.id) {
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.size + 4 / scale, 0, Math.PI * 2);
-                ctx.strokeStyle = '#FFFFFF';
-                ctx.lineWidth = 1 / scale;
-                ctx.stroke();
-            }
-
-            // Visited System Indicator (Green Dot)
-            if (visited.includes(star.id)) {
-                ctx.beginPath();
-                ctx.arc(star.x, star.y + star.size + 5 / scale, 2 / scale, 0, Math.PI * 2);
-                ctx.fillStyle = '#00FF00';
-                ctx.fill();
-            }
+          }
         });
 
         ctx.restore();

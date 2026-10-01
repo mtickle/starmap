@@ -1,0 +1,881 @@
+{
+    "id": "X:1_Y:0_Z:0",
+    "x": 167.48040524544194,
+    "y": 66.21551716234535,
+    "name": "Seon",
+    "type": "M",
+    "color": "#EF4444",
+    "size": 6,
+    "faction": {
+        "name": "The Ember Crown",
+        "id": "ember_crown",
+        "alignment": "Chaotic Neutral",
+        "symbol": "🔥",
+        "color": "#FF4500",
+        "description": "A nomadic war-clan empire, forged in dying suns. They prize honor, conflict, and legacy, roaming the fringe for glory and battle.",
+        "alliance": null
+    },
+    "fullData": {
+        "id": "X:1_Y:0_Z:0",
+        "name": "Seon",
+        "type": "M",
+        "color": "#EF4444",
+        "size": 6,
+        "temperatureDesc": "<3,700K",
+        "economy": "None",
+        "faction": {
+            "name": "The Ember Crown",
+            "id": "ember_crown",
+            "alignment": "Chaotic Neutral",
+            "symbol": "🔥",
+            "color": "#FF4500",
+            "description": "A nomadic war-clan empire, forged in dying suns. They prize honor, conflict, and legacy, roaming the fringe for glory and battle.",
+            "alliance": null
+        },
+        "stations": [],
+        "planets": [
+            {
+                "planetId": "X:1_Y:0_Z:0_P0",
+                "planetName": "Seon I",
+                "planetType": "Exotic",
+                "planetColor": "#ED64A6",
+                "gravity": "1.79",
+                "orbitalPeriod": 305,
+                "atmosphere": [
+                    {
+                        "name": "Xenon",
+                        "percent": 0.4
+                    },
+                    {
+                        "name": "Neon",
+                        "percent": 0.4
+                    },
+                    {
+                        "name": "Nitrogen",
+                        "percent": 0.2
+                    }
+                ],
+                "conditions": {
+                    "weather": "Dust Storms",
+                    "temperature": "Frosty",
+                    "nightTemperature": "Mild if You're On Fire",
+                    "wind": "You'll Need Ballast",
+                    "toxicity": "Toxic to the Touch",
+                    "radiation": "Suit-Melting"
+                },
+                "faunaList": [
+                    {
+                        "name": "Olfelquortra",
+                        "type": "Crustacean",
+                        "behavior": "Parasitic",
+                        "biome": "Amphibious",
+                        "legs": 6,
+                        "laysEggs": true,
+                        "description": "A parasitic crustacean that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Luxskaquor",
+                        "type": "Avian",
+                        "behavior": "Skittish",
+                        "biome": "Amphibious",
+                        "legs": 2,
+                        "laysEggs": true,
+                        "description": "A skittish avian that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Vexzorzorgarn",
+                        "type": "Hybrid",
+                        "behavior": "Edible",
+                        "biome": "Subterranean",
+                        "legs": 1,
+                        "laysEggs": true,
+                        "description": "A edible hybrid that prefers the subterranean biome."
+                    },
+                    {
+                        "name": "Drool",
+                        "type": "Insectoid",
+                        "behavior": "Peaceful",
+                        "biome": "Marine",
+                        "legs": 0,
+                        "laysEggs": false,
+                        "description": "A peaceful insectoid that prefers the marine biome."
+                    },
+                    {
+                        "name": "Vexvex",
+                        "type": "Avian",
+                        "behavior": "Parasitic",
+                        "biome": "Subterranean",
+                        "legs": 2,
+                        "laysEggs": false,
+                        "description": "A parasitic avian that prefers the subterranean biome."
+                    },
+                    {
+                        "name": "Raxtra",
+                        "type": "Insectoid",
+                        "behavior": "Parasitic",
+                        "biome": "Amphibious",
+                        "legs": 1,
+                        "laysEggs": false,
+                        "description": "A parasitic insectoid that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Mekgarnol",
+                        "type": "Amphibian",
+                        "behavior": "Edible",
+                        "biome": "Aerial",
+                        "legs": 4,
+                        "laysEggs": true,
+                        "description": "A edible amphibian that prefers the aerial biome."
+                    },
+                    {
+                        "name": "Talquorquor",
+                        "type": "Rodent",
+                        "behavior": "Skittish",
+                        "biome": "Amphibious",
+                        "legs": 6,
+                        "laysEggs": true,
+                        "description": "A skittish rodent that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Raxnirtalgarn",
+                        "type": "Cephalopod",
+                        "behavior": "Hostile",
+                        "biome": "Aerial",
+                        "legs": 0,
+                        "laysEggs": true,
+                        "description": "A hostile cephalopod that prefers the aerial biome."
+                    },
+                    {
+                        "name": "Luxtrazor",
+                        "type": "Synthetic",
+                        "behavior": "Parasitic",
+                        "biome": "Aerial",
+                        "legs": 2,
+                        "laysEggs": true,
+                        "description": "A parasitic synthetic that prefers the aerial biome."
+                    },
+                    {
+                        "name": "Vexzinxenrax",
+                        "type": "Reptile",
+                        "behavior": "Territorial",
+                        "biome": "Amphibious",
+                        "legs": 4,
+                        "laysEggs": true,
+                        "description": "A territorial reptile that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Talgarntraska",
+                        "type": "Avian",
+                        "behavior": "Parasitic",
+                        "biome": "Amphibious",
+                        "legs": 2,
+                        "laysEggs": false,
+                        "description": "A parasitic avian that prefers the amphibious biome."
+                    }
+                ],
+                "floraList": [
+                    {
+                        "name": "Quarchibud",
+                        "type": "Grass",
+                        "appearance": "twisting",
+                        "utility": "Food",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Velkaroot",
+                        "type": "Seaweed",
+                        "appearance": "crystalline",
+                        "utility": "Building Material",
+                        "rarity": "Uncommon"
+                    },
+                    {
+                        "name": "Blorvine",
+                        "type": "Moss",
+                        "appearance": "drooping",
+                        "utility": "Fiber",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Quarliblossom",
+                        "type": "Shrub",
+                        "appearance": "hairy",
+                        "utility": "Tech Component",
+                        "rarity": "Uncommon"
+                    },
+                    {
+                        "name": "Velvine",
+                        "type": "Shrub",
+                        "appearance": "shimmering",
+                        "utility": "Fuel",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Lumtree",
+                        "type": "Bush",
+                        "appearance": "scaled",
+                        "utility": "Hallucinogen",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Irrchitree",
+                        "type": "Vine",
+                        "appearance": "crystalline",
+                        "utility": "Fiber",
+                        "rarity": "Legendary"
+                    },
+                    {
+                        "name": "Irrstem",
+                        "type": "Tree",
+                        "appearance": "twisting",
+                        "utility": "Fuel",
+                        "rarity": "Uncommon"
+                    },
+                    {
+                        "name": "Quarplant",
+                        "type": "Vine",
+                        "appearance": "hairy",
+                        "utility": "Healing",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Velliplant",
+                        "type": "Tree",
+                        "appearance": "drooping",
+                        "utility": "Fiber",
+                        "rarity": "Legendary"
+                    },
+                    {
+                        "name": "Lumkablossom",
+                        "type": "Vine",
+                        "appearance": "fan-like",
+                        "utility": "Building Material",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Trikaweed",
+                        "type": "Grass",
+                        "appearance": "translucent",
+                        "utility": "Ornamental",
+                        "rarity": "Uncommon"
+                    },
+                    {
+                        "name": "Velbud",
+                        "type": "Tree",
+                        "appearance": "bioluminescent",
+                        "utility": "Fiber",
+                        "rarity": "Common"
+                    }
+                ],
+                "resourceList": [
+                    {
+                        "baseMaterial": "Sentient Spores",
+                        "specificName": "Skelacite",
+                        "rarity": "common"
+                    },
+                    {
+                        "baseMaterial": "Sentient Spores",
+                        "specificName": "Solantrium",
+                        "rarity": "uncommon"
+                    },
+                    {
+                        "baseMaterial": "Xenocrystals",
+                        "specificName": "Cryzorium",
+                        "rarity": "rare"
+                    },
+                    {
+                        "baseMaterial": "Bioluminescent Fungi",
+                        "specificName": "Zenthium",
+                        "rarity": "uncommon"
+                    },
+                    {
+                        "baseMaterial": "Xenocrystals",
+                        "specificName": "Crysalon",
+                        "rarity": "common"
+                    }
+                ],
+                "inhabitants": [],
+                "settlements": [],
+                "economy": null,
+                "industry": null,
+                "moons": [
+                    "Moon 1",
+                    "Moon 2"
+                ]
+            },
+            {
+                "planetId": "X:1_Y:0_Z:0_P1",
+                "planetName": "Seon II",
+                "planetType": "Rocky",
+                "planetColor": "#A0AEC0",
+                "gravity": "0.92",
+                "orbitalPeriod": 278,
+                "atmosphere": [
+                    {
+                        "name": "Sulfur Dioxide",
+                        "percent": 0.8
+                    },
+                    {
+                        "name": "Nitrogen",
+                        "percent": 0.2
+                    }
+                ],
+                "conditions": {
+                    "weather": "Cyclonic",
+                    "temperature": "Chilly",
+                    "nightTemperature": "So Cold Even the Darkness Shivers",
+                    "wind": "Whispers of Madness",
+                    "toxicity": "Don't Even Think About It",
+                    "radiation": "Suit-Melting"
+                },
+                "faunaList": [
+                    {
+                        "name": "Drozor",
+                        "type": "Plantimal",
+                        "behavior": "Parasitic",
+                        "biome": "Marine",
+                        "legs": 4,
+                        "laysEggs": true,
+                        "description": "A parasitic plantimal that prefers the marine biome."
+                    },
+                    {
+                        "name": "Yildroyilmek",
+                        "type": "Plantimal",
+                        "behavior": "Skittish",
+                        "biome": "Marine",
+                        "legs": 8,
+                        "laysEggs": true,
+                        "description": "A skittish plantimal that prefers the marine biome."
+                    },
+                    {
+                        "name": "Skavexquor",
+                        "type": "Reptile",
+                        "behavior": "Curious",
+                        "biome": "Amphibious",
+                        "legs": 4,
+                        "laysEggs": false,
+                        "description": "A curious reptile that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Felum",
+                        "type": "Hybrid",
+                        "behavior": "Pack hunter",
+                        "biome": "Surface",
+                        "legs": 0,
+                        "laysEggs": false,
+                        "description": "A pack hunter hybrid that prefers the surface biome."
+                    },
+                    {
+                        "name": "Zorol",
+                        "type": "Amphibian",
+                        "behavior": "Parasitic",
+                        "biome": "Amphibious",
+                        "legs": 2,
+                        "laysEggs": false,
+                        "description": "A parasitic amphibian that prefers the amphibious biome."
+                    }
+                ],
+                "floraList": [
+                    {
+                        "name": "Blorlitree",
+                        "type": "Tree",
+                        "appearance": "drooping",
+                        "utility": "Fiber",
+                        "rarity": "Legendary"
+                    },
+                    {
+                        "name": "Velvine",
+                        "type": "Seaweed",
+                        "appearance": "hairy",
+                        "utility": "Tech Component",
+                        "rarity": "Rare"
+                    },
+                    {
+                        "name": "Velvine",
+                        "type": "Moss",
+                        "appearance": "fan-like",
+                        "utility": "Tech Component",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Velplant",
+                        "type": "Seaweed",
+                        "appearance": "shimmering",
+                        "utility": "Hallucinogen",
+                        "rarity": "Common"
+                    }
+                ],
+                "resourceList": [
+                    {
+                        "baseMaterial": "Iron Ore",
+                        "specificName": "Barynthium",
+                        "rarity": "uncommon"
+                    },
+                    {
+                        "baseMaterial": "Copper",
+                        "specificName": "Elysite",
+                        "rarity": "uncommon"
+                    },
+                    {
+                        "baseMaterial": "Bauxite",
+                        "specificName": "Mithrene",
+                        "rarity": "uncommon"
+                    }
+                ],
+                "inhabitants": [],
+                "settlements": [],
+                "economy": null,
+                "industry": null,
+                "moons": [
+                    "Moon 1",
+                    "Moon 2"
+                ]
+            },
+            {
+                "planetId": "X:1_Y:0_Z:0_P2",
+                "planetName": "Seon III",
+                "planetType": "Rocky",
+                "planetColor": "#A0AEC0",
+                "gravity": "2.40",
+                "orbitalPeriod": 122,
+                "atmosphere": [
+                    {
+                        "name": "Carbon Monoxide",
+                        "percent": 0.2
+                    },
+                    {
+                        "name": "Nitrogen",
+                        "percent": 0.8
+                    }
+                ],
+                "conditions": {
+                    "weather": "Unrelenting Sunlight",
+                    "temperature": "Sweater Weather (in a vacuum suit)",
+                    "nightTemperature": "Tolerable, Assuming Cryosleep",
+                    "wind": "Strong Enough to Peel Paint Off a Ship",
+                    "toxicity": "Great for Robots, Bad for Everything Else",
+                    "radiation": "Dangerous"
+                },
+                "faunaList": [
+                    {
+                        "name": "Tragarnmek",
+                        "type": "Rodent",
+                        "behavior": "Edible",
+                        "biome": "Surface",
+                        "legs": 6,
+                        "laysEggs": false,
+                        "description": "A edible rodent that prefers the surface biome."
+                    },
+                    {
+                        "name": "Umoldro",
+                        "type": "Crustacean",
+                        "behavior": "Sentient",
+                        "biome": "Aerial",
+                        "legs": 1,
+                        "laysEggs": false,
+                        "description": "A sentient crustacean that prefers the aerial biome."
+                    },
+                    {
+                        "name": "Quorol",
+                        "type": "Reptile",
+                        "behavior": "Edible",
+                        "biome": "Marine",
+                        "legs": 8,
+                        "laysEggs": true,
+                        "description": "A edible reptile that prefers the marine biome."
+                    },
+                    {
+                        "name": "Zinnir",
+                        "type": "Amphibian",
+                        "behavior": "Edible",
+                        "biome": "Amphibious",
+                        "legs": 0,
+                        "laysEggs": true,
+                        "description": "A edible amphibian that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Olquorzinzin",
+                        "type": "Cephalopod",
+                        "behavior": "Peaceful",
+                        "biome": "Amphibious",
+                        "legs": 8,
+                        "laysEggs": false,
+                        "description": "A peaceful cephalopod that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Xenskatra",
+                        "type": "Synthetic",
+                        "behavior": "Pack hunter",
+                        "biome": "Aerial",
+                        "legs": 2,
+                        "laysEggs": true,
+                        "description": "A pack hunter synthetic that prefers the aerial biome."
+                    }
+                ],
+                "floraList": [
+                    {
+                        "name": "Lumtree",
+                        "type": "Flower",
+                        "appearance": "tubular",
+                        "utility": "Building Material",
+                        "rarity": "Rare"
+                    },
+                    {
+                        "name": "Lumroot",
+                        "type": "Tree",
+                        "appearance": "bioluminescent",
+                        "utility": "Fiber",
+                        "rarity": "Common"
+                    }
+                ],
+                "resourceList": [
+                    {
+                        "baseMaterial": "Iron Ore",
+                        "specificName": "Solantrium",
+                        "rarity": "uncommon"
+                    },
+                    {
+                        "baseMaterial": "Iron Ore",
+                        "specificName": "Pyrosine",
+                        "rarity": "common"
+                    },
+                    {
+                        "baseMaterial": "Copper",
+                        "specificName": "Zeraphite",
+                        "rarity": "rare"
+                    }
+                ],
+                "inhabitants": [],
+                "settlements": [],
+                "economy": null,
+                "industry": null,
+                "moons": []
+            },
+            {
+                "planetId": "X:1_Y:0_Z:0_P3",
+                "planetName": "Seon IV",
+                "planetType": "Rocky",
+                "planetColor": "#A0AEC0",
+                "gravity": "2.10",
+                "orbitalPeriod": 673,
+                "atmosphere": [
+                    {
+                        "name": "Thin Carbon Dioxide",
+                        "percent": 0.99
+                    }
+                ],
+                "conditions": {
+                    "weather": "Punchy Winds with Sideways Hail",
+                    "temperature": "Cold Enough to Freeze a Plasma Line",
+                    "nightTemperature": "Subzero",
+                    "wind": "Sonic Boom Breezes",
+                    "toxicity": "Toxicity 3000™",
+                    "radiation": "Microwave-Worthy"
+                },
+                "faunaList": [
+                    {
+                        "name": "Taltalquorzor",
+                        "type": "Crustacean",
+                        "behavior": "Territorial",
+                        "biome": "Marine",
+                        "legs": 6,
+                        "laysEggs": false,
+                        "description": "A territorial crustacean that prefers the marine biome."
+                    },
+                    {
+                        "name": "Yildrozorzor",
+                        "type": "Reptile",
+                        "behavior": "Peaceful",
+                        "biome": "Subterranean",
+                        "legs": 8,
+                        "laysEggs": false,
+                        "description": "A peaceful reptile that prefers the subterranean biome."
+                    },
+                    {
+                        "name": "Yilzinzor",
+                        "type": "Cephalopod",
+                        "behavior": "Skittish",
+                        "biome": "Marine",
+                        "legs": 1,
+                        "laysEggs": true,
+                        "description": "A skittish cephalopod that prefers the marine biome."
+                    }
+                ],
+                "floraList": [
+                    {
+                        "name": "Velkastem",
+                        "type": "Coral-like",
+                        "appearance": "vibrant",
+                        "utility": "Hallucinogen",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Nehplant",
+                        "type": "Bush",
+                        "appearance": "vibrant",
+                        "utility": "Building Material",
+                        "rarity": "Rare"
+                    },
+                    {
+                        "name": "Nehlistem",
+                        "type": "Vine",
+                        "appearance": "vibrant",
+                        "utility": "Tech Component",
+                        "rarity": "Uncommon"
+                    },
+                    {
+                        "name": "Velliblossom",
+                        "type": "Fungus",
+                        "appearance": "twisting",
+                        "utility": "Fiber",
+                        "rarity": "Legendary"
+                    },
+                    {
+                        "name": "Nehpharoot",
+                        "type": "Vine",
+                        "appearance": "fan-like",
+                        "utility": "Food",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Thyblossom",
+                        "type": "Moss",
+                        "appearance": "glowing",
+                        "utility": "Tech Component",
+                        "rarity": "Common"
+                    }
+                ],
+                "resourceList": [
+                    {
+                        "baseMaterial": "Silica",
+                        "specificName": "Aetherite",
+                        "rarity": "common"
+                    },
+                    {
+                        "baseMaterial": "Bauxite",
+                        "specificName": "Skelacite",
+                        "rarity": "common"
+                    },
+                    {
+                        "baseMaterial": "Iron Ore",
+                        "specificName": "Nubilite",
+                        "rarity": "common"
+                    }
+                ],
+                "inhabitants": [],
+                "settlements": [],
+                "economy": null,
+                "industry": null,
+                "moons": [
+                    "Moon 1"
+                ]
+            },
+            {
+                "planetId": "X:1_Y:0_Z:0_P4",
+                "planetName": "Seon V",
+                "planetType": "Oceanic",
+                "planetColor": "#63B3ED",
+                "gravity": "1.46",
+                "orbitalPeriod": 482,
+                "atmosphere": [
+                    {
+                        "name": "Nitrogen",
+                        "percent": 0.6
+                    },
+                    {
+                        "name": "Carbon Dioxide",
+                        "percent": 0.4
+                    }
+                ],
+                "conditions": {
+                    "weather": "Perpetual Overcast",
+                    "temperature": "Temperate",
+                    "nightTemperature": "Tolerable, Assuming Cryosleep",
+                    "wind": "Gentle",
+                    "toxicity": "Certified No-No Air",
+                    "radiation": "Congratulations, You’re a Radiator Now"
+                },
+                "faunaList": [
+                    {
+                        "name": "Drogarn",
+                        "type": "Synthetic",
+                        "behavior": "Pack hunter",
+                        "biome": "Amphibious",
+                        "legs": 2,
+                        "laysEggs": true,
+                        "description": "A pack hunter synthetic that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Zinlux",
+                        "type": "Synthetic",
+                        "behavior": "Pack hunter",
+                        "biome": "Marine",
+                        "legs": 2,
+                        "laysEggs": true,
+                        "description": "A pack hunter synthetic that prefers the marine biome."
+                    },
+                    {
+                        "name": "Xengarn",
+                        "type": "Synthetic",
+                        "behavior": "Symbiotic",
+                        "biome": "Marine",
+                        "legs": 2,
+                        "laysEggs": true,
+                        "description": "A symbiotic synthetic that prefers the marine biome."
+                    },
+                    {
+                        "name": "Olraxraxzor",
+                        "type": "Cephalopod",
+                        "behavior": "Skittish",
+                        "biome": "Marine",
+                        "legs": 2,
+                        "laysEggs": false,
+                        "description": "A skittish cephalopod that prefers the marine biome."
+                    }
+                ],
+                "floraList": [
+                    {
+                        "name": "Tritree",
+                        "type": "Seaweed",
+                        "appearance": "bioluminescent",
+                        "utility": "Fiber",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Nehroot",
+                        "type": "Seaweed",
+                        "appearance": "twisting",
+                        "utility": "Ornamental",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Nehzuroot",
+                        "type": "Seaweed",
+                        "appearance": "drooping",
+                        "utility": "Ornamental",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Lumzublossom",
+                        "type": "Seaweed",
+                        "appearance": "spiked",
+                        "utility": "Building Material",
+                        "rarity": "Uncommon"
+                    }
+                ],
+                "resourceList": [
+                    {
+                        "baseMaterial": "Magnesium Nodules",
+                        "specificName": "Volucite",
+                        "rarity": "common"
+                    },
+                    {
+                        "baseMaterial": "Bioluminescent Algae",
+                        "specificName": "Lunacite",
+                        "rarity": "common"
+                    }
+                ],
+                "inhabitants": [],
+                "settlements": [],
+                "economy": null,
+                "industry": null,
+                "moons": [
+                    "Moon 1"
+                ]
+            },
+            {
+                "planetId": "X:1_Y:0_Z:0_P5",
+                "planetName": "Seon VI",
+                "planetType": "Ice World",
+                "planetColor": "#90CDF4",
+                "gravity": "2.26",
+                "orbitalPeriod": 638,
+                "atmosphere": [
+                    {
+                        "name": "Chlorine",
+                        "percent": 0.1
+                    },
+                    {
+                        "name": "Nitrogen",
+                        "percent": 0.9
+                    }
+                ],
+                "conditions": {
+                    "weather": "Atmospheric Static",
+                    "temperature": "Scorching but Dry (like bad humor)",
+                    "nightTemperature": "Frozen Solid",
+                    "wind": "Howling Winds",
+                    "toxicity": "Toxicity 3000™",
+                    "radiation": "Full Cosmic BBQ"
+                },
+                "faunaList": [
+                    {
+                        "name": "Nirska",
+                        "type": "Cephalopod",
+                        "behavior": "Hostile",
+                        "biome": "Surface",
+                        "legs": 2,
+                        "laysEggs": false,
+                        "description": "A hostile cephalopod that prefers the surface biome."
+                    },
+                    {
+                        "name": "Xenraxfelfel",
+                        "type": "Insectoid",
+                        "behavior": "Sentient",
+                        "biome": "Aerial",
+                        "legs": 1,
+                        "laysEggs": false,
+                        "description": "A sentient insectoid that prefers the aerial biome."
+                    }
+                ],
+                "floraList": [
+                    {
+                        "name": "Lumkaplant",
+                        "type": "Moss",
+                        "appearance": "bioluminescent",
+                        "utility": "Ornamental",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Irrbud",
+                        "type": "Grass",
+                        "appearance": "glowing",
+                        "utility": "Building Material",
+                        "rarity": "Uncommon"
+                    }
+                ],
+                "resourceList": [
+                    {
+                        "baseMaterial": "Methane Clathrates",
+                        "specificName": "Dramithium",
+                        "rarity": "common"
+                    },
+                    {
+                        "baseMaterial": "Methane Clathrates",
+                        "specificName": "Fluorax",
+                        "rarity": "common"
+                    },
+                    {
+                        "baseMaterial": "Ammonia Crystals",
+                        "specificName": "Oscerite",
+                        "rarity": "common"
+                    },
+                    {
+                        "baseMaterial": "Ammonia Crystals",
+                        "specificName": "Nixium",
+                        "rarity": "legendary"
+                    },
+                    {
+                        "baseMaterial": "Methane Clathrates",
+                        "specificName": "Azuronite",
+                        "rarity": "rare"
+                    }
+                ],
+                "inhabitants": [],
+                "settlements": [],
+                "economy": null,
+                "industry": null,
+                "moons": []
+            }
+        ]
+    }
+}
