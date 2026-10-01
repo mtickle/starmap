@@ -4,6 +4,10 @@ import {
     generateFlora, generateResources, generateEconomy,
     generateIndustry, generateInhabitants, generateSettlements
 } from './planetPropertiesUtils.js';
+import { starClasses } from '../libraries/stars.js';
+import { planetTypes } from '../libraries/planets.js';
+import { nameSyllables, romanNumerals } from '../libraries/names.js';
+
 
 // --- SEEDING & PRNG UTILS ---
 export function hashString(str) {
@@ -27,37 +31,23 @@ function getRandomItem(arr, rng) {
     return arr[Math.floor(rng() * arr.length)];
 }
 
-// --- STAR GENERATION DATA ---
-const starClasses = [
-    { type: 'O', color: '#3B82F6', temp: '>30,000K', size: 10, weight: 0.05 }, // Brilliant Blue
-    { type: 'B', color: '#06B6D4', temp: '10,000–30,000K', size: 8, weight: 0.1 },  // Vibrant Cyan
-    { type: 'A', color: '#F8FAFC', temp: '7,500–10,000K', size: 7, weight: 0.1 },  // Crisp White
-    { type: 'F', color: '#FDE047', temp: '6,000–7,500K', size: 6, weight: 0.1 },  // Bright Yellow
-    { type: 'G', color: '#F59E0B', temp: '5,200–6,000K', size: 5, weight: 0.15 }, // Deep Amber
-    { type: 'K', color: '#EA580C', temp: '3,700–5,200K', size: 4, weight: 0.2 },  // Bold Orange
-    { type: 'M', color: '#EF4444', temp: '<3,700K', size: 3, weight: 0.4 },       // Strong Red
-];
 
-const planetTypes = [
-    'Rocky', 'Gas Giant', 'Ice World', 'Exotic',
-    'Oceanic', 'Volcanic', 'Barren', 'Radiated'
-];
-
-const nameSyllables = ['al', 'ta', 'ir', 'be', 'tel', 'geu', 'se', 'ri', 'gel', 've', 'ga', 'pro', 'cy', 'on', 'sir', 'ius'];
 
 // --- CORE GENERATOR ---
 export function synthesizeStar(coordinate) {
-    // 1. Initialize System-Level PRNG
-    const systemSeed = hashString(coordinate);
+    // 1. Initialize System-Level PRNG with a unique salt
+    const systemSeed = hashString(`${coordinate}_sys`);
     const rng = mulberry32(systemSeed);
 
-    // 2. Generate Star Properties
-    const roll = rng() * 1.1; // Multiplied by 1.1 because your total weights add up to 1.1
+    // 2. Generate Star Properties using the new "weight" property
+    const roll = rng() * 1.1;
     let cumulative = 0;
-    let selectedStarClass = starClasses[starClasses.length - 1]; // Fallback
+
+    // Set a safe fallback to Class M (the last item in the array) just in case
+    let selectedStarClass = starClasses[starClasses.length - 1];
 
     for (const sc of starClasses) {
-        cumulative += sc.weight;
+        cumulative += sc.weight; // <- This must be .weight, not .probability
         if (roll <= cumulative) {
             selectedStarClass = sc;
             break;
@@ -82,43 +72,42 @@ export function synthesizeStar(coordinate) {
     }] : [];
 
     // 4. Generate Planets
-    // 4. Generate Planets
     const numPlanets = Math.floor(rng() * 9); // 0 to 8 planets
     const planets = [];
 
-    // Roman numeral lookup for catalog designations
-    const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
-
     for (let i = 0; i < numPlanets; i++) {
-        // Create a unique PRNG for each planet
         const planetSeed = hashString(`${coordinate}_P${i}`);
         const pRng = mulberry32(planetSeed);
 
-        const planetType = getRandomItem(planetTypes, pRng);
+        // ROLL FOR PLANET TYPE USING WEIGHTS
+        const pRoll = pRng(); // Total weights equal exactly 1.0
+        let cumulativeP = 0;
+        let selectedPlanetObj = planetTypes[planetTypes.length - 1]; // Fallback
 
-        // ROLL FOR CIVILIZATION FIRST so it dictates the naming convention
+        for (const pt of planetTypes) {
+            cumulativeP += pt.weight;
+            if (pRoll <= cumulativeP) {
+                selectedPlanetObj = pt;
+                break;
+            }
+        }
+
+        const planetType = selectedPlanetObj.type;
+
+        // ROLL FOR CIVILIZATION FIRST
         const hasCivilization = pRng() > 0.7;
 
         let pName = '';
         if (hasCivilization) {
-            // Inhabited World: Generates a unique "real" name from syllables with no numbers
             for (let j = 0; j < (Math.floor(pRng() * 2) + 2); j++) {
                 pName += getRandomItem(nameSyllables, pRng);
             }
             pName = pName.charAt(0).toUpperCase() + pName.slice(1);
         } else {
-            // Uninhabited World: Uses a catalog designation based on the parent star
-            // Mixes between formats like "Sirgeu IV" and "Sirgeu-4" for flavor
-            // const isRoman = pRng() > 0.5;
-            // if (isRoman) {
             const suffix = romanNumerals[i] || (i + 1);
             pName = `${starName} ${suffix}`;
-            // } else {
-            //     pName = `${starName}-${i + 1}`;
-            //}
         }
 
-        // Number of moons
         const numMoons = (planetType === 'Gas Giant') ? Math.floor(pRng() * 6) + 1 : Math.floor(pRng() * 3);
         const moons = Array.from({ length: numMoons }, (_, mIdx) => `Moon ${mIdx + 1}`);
 
@@ -126,11 +115,9 @@ export function synthesizeStar(coordinate) {
             planetId: `${coordinate}_P${i}`,
             planetName: pName,
             planetType: planetType,
-            planetColor: getRandomItem(['#8B4513', '#2E8B57', '#4682B4', '#D2B48C', '#A0522D', '#708090'], pRng),
+            planetColor: selectedPlanetObj.color,
             gravity: (pRng() * 2 + 0.5).toFixed(2),
             orbitalPeriod: Math.floor(pRng() * 800) + 50,
-
-            // Nested generation
             atmosphere: generateAtmosphere(planetType, pRng),
             conditions: generateConditions(planetType, pRng),
             faunaList: generateFauna(planetType, pRng),
@@ -138,11 +125,11 @@ export function synthesizeStar(coordinate) {
             resourceList: generateResources(planetType, pRng),
             inhabitants: generateInhabitants(planetType, hasCivilization, pRng),
             settlements: generateSettlements(hasCivilization, pRng),
-
+            economy: generateEconomy(hasCivilization, pRng),
+            industry: generateIndustry(hasCivilization, pRng),
             moons: moons
         });
     }
-
     return {
         id: coordinate,
         name: starName,

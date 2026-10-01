@@ -14,7 +14,10 @@ const getStarTooltip = (star) => {
     return {
         name: star.name,
         type: star.type,
+        color: star.color, // Grab the hex code for styling
         faction: star.faction?.name || 'Uncharted',
+        coordinates: star.id,
+        planetCount: star.fullData?.planets?.length || 0
     };
 };
 
@@ -205,25 +208,25 @@ const StarMap = () => {
         ctx.restore();
 
         // Tooltip Overlay
-        if (hoveredStar) {
-            const tooltip = getStarTooltip(hoveredStar);
-            if (tooltip) {
-                ctx.save();
-                ctx.font = '12px Courier New, monospace';
-                const text = `★ ${tooltip.name} | ${tooltip.faction}`;
-                const metrics = ctx.measureText(text);
-                const canvasRect = canvas.getBoundingClientRect();
+        // if (hoveredStar) {
+        //     const tooltip = getStarTooltip(hoveredStar);
+        //     if (tooltip) {
+        //         ctx.save();
+        //         ctx.font = '12px Courier New, monospace';
+        //         const text = `★ ${tooltip.name} | ${tooltip.faction} | Class ${tooltip.type}`;
+        //         const metrics = ctx.measureText(text);
+        //         const canvasRect = canvas.getBoundingClientRect();
 
-                const tooltipX = hoveredStar.clientX - canvasRect.left + 15;
-                const tooltipY = hoveredStar.clientY - canvasRect.top + 15;
+        //         const tooltipX = hoveredStar.clientX - canvasRect.left + 15;
+        //         const tooltipY = hoveredStar.clientY - canvasRect.top + 15;
 
-                ctx.fillStyle = 'rgba(10, 10, 20, 0.85)';
-                ctx.fillRect(tooltipX, tooltipY, metrics.width + 10, 20);
-                ctx.fillStyle = '#00ff88';
-                ctx.fillText(text, tooltipX + 5, tooltipY + 14);
-                ctx.restore();
-            }
-        }
+        //         ctx.fillStyle = 'rgba(10, 10, 20, 0.85)';
+        //         ctx.fillRect(tooltipX, tooltipY, metrics.width + 10, 20);
+        //         ctx.fillStyle = '#00ff88';
+        //         ctx.fillText(text, tooltipX + 5, tooltipY + 14);
+        //         ctx.restore();
+        //     }
+        // }
     }, [stars, offsetX, offsetY, scale, hoveredStar]);
 
     // --- ANIMATION LOOP ---
@@ -250,6 +253,46 @@ const StarMap = () => {
                 onClick={handleClick}
                 onContextMenu={handleContextMenu}
             />
+            {/* DOM-based Hover Tooltip */}
+            {/* DOM-based Hover Tooltip */}
+            {hoveredStar && (
+                <div
+                    className="absolute z-40 pointer-events-none bg-gray-900/95 border border-gray-700 p-3 rounded-lg shadow-xl shadow-black/80 backdrop-blur-md transition-opacity duration-150"
+                    style={{
+                        left: hoveredStar.clientX + 15,
+                        top: hoveredStar.clientY + 15
+                    }}
+                >
+                    <div className="border-b border-gray-700 pb-2 mb-2 flex items-center gap-2">
+                        <span
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: hoveredStar.color, boxShadow: `0 0 8px ${hoveredStar.color}` }}
+                        ></span>
+                        <h3 className="text-white font-bold text-lg leading-none tracking-wide">{hoveredStar.name}</h3>
+                    </div>
+
+                    <ul className="text-xs space-y-1.5 text-gray-300 font-sans">
+                        <li className="flex gap-2">
+                            <span className="text-gray-500 w-28 shrink-0">Class:</span>
+                            <span className="font-mono text-gray-200">{hoveredStar.type}</span>
+                        </li>
+                        <li className="flex gap-2">
+                            <span className="text-gray-500 w-28 shrink-0">Sector:</span>
+                            <span className="font-mono text-gray-400">{hoveredStar.id.replace(/_/g, ' ')}</span>
+                        </li>
+                        <li className="flex gap-2">
+                            <span className="text-gray-500 w-28 shrink-0">Planetary Bodies:</span>
+                            <span className="font-mono text-blue-400 font-semibold">{getStarTooltip(hoveredStar).planetCount}</span>
+                        </li>
+                        <li className="flex gap-2 pt-1 border-t border-gray-800 mt-1">
+                            <span className="text-gray-500 w-28 shrink-0">Control:</span>
+                            <span className="text-purple-400 truncate max-w-[140px]" title={getStarTooltip(hoveredStar).faction}>
+                                {getStarTooltip(hoveredStar).faction}
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            )}
             {showSystemMap && activeSystem && (
                 <div className="absolute inset-0 z-50 bg-gray-900/95 backdrop-blur-sm overflow-hidden">
                     <StarSystemViewer

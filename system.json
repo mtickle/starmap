@@ -1,0 +1,775 @@
+{
+    "id": "X:-2_Y:6_Z:0",
+    "x": -216.85514504788443,
+    "y": 949.728500645142,
+    "name": "Geuprogeu",
+    "type": "B",
+    "color": "#06B6D4",
+    "size": 8,
+    "faction": null,
+    "fullData": {
+        "id": "X:-2_Y:6_Z:0",
+        "name": "Geuprogeu",
+        "type": "B",
+        "color": "#06B6D4",
+        "size": 8,
+        "temperatureDesc": "10,000–30,000K",
+        "economy": "Destitute",
+        "faction": null,
+        "stations": [
+            {
+                "name": "Geuprogeu Prime",
+                "type": "Trading Post"
+            }
+        ],
+        "planets": [
+            {
+                "planetId": "X:-2_Y:6_Z:0_P0",
+                "planetName": "Bevega",
+                "planetType": "Exotic",
+                "planetColor": "#8B4513",
+                "gravity": "1.31",
+                "orbitalPeriod": 677,
+                "atmosphere": [
+                    {
+                        "name": "Silicate Vapor",
+                        "percent": 1
+                    }
+                ],
+                "conditions": {
+                    "weather": "Perpetual Overcast",
+                    "temperature": "Cold Enough to Freeze a Plasma Line",
+                    "nightTemperature": "Cozy for Ice Worms",
+                    "wind": "Silent but Deadly",
+                    "toxicity": "High",
+                    "radiation": "Unshielded Exposure Not Recommended"
+                },
+                "faunaList": [
+                    {
+                        "name": "Luxtra",
+                        "type": "Synthetic",
+                        "behavior": "Edible",
+                        "biome": "Surface",
+                        "legs": 2,
+                        "laysEggs": true,
+                        "description": "A edible synthetic that prefers the surface biome."
+                    },
+                    {
+                        "name": "Zorvexgarn",
+                        "type": "Mammal",
+                        "behavior": "Curious",
+                        "biome": "Amphibious",
+                        "legs": 4,
+                        "laysEggs": false,
+                        "description": "A curious mammal that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Vexmekmekzin",
+                        "type": "Reptile",
+                        "behavior": "Hostile",
+                        "biome": "Surface",
+                        "legs": 0,
+                        "laysEggs": false,
+                        "description": "A hostile reptile that prefers the surface biome."
+                    },
+                    {
+                        "name": "Oltrayil",
+                        "type": "Hybrid",
+                        "behavior": "Parasitic",
+                        "biome": "Surface",
+                        "legs": 1,
+                        "laysEggs": false,
+                        "description": "A parasitic hybrid that prefers the surface biome."
+                    },
+                    {
+                        "name": "Skadro",
+                        "type": "Synthetic",
+                        "behavior": "Pack hunter",
+                        "biome": "Subterranean",
+                        "legs": 2,
+                        "laysEggs": true,
+                        "description": "A pack hunter synthetic that prefers the subterranean biome."
+                    },
+                    {
+                        "name": "Raxgarn",
+                        "type": "Reptile",
+                        "behavior": "Curious",
+                        "biome": "Surface",
+                        "legs": 1,
+                        "laysEggs": true,
+                        "description": "A curious reptile that prefers the surface biome."
+                    },
+                    {
+                        "name": "Quorraxvexzor",
+                        "type": "Rodent",
+                        "behavior": "Skittish",
+                        "biome": "Amphibious",
+                        "legs": 1,
+                        "laysEggs": true,
+                        "description": "A skittish rodent that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Quornir",
+                        "type": "Mammal",
+                        "behavior": "Peaceful",
+                        "biome": "Marine",
+                        "legs": 2,
+                        "laysEggs": false,
+                        "description": "A peaceful mammal that prefers the marine biome."
+                    },
+                    {
+                        "name": "Skavex",
+                        "type": "Reptile",
+                        "behavior": "Edible",
+                        "biome": "Subterranean",
+                        "legs": 8,
+                        "laysEggs": true,
+                        "description": "A edible reptile that prefers the subterranean biome."
+                    },
+                    {
+                        "name": "Olluxzin",
+                        "type": "Amphibian",
+                        "behavior": "Edible",
+                        "biome": "Amphibious",
+                        "legs": 1,
+                        "laysEggs": true,
+                        "description": "A edible amphibian that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Umxen",
+                        "type": "Reptile",
+                        "behavior": "Curious",
+                        "biome": "Amphibious",
+                        "legs": 2,
+                        "laysEggs": false,
+                        "description": "A curious reptile that prefers the amphibious biome."
+                    },
+                    {
+                        "name": "Traxenvexzor",
+                        "type": "Reptile",
+                        "behavior": "Edible",
+                        "biome": "Surface",
+                        "legs": 2,
+                        "laysEggs": true,
+                        "description": "A edible reptile that prefers the surface biome."
+                    }
+                ],
+                "floraList": [
+                    {
+                        "name": "Lumroot",
+                        "type": "Seaweed",
+                        "appearance": "vibrant",
+                        "utility": "Food",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Lumtree",
+                        "type": "Fungus",
+                        "appearance": "vibrant",
+                        "utility": "Fuel",
+                        "rarity": "Rare"
+                    },
+                    {
+                        "name": "Xankatree",
+                        "type": "Flower",
+                        "appearance": "tubular",
+                        "utility": "Healing",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Thyblossom",
+                        "type": "Vine",
+                        "appearance": "vibrant",
+                        "utility": "Food",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Lumvine",
+                        "type": "Flower",
+                        "appearance": "bioluminescent",
+                        "utility": "Fiber",
+                        "rarity": "Legendary"
+                    },
+                    {
+                        "name": "Thyphastem",
+                        "type": "Shrub",
+                        "appearance": "tubular",
+                        "utility": "Healing",
+                        "rarity": "Rare"
+                    },
+                    {
+                        "name": "Zormiplant",
+                        "type": "Vine",
+                        "appearance": "hairy",
+                        "utility": "Fiber",
+                        "rarity": "Rare"
+                    },
+                    {
+                        "name": "Blortree",
+                        "type": "Flower",
+                        "appearance": "mossy",
+                        "utility": "Hallucinogen",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Quarbud",
+                        "type": "Moss",
+                        "appearance": "drooping",
+                        "utility": "Building Material",
+                        "rarity": "Uncommon"
+                    },
+                    {
+                        "name": "Velbud",
+                        "type": "Grass",
+                        "appearance": "bioluminescent",
+                        "utility": "Fiber",
+                        "rarity": "Uncommon"
+                    }
+                ],
+                "resourceList": [
+                    {
+                        "baseMaterial": "Sentient Spores",
+                        "specificName": "Torvalite",
+                        "rarity": "common"
+                    },
+                    {
+                        "baseMaterial": "Bioluminescent Fungi",
+                        "specificName": "Vortanite",
+                        "rarity": "rare"
+                    },
+                    {
+                        "baseMaterial": "Bioluminescent Fungi",
+                        "specificName": "Chromanite",
+                        "rarity": "uncommon"
+                    },
+                    {
+                        "baseMaterial": "Bioluminescent Fungi",
+                        "specificName": "Zenthium",
+                        "rarity": "uncommon"
+                    },
+                    {
+                        "baseMaterial": "Bioluminescent Fungi",
+                        "specificName": "Zephyrite",
+                        "rarity": "common"
+                    }
+                ],
+                "inhabitants": [
+                    {
+                        "inhabitantId": "arthropoid-swarm",
+                        "inhabitantName": "Zorath Swarm",
+                        "description": "Relentless hive-minded arthropods driven by consumption and adaptation. They strip worlds bare and evolve rapidly.",
+                        "disposition": "Devouring and Adaptive",
+                        "homePlanetType": [
+                            "Carbonaceous",
+                            "Exotic"
+                        ],
+                        "techLevel": "Organic Evolution",
+                        "societalTypes": [
+                            "Hive Mind"
+                        ],
+                        "canSettle": true,
+                        "status": "Native",
+                        "percentage": 76,
+                        "currentSociety": "Hive Mind"
+                    },
+                    {
+                        "inhabitantId": "plantoid-symbiont",
+                        "inhabitantName": "Verdant Symbiotes",
+                        "description": "Mobile plant-animal hybrids that form symbiotic relationships with lesser inhabitant. They photosynthesize and spread vast living megastructures.",
+                        "disposition": "Harmonious and Communal",
+                        "homePlanetType": [
+                            "Tropical",
+                            "Gaia / Biosphere Rich"
+                        ],
+                        "techLevel": "Biological Mastery",
+                        "societalTypes": [
+                            "Civilization",
+                            "Hive Network"
+                        ],
+                        "canSettle": true,
+                        "status": "Settler",
+                        "percentage": 8
+                    },
+                    {
+                        "inhabitantId": "cephalopod-merchant",
+                        "inhabitantName": "Tentacled Traders",
+                        "description": "Highly intelligent, multi-limbed cephalopods renowned for cunning deals and vast trade networks. They avoid conflict through economics.",
+                        "disposition": "Mercantile and Opportunistic",
+                        "homePlanetType": [
+                            "Oceanic",
+                            "Tropical"
+                        ],
+                        "techLevel": "Advanced",
+                        "societalTypes": [
+                            "Trade Guilds",
+                            "Civilization"
+                        ],
+                        "canSettle": true,
+                        "status": "Settler",
+                        "percentage": 6
+                    },
+                    {
+                        "inhabitantId": "reptilian-imperial",
+                        "inhabitantName": "Saurian Dominion",
+                        "description": "Cold-blooded reptilians with hierarchical castes and ancient warrior traditions. They build vast pyramid-cities and conquer relentlessly.",
+                        "disposition": "Authoritarian and Expansionist",
+                        "homePlanetType": [
+                            "Volcanic",
+                            "Desert"
+                        ],
+                        "techLevel": "Advanced",
+                        "societalTypes": [
+                            "Civilization",
+                            "Empire"
+                        ],
+                        "canSettle": true,
+                        "status": "Settler",
+                        "percentage": 10
+                    }
+                ],
+                "settlements": [
+                    {
+                        "name": "Sandspire",
+                        "isCapital": true,
+                        "population": 85804,
+                        "theme": "High-Tech",
+                        "condition": "Sterile",
+                        "buildings": [
+                            {
+                                "name": "Cybernetics Lab",
+                                "type": "Science"
+                            },
+                            {
+                                "name": "Corporate Emporium",
+                                "type": "Commerce"
+                            },
+                            {
+                                "name": "Luxury Sky-Towers",
+                                "type": "Residential"
+                            },
+                            {
+                                "name": "Stellar Observatory",
+                                "type": "Science"
+                            }
+                        ]
+                    }
+                ],
+                "moons": []
+            },
+            {
+                "planetId": "X:-2_Y:6_Z:0_P1",
+                "planetName": "Geuprogeu II",
+                "planetType": "Ice World",
+                "planetColor": "#D2B48C",
+                "gravity": "1.73",
+                "orbitalPeriod": 637,
+                "atmosphere": [
+                    {
+                        "name": "Carbon Monoxide",
+                        "percent": 0.2
+                    },
+                    {
+                        "name": "Nitrogen",
+                        "percent": 0.8
+                    }
+                ],
+                "conditions": {
+                    "weather": "Frozen Precipitation",
+                    "temperature": "Sweater Weather (in a vacuum suit)",
+                    "nightTemperature": "Cozy for Ice Worms",
+                    "wind": "Strong Enough to Peel Paint Off a Ship",
+                    "toxicity": "None",
+                    "radiation": "Congratulations, You’re a Radiator Now"
+                },
+                "faunaList": [
+                    {
+                        "name": "Garnraxska",
+                        "type": "Cephalopod",
+                        "behavior": "Skittish",
+                        "biome": "Surface",
+                        "legs": 2,
+                        "laysEggs": true,
+                        "description": "A skittish cephalopod that prefers the surface biome."
+                    },
+                    {
+                        "name": "Umdro",
+                        "type": "Amphibian",
+                        "behavior": "Pack hunter",
+                        "biome": "Aerial",
+                        "legs": 2,
+                        "laysEggs": false,
+                        "description": "A pack hunter amphibian that prefers the aerial biome."
+                    }
+                ],
+                "floraList": [
+                    {
+                        "name": "Velroblossom",
+                        "type": "Shrub",
+                        "appearance": "fan-like",
+                        "utility": "Healing",
+                        "rarity": "Uncommon"
+                    }
+                ],
+                "resourceList": [
+                    {
+                        "baseMaterial": "Ammonia Crystals",
+                        "specificName": "Tessarite",
+                        "rarity": "common"
+                    },
+                    {
+                        "baseMaterial": "Ammonia Crystals",
+                        "specificName": "Veldros",
+                        "rarity": "uncommon"
+                    },
+                    {
+                        "baseMaterial": "Methane Clathrates",
+                        "specificName": "Aetherite",
+                        "rarity": "common"
+                    }
+                ],
+                "inhabitants": [],
+                "settlements": [],
+                "moons": [
+                    "Moon 1",
+                    "Moon 2"
+                ]
+            },
+            {
+                "planetId": "X:-2_Y:6_Z:0_P2",
+                "planetName": "Gelveir",
+                "planetType": "Rocky",
+                "planetColor": "#8B4513",
+                "gravity": "2.08",
+                "orbitalPeriod": 766,
+                "atmosphere": [
+                    {
+                        "name": "Sulfur Dioxide",
+                        "percent": 0.8
+                    },
+                    {
+                        "name": "Nitrogen",
+                        "percent": 0.2
+                    }
+                ],
+                "conditions": {
+                    "weather": "Unrelenting Sunlight",
+                    "temperature": "Oppressively Humid",
+                    "nightTemperature": "Mild if You're On Fire",
+                    "wind": "Searing Winds",
+                    "toxicity": "None",
+                    "radiation": "Glow in the Dark Guaranteed"
+                },
+                "faunaList": [
+                    {
+                        "name": "Drogarnmekfel",
+                        "type": "Avian",
+                        "behavior": "Parasitic",
+                        "biome": "Aerial",
+                        "legs": 2,
+                        "laysEggs": false,
+                        "description": "A parasitic avian that prefers the aerial biome."
+                    },
+                    {
+                        "name": "Yilum",
+                        "type": "Rodent",
+                        "behavior": "Territorial",
+                        "biome": "Surface",
+                        "legs": 1,
+                        "laysEggs": true,
+                        "description": "A territorial rodent that prefers the surface biome."
+                    },
+                    {
+                        "name": "Garnnir",
+                        "type": "Crustacean",
+                        "behavior": "Skittish",
+                        "biome": "Surface",
+                        "legs": 0,
+                        "laysEggs": true,
+                        "description": "A skittish crustacean that prefers the surface biome."
+                    },
+                    {
+                        "name": "Drofelol",
+                        "type": "Reptile",
+                        "behavior": "Hostile",
+                        "biome": "Subterranean",
+                        "legs": 1,
+                        "laysEggs": true,
+                        "description": "A hostile reptile that prefers the subterranean biome."
+                    },
+                    {
+                        "name": "Meknirskaol",
+                        "type": "Reptile",
+                        "behavior": "Hostile",
+                        "biome": "Surface",
+                        "legs": 6,
+                        "laysEggs": true,
+                        "description": "A hostile reptile that prefers the surface biome."
+                    },
+                    {
+                        "name": "Xenumzindro",
+                        "type": "Synthetic",
+                        "behavior": "Pack hunter",
+                        "biome": "Aerial",
+                        "legs": 2,
+                        "laysEggs": true,
+                        "description": "A pack hunter synthetic that prefers the aerial biome."
+                    },
+                    {
+                        "name": "Luxxen",
+                        "type": "Cephalopod",
+                        "behavior": "Sentient",
+                        "biome": "Surface",
+                        "legs": 2,
+                        "laysEggs": true,
+                        "description": "A sentient cephalopod that prefers the surface biome."
+                    }
+                ],
+                "floraList": [
+                    {
+                        "name": "Quarstem",
+                        "type": "Moss",
+                        "appearance": "tubular",
+                        "utility": "Healing",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Xanplant",
+                        "type": "Bush",
+                        "appearance": "tubular",
+                        "utility": "Tech Component",
+                        "rarity": "Rare"
+                    },
+                    {
+                        "name": "Quarvine",
+                        "type": "Moss",
+                        "appearance": "tubular",
+                        "utility": "Ornamental",
+                        "rarity": "Rare"
+                    },
+                    {
+                        "name": "Xanroot",
+                        "type": "Grass",
+                        "appearance": "translucent",
+                        "utility": "Ornamental",
+                        "rarity": "Common"
+                    },
+                    {
+                        "name": "Triroweed",
+                        "type": "Flower",
+                        "appearance": "drooping",
+                        "utility": "Fiber",
+                        "rarity": "Common"
+                    }
+                ],
+                "resourceList": [
+                    {
+                        "baseMaterial": "Bauxite",
+                        "specificName": "Tessarite",
+                        "rarity": "common"
+                    },
+                    {
+                        "baseMaterial": "Silica",
+                        "specificName": "Mechronite",
+                        "rarity": "common"
+                    }
+                ],
+                "inhabitants": [
+                    {
+                        "inhabitantId": "avian-avior",
+                        "inhabitantName": "Avior Ascendants",
+                        "description": "Feathered bipeds with hollow bones, perfectly adapted to low-gravity worlds or gas giant moons.",
+                        "disposition": "Artistic and Fiercely Independent",
+                        "homePlanetType": [
+                            "Rocky",
+                            "Gas Giant"
+                        ],
+                        "techLevel": "Intermediate",
+                        "societalTypes": [
+                            "Civilization",
+                            "Primitive"
+                        ],
+                        "canSettle": true,
+                        "status": "Native",
+                        "percentage": 100,
+                        "currentSociety": "Primitive"
+                    }
+                ],
+                "settlements": [
+                    {
+                        "name": "Stormwatch",
+                        "isCapital": true,
+                        "population": 223011,
+                        "theme": "High-Tech",
+                        "condition": "Functional",
+                        "buildings": [
+                            {
+                                "name": "Luxury Sky-Towers",
+                                "type": "Residential"
+                            },
+                            {
+                                "name": "Fusion Power Core",
+                                "type": "Energy"
+                            },
+                            {
+                                "name": "Corporate Emporium",
+                                "type": "Commerce"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Rivergate",
+                        "isCapital": false,
+                        "population": 25559,
+                        "theme": "Industrial",
+                        "condition": "Functional",
+                        "buildings": [
+                            {
+                                "name": "Automated Factory",
+                                "type": "Industry"
+                            },
+                            {
+                                "name": "Ore Refinery",
+                                "type": "Industry"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Windspire",
+                        "isCapital": false,
+                        "population": 10373,
+                        "theme": "Agrarian",
+                        "condition": "Rustic",
+                        "buildings": [
+                            {
+                                "name": "Open-Air Market",
+                                "type": "Commerce"
+                            },
+                            {
+                                "name": "Herbalist Den",
+                                "type": "Medical"
+                            }
+                        ]
+                    }
+                ],
+                "moons": []
+            },
+            {
+                "planetId": "X:-2_Y:6_Z:0_P3",
+                "planetName": "Geuprogeu IV",
+                "planetType": "Barren",
+                "planetColor": "#D2B48C",
+                "gravity": "1.48",
+                "orbitalPeriod": 271,
+                "atmosphere": [
+                    {
+                        "name": "Trace Sodium",
+                        "percent": 1
+                    }
+                ],
+                "conditions": {
+                    "weather": "Arid",
+                    "temperature": "Chilly",
+                    "nightTemperature": "Cozy for Ice Worms",
+                    "wind": "Gentle",
+                    "toxicity": "High",
+                    "radiation": "Only Survivable by Cockroaches"
+                },
+                "faunaList": [],
+                "floraList": [],
+                "resourceList": [
+                    {
+                        "baseMaterial": "Iron Ore",
+                        "specificName": "Xenthrite",
+                        "rarity": "common"
+                    },
+                    {
+                        "baseMaterial": "Helium-3",
+                        "specificName": "Ignethon",
+                        "rarity": "uncommon"
+                    },
+                    {
+                        "baseMaterial": "Iron Ore",
+                        "specificName": "Ultherium",
+                        "rarity": "uncommon"
+                    }
+                ],
+                "inhabitants": [],
+                "settlements": [],
+                "moons": [
+                    "Moon 1"
+                ]
+            },
+            {
+                "planetId": "X:-2_Y:6_Z:0_P4",
+                "planetName": "Geuprogeu V",
+                "planetType": "Gas Giant",
+                "planetColor": "#8B4513",
+                "gravity": "0.61",
+                "orbitalPeriod": 312,
+                "atmosphere": [
+                    {
+                        "name": "Thin Carbon Dioxide",
+                        "percent": 0.99
+                    }
+                ],
+                "conditions": {
+                    "weather": "Perpetual Overcast",
+                    "temperature": "Comfortably Inhospitable",
+                    "nightTemperature": "Subzero",
+                    "wind": "Steady",
+                    "toxicity": "Moderate",
+                    "radiation": "Hostile to DNA"
+                },
+                "faunaList": [],
+                "floraList": [],
+                "resourceList": [],
+                "inhabitants": [],
+                "settlements": [],
+                "moons": [
+                    "Moon 1",
+                    "Moon 2",
+                    "Moon 3"
+                ]
+            },
+            {
+                "planetId": "X:-2_Y:6_Z:0_P5",
+                "planetName": "Geuprogeu VI",
+                "planetType": "Gas Giant",
+                "planetColor": "#8B4513",
+                "gravity": "2.12",
+                "orbitalPeriod": 527,
+                "atmosphere": [
+                    {
+                        "name": "Formaldehyde",
+                        "percent": 0.05
+                    },
+                    {
+                        "name": "Nitrogen",
+                        "percent": 0.95
+                    }
+                ],
+                "conditions": {
+                    "weather": "Volcanic Ashfall",
+                    "temperature": "Cold Enough to Freeze a Plasma Line",
+                    "nightTemperature": "So Cold Even the Darkness Shivers",
+                    "wind": "Unpredictable Gusts",
+                    "toxicity": "Toxicity 3000™",
+                    "radiation": "Safe"
+                },
+                "faunaList": [],
+                "floraList": [],
+                "resourceList": [],
+                "inhabitants": [],
+                "settlements": [],
+                "moons": [
+                    "Moon 1",
+                    "Moon 2",
+                    "Moon 3",
+                    "Moon 4",
+                    "Moon 5",
+                    "Moon 6"
+                ]
+            }
+        ]
+    }
+}

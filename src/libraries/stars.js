@@ -103,11 +103,11 @@ export const starDescriptions = {
 };
 
 export const starClasses = [
-    { type: 'O', color: '#A3BFFA', temp: '>30,000K', size: 10, weight: 0.05 },
-    { type: 'B', color: '#BEE3F8', temp: '10,000–30,000K', size: 8, weight: 0.1 },
-    { type: 'A', color: '#EBF8FF', temp: '7,500–10,000K', size: 7, weight: 0.1 },
-    { type: 'F', color: '#FEFCBF', temp: '6,000–7,500K', size: 6, weight: 0.1 },
-    { type: 'G', color: '#FFFF99', temp: '5,200–6,000K', size: 5, weight: 0.15 },
-    { type: 'K', color: '#FBD38D', temp: '3,700–5,200K', size: 4, weight: 0.2 },
-    { type: 'M', color: '#F56565', temp: '<3,700K', size: 3, weight: 0.4 },
+    { type: 'O', color: '#3B82F6', temp: '>30,000K', size: 14, weight: 0.05 },
+    { type: 'B', color: '#06B6D4', temp: '10,000–30,000K', size: 12, weight: 0.1 },
+    { type: 'A', color: '#F8FAFC', temp: '7,500–10,000K', size: 10, weight: 0.1 },
+    { type: 'F', color: '#FDE047', temp: '6,000–7,500K', size: 9, weight: 0.1 },
+    { type: 'G', color: '#F59E0B', temp: '5,200–6,000K', size: 8, weight: 0.15 },
+    { type: 'K', color: '#EA580C', temp: '3,700–5,200K', size: 7, weight: 0.2 },
+    { type: 'M', color: '#EF4444', temp: '<3,700K', size: 6, weight: 0.4 },
 ];

@@ -127,10 +127,87 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
                                         <div className="mt-3 pt-3 border-t border-gray-700 text-xs">
                                             <span className="text-gray-500">Major Settlements: </span>
                                             <span className="text-orange-300">
-                                                {planet.settlements.map(s => s.name).join(', ')}
+                                                {planet.settlements.map(s => s.name || (typeof s === 'string' ? s : 'Unknown')).join(', ')}
                                             </span>
                                         </div>
                                     )}
+                                    {/* Inhabitants */}
+                                    {planet.inhabitants && (!Array.isArray(planet.inhabitants) || planet.inhabitants.length > 0) && (
+                                        <div className="mt-2 text-xs">
+                                            <span className="text-gray-500">Inhabitants: </span>
+                                            <span className="text-blue-300">
+                                                {Array.isArray(planet.inhabitants)
+                                                    ? planet.inhabitants.map(i => {
+                                                        const name = i.inhabitantName || i.name || (typeof i === 'string' ? i : 'Unknown');
+                                                        const pop = i.percentage ? ` (${i.percentage}%)` : '';
+                                                        return `${name}${pop}`;
+                                                    }).join(', ')
+                                                    : `${planet.inhabitants.inhabitantName || planet.inhabitants.name || (typeof planet.inhabitants === 'string' ? planet.inhabitants : 'Unknown')}${planet.inhabitants.percentage ? ` (${planet.inhabitants.percentage}%)` : ''}`
+                                                }
+                                            </span>
+                                        </div>
+                                    )}
+                                    {(planet.economy || planet.industry) && (
+                                        <div className="mt-2 flex items-center gap-4 text-xs">
+                                            {planet.economy && (
+                                                <div>
+                                                    <span className="text-gray-500">Economy: </span>
+                                                    <span className="text-green-400">
+                                                        {typeof planet.economy === 'string' ? planet.economy : planet.economy.name}
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {planet.industry && (
+                                                <div>
+                                                    <span className="text-gray-500">Industry: </span>
+                                                    <span className="text-yellow-400">
+                                                        {typeof planet.industry === 'string' ? planet.industry : planet.industry.name}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                    {planet.faunaList?.length > 0 && (
+                                        <div className="mt-3">
+                                            <span className="text-gray-500 font-semibold block mb-2">Fauna Logs: </span>
+                                            <ul className="space-y-2">
+                                                {planet.faunaList.map((f, fIdx) => (
+                                                    <li key={fIdx} className="bg-gray-800/40 p-2 rounded border border-teal-900/30">
+                                                        {/* Primary Identity */}
+                                                        <div className="flex items-baseline justify-between gap-2">
+                                                            <span className="font-bold text-teal-300">{f.name || f.species}</span>
+                                                            {f.type && (
+                                                                <span className="text-[9px] uppercase tracking-widest text-teal-500 bg-teal-950/60 px-1.5 py-0.5 rounded border border-teal-800/50">
+                                                                    {f.type}
+                                                                </span>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Taxonomic Tags */}
+                                                        <div className="text-[10px] text-gray-500 mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1">
+                                                            {f.biome && <span>{f.biome}</span>}
+                                                            {f.biome && f.behavior && <span className="text-gray-700">•</span>}
+                                                            {f.behavior && <span>{f.behavior}</span>}
+
+                                                            {(f.legs !== undefined || f.laysEggs !== undefined) && <span className="text-gray-700">•</span>}
+
+                                                            {f.legs !== undefined && <span>{f.legs} Appendages</span>}
+                                                            {f.legs !== undefined && f.laysEggs && <span className="text-gray-700">•</span>}
+                                                            {f.laysEggs && <span className="text-teal-700/80">Oviparous</span>}
+                                                        </div>
+
+                                                        {/* Scanner Description */}
+                                                        {f.description && (
+                                                            <p className="text-[10px] text-gray-400 italic mt-1.5 leading-tight border-l-2 border-teal-900/50 pl-2">
+                                                                "{f.description}"
+                                                            </p>
+                                                        )}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+
                                 </div>
                             ))}
                         </div>
