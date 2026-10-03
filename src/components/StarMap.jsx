@@ -8,6 +8,7 @@ import {
     createHandleWheel
 } from '@utils/mouseUtils.jsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import NavigationFooter from './NavigationFooter.jsx';
 
 const getStarTooltip = (star) => {
     if (!star) return null;
@@ -259,6 +260,7 @@ const StarMap = () => {
                 onClick={handleClick}
                 onContextMenu={handleContextMenu}
             />
+            <NavigationFooter visibleStars={stars} />
             {/* DOM-based Hover Tooltip */}
             {/* DOM-based Hover Tooltip */}
             {hoveredStar && (
@@ -307,6 +309,7 @@ const StarMap = () => {
                     />
                 </div>
             )}
+
         </div>
     );
 };
