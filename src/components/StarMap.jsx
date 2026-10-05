@@ -139,7 +139,7 @@ const StarMap = () => {
         const ctx = canvas.getContext('2d');
         const { width, height } = canvas;
 
-        // Background Gradient
+        // 1. Background Gradient (Static Space)
         ctx.clearRect(0, 0, width, height);
         const backgroundGradient = ctx.createLinearGradient(0, 0, width, height);
         backgroundGradient.addColorStop(0, '#0a0a14');
@@ -148,18 +148,28 @@ const StarMap = () => {
         ctx.fillStyle = backgroundGradient;
         ctx.fillRect(0, 0, width, height);
 
-        // Static Background Stars
-        backgroundStars.current.forEach(star => {
+        // 2. Deep Background Stars (Moves at 10% speed)
+        backgroundStars.current.forEach((star, idx) => {
+            // Split the background stars into two depth layers based on odd/even index
+            const depthSpeed = idx % 2 === 0 ? 0.05 : 0.15;
+
+            // Apply parallax offset and use modulo to seamlessly wrap around screen edges
+            const px = ((star.x + offsetX * depthSpeed) % width + width) % width;
+            const py = ((star.y + offsetY * depthSpeed) % height + height) % height;
+
             ctx.beginPath();
-            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.arc(px, py, star.radius, 0, Math.PI * 2);
             ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
             ctx.fill();
         });
 
-        // Static Nebula Clouds
+        // 3. Midground Nebula Clouds (Moves at 30% speed)
         NEBULA_CLOUDS.current.forEach(cloud => {
+            const px = ((cloud.x + offsetX * 0.3) % width + width) % width;
+            const py = ((cloud.y + offsetY * 0.3) % height + height) % height;
+
             ctx.beginPath();
-            ctx.arc(cloud.x, cloud.y, cloud.radius, 0, Math.PI * 2);
+            ctx.arc(px, py, cloud.radius, 0, Math.PI * 2);
             ctx.fillStyle = cloud.color;
             ctx.fill();
         });
@@ -174,42 +184,42 @@ const StarMap = () => {
         // Draw Interactive Foreground Stars
 
         stars.forEach((star) => {
-          //console.log("Rendering star:", star);
-          ctx.beginPath();
-          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-          ctx.fillStyle = star.color;
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = star.color;
-          ctx.fill();
-          ctx.shadowBlur = 0;
-
-          ctx.fillStyle = "#FFFFFF";
-          ctx.font = `${12 / scale}px Courier New, monospace`;
-          ctx.textAlign = "center";
-          ctx.fillText(star.name, star.x, star.y - star.size - 6 / scale);
-
-          // Home System Ring
-          if (home.id === star.id) {
+            //console.log("Rendering star:", star);
             ctx.beginPath();
-            ctx.arc(star.x, star.y, star.size + 4 / scale, 0, Math.PI * 2);
-            ctx.strokeStyle = "#FFFFFF";
-            ctx.lineWidth = 1 / scale;
-            ctx.stroke();
-          }
-
-          // Visited System Indicator (Green Dot)
-          if (visited.includes(star.id)) {
-            ctx.beginPath();
-            ctx.arc(
-              star.x,
-              star.y + star.size + 5 / scale,
-              2 / scale,
-              0,
-              Math.PI * 2
-            );
-            ctx.fillStyle = "#00FF00";
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            ctx.fillStyle = star.color;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = star.color;
             ctx.fill();
-          }
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = "#FFFFFF";
+            ctx.font = `${12 / scale}px Courier New, monospace`;
+            ctx.textAlign = "center";
+            ctx.fillText(star.name, star.x, star.y - star.size - 6 / scale);
+
+            // Home System Ring
+            if (home.id === star.id) {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size + 4 / scale, 0, Math.PI * 2);
+                ctx.strokeStyle = "#FFFFFF";
+                ctx.lineWidth = 1 / scale;
+                ctx.stroke();
+            }
+
+            // Visited System Indicator (Green Dot)
+            if (visited.includes(star.id)) {
+                ctx.beginPath();
+                ctx.arc(
+                    star.x,
+                    star.y + star.size + 5 / scale,
+                    2 / scale,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fillStyle = "#00FF00";
+                ctx.fill();
+            }
         });
 
         ctx.restore();
