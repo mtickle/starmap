@@ -5,7 +5,10 @@ import {
     createHandleMouseDown,
     createHandleMouseMove,
     createHandleMouseUp,
-    createHandleWheel
+    createHandleWheel,
+    createHandleTouchStart,
+    createHandleTouchMove,
+    createHandleTouchEnd
 } from '@utils/mouseUtils.jsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import NavigationFooter from './NavigationFooter.jsx';
@@ -131,6 +134,18 @@ const StarMap = () => {
     const handleContextMenu = createHandleContextMenu({
         canvasRef, offsetX, offsetY, scale, stars
     });
+
+    const handleTouchStart = createHandleTouchStart(setIsDragging, setDragStart);
+
+    const handleTouchMove = useCallback((e) => {
+        createHandleTouchMove({
+            offsetX, offsetY, scale, isDragging,
+            setOffsetX, setOffsetY, dragStart, setDragStart,
+            setScale
+        })(e);
+    }, [offsetX, offsetY, scale, isDragging, dragStart]);
+
+    const handleTouchEnd = createHandleTouchEnd(setIsDragging);
 
     // --- DRAWING LOGIC ---
     const drawScene = useCallback(() => {
@@ -261,7 +276,7 @@ const StarMap = () => {
         <div className="w-screen h-screen bg-black overflow-hidden relative font-mono text-white">
             <canvas
                 ref={canvasRef}
-                className="w-full h-full block cursor-crosshair"
+                className="w-full h-full block cursor-crosshair touch-none" // <-- touch-none added
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
@@ -269,6 +284,12 @@ const StarMap = () => {
                 onWheel={handleWheel}
                 onClick={handleClick}
                 onContextMenu={handleContextMenu}
+
+                /* New Mobile Listeners */
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                onTouchCancel={handleTouchEnd}
             />
             <NavigationFooter visibleStars={stars} />
             {/* DOM-based Hover Tooltip */}
