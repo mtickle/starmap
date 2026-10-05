@@ -15,9 +15,9 @@ export const createHandleMouseMove = ({
     stars, setHoveredStar
 }) => (e) => {
     if (isDragging) {
-        // Panning map
-        const dx = (e.clientX - dragStart.x) / scale;
-        const dy = (e.clientY - dragStart.y) / scale;
+        // Panning map - removed the "/ scale" division
+        const dx = (e.clientX - dragStart.x);
+        const dy = (e.clientY - dragStart.y);
         setOffsetX(offsetX + dx);
         setOffsetY(offsetY + dy);
         setDragStart({ x: e.clientX, y: e.clientY });
@@ -83,13 +83,12 @@ export const createHandleTouchMove = ({
     setScale
 }) => (e) => {
     if (e.touches.length === 1 && isDragging) {
-        // Single finger: Pan the map
-        const dx = (e.touches[0].clientX - dragStart.x) / scale;
-        const dy = (e.touches[0].clientY - dragStart.y) / scale;
+        // Single finger: Pan the map - removed the "/ scale" division
+        const dx = (e.touches[0].clientX - dragStart.x);
+        const dy = (e.touches[0].clientY - dragStart.y);
         setOffsetX(offsetX + dx);
         setOffsetY(offsetY + dy);
         setDragStart({ x: e.touches[0].clientX, y: e.touches[0].clientY });
-
     } else if (e.touches.length === 2) {
         // Two fingers: Zoom the map
         const dx = e.touches[0].clientX - e.touches[1].clientX;

@@ -198,67 +198,62 @@ const StarMap = () => {
 
         // Draw Interactive Foreground Stars
 
+        // Draw Interactive Foreground Stars
+        // Draw Interactive Foreground Stars
         stars.forEach((star) => {
-            //console.log("Rendering star:", star);
+            // Calculate exact universe bounds based on camera offset and zoom
+            const minX = (-width / 2 - offsetX) / scale - 30;
+            const maxX = (width / 2 - offsetX) / scale + 30;
+            const minY = (-height / 2 - offsetY) / scale - 30;
+            const maxY = (height / 2 - offsetY) / scale + 30;
+
+            // Cull stars that are outside the calculated camera view
+            if (star.x < minX || star.x > maxX || star.y < minY || star.y > maxY) {
+                return;
+            }
+
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
             ctx.fillStyle = star.color;
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = star.color;
-            ctx.fill();
-            ctx.shadowBlur = 0;
 
-            ctx.fillStyle = "#FFFFFF";
-            ctx.font = `${12 / scale}px Courier New, monospace`;
-            ctx.textAlign = "center";
-            ctx.fillText(star.name, star.x, star.y - star.size - 6 / scale);
-
-            // Home System Ring
-            if (home.id === star.id) {
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.size + 4 / scale, 0, Math.PI * 2);
-                ctx.strokeStyle = "#FFFFFF";
-                ctx.lineWidth = 1 / scale;
-                ctx.stroke();
+            // Only apply expensive shadow physics when zoomed in
+            if (scale > 0.5) {
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = star.color;
+            } else {
+                ctx.shadowBlur = 0; // Performance mode
             }
 
-            // Visited System Indicator (Green Dot)
-            if (visited.includes(star.id)) {
+            ctx.fill();
+            ctx.shadowBlur = 0; // Always reset
+
+            // Level of Detail: Text and Rings
+            if (scale > 0.5) {
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = `${12 / scale}px Courier New, monospace`;
+                ctx.textAlign = 'center';
+                ctx.fillText(star.name, star.x, star.y - star.size - 6 / scale);
+
+                // Home System Ring
+                if (home.id === star.id) {
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.size + 4 / scale, 0, Math.PI * 2);
+                    ctx.strokeStyle = '#FFFFFF';
+                    ctx.lineWidth = 1 / scale;
+                    ctx.stroke();
+                }
+            }
+
+            // Visited System Indicator (Only draw if zoomed in enough to see it)
+            if (scale > 0.2 && visited.includes(star.id)) {
                 ctx.beginPath();
-                ctx.arc(
-                    star.x,
-                    star.y + star.size + 5 / scale,
-                    2 / scale,
-                    0,
-                    Math.PI * 2
-                );
-                ctx.fillStyle = "#00FF00";
+                ctx.arc(star.x, star.y + star.size + 5 / scale, 2 / scale, 0, Math.PI * 2);
+                ctx.fillStyle = '#00FF00';
                 ctx.fill();
             }
         });
-
         ctx.restore();
 
-        // Tooltip Overlay
-        // if (hoveredStar) {
-        //     const tooltip = getStarTooltip(hoveredStar);
-        //     if (tooltip) {
-        //         ctx.save();
-        //         ctx.font = '12px Courier New, monospace';
-        //         const text = `★ ${tooltip.name} | ${tooltip.faction} | Class ${tooltip.type}`;
-        //         const metrics = ctx.measureText(text);
-        //         const canvasRect = canvas.getBoundingClientRect();
-
-        //         const tooltipX = hoveredStar.clientX - canvasRect.left + 15;
-        //         const tooltipY = hoveredStar.clientY - canvasRect.top + 15;
-
-        //         ctx.fillStyle = 'rgba(10, 10, 20, 0.85)';
-        //         ctx.fillRect(tooltipX, tooltipY, metrics.width + 10, 20);
-        //         ctx.fillStyle = '#00ff88';
-        //         ctx.fillText(text, tooltipX + 5, tooltipY + 14);
-        //         ctx.restore();
-        //     }
-        // }
     }, [stars, offsetX, offsetY, scale, hoveredStar]);
 
     // --- ANIMATION LOOP ---
@@ -291,6 +286,16 @@ const StarMap = () => {
                 onTouchEnd={handleTouchEnd}
                 onTouchCancel={handleTouchEnd}
             />
+            <button
+                onClick={() => {
+                    setOffsetX(0);
+                    setOffsetY(0);
+                    setScale(1);
+                }}
+                className="absolute top-6 right-6 z-40 bg-gray-950/80 hover:bg-gray-800 text-gray-400 hover:text-white px-4 py-2 rounded border border-gray-800 shadow-lg backdrop-blur-sm transition-all text-xs tracking-wider uppercase font-semibold"
+            >
+                Recenter HUD
+            </button>
             <NavigationFooter visibleStars={stars} />
             {/* DOM-based Hover Tooltip */}
             {/* DOM-based Hover Tooltip */}
