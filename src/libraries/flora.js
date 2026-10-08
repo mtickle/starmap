@@ -1,3 +1,5 @@
+// libraries/flora.js
+
 export const floraTypes = [
     { type: 'tree', name: 'Tree' },
     { type: 'shrub', name: 'Shrub' },
@@ -46,9 +48,3 @@ export const jokes = [
     `Its pollen causes mild euphoria and uncontrollable dance moves.`,
     `Harvest with caution: last botanist grew a second shadow.`
 ];
-
-export const prefixes = ['Zor', 'Xan', 'Blor', 'Neh', 'Tri', 'Lum', 'Vel', 'Quar', 'Thy', 'Irr'];
-
-export const middles = ['ro', 'li', 'ka', 'zu', 'mi', 'the', 'pha', 'chi'];
-
-export const suffixes = ['plant', 'weed', 'root', 'vine', 'stem', 'blossom', 'bud', 'tree'];

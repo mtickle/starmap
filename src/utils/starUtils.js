@@ -6,7 +6,8 @@ import {
 } from './planetPropertiesUtils.js';
 import { starClasses } from '../libraries/stars.js';
 import { planetTypes } from '../libraries/planets.js';
-import { nameSyllables, romanNumerals } from '../libraries/names.js';
+// Removed the static libraries/names.js import
+import { generateName } from './proceduralLanguage.js';
 
 
 // --- SEEDING & PRNG UTILS ---
@@ -32,36 +33,29 @@ function getRandomItem(arr, rng) {
 }
 
 
-
 // --- CORE GENERATOR ---
 export function synthesizeStar(coordinate) {
-    // 1. Initialize System-Level PRNG with a unique salt
+    // 1. Initialize System-Level PRNG
     const systemSeed = hashString(`${coordinate}_sys`);
     const rng = mulberry32(systemSeed);
 
-    // 2. Generate Star Properties using the new "weight" property
+    // 2. Generate Star Properties
     const roll = rng() * 1.1;
     let cumulative = 0;
-
-    // Set a safe fallback to Class M (the last item in the array) just in case
     let selectedStarClass = starClasses[starClasses.length - 1];
 
     for (const sc of starClasses) {
-        cumulative += sc.weight; // <- This must be .weight, not .probability
+        cumulative += sc.weight;
         if (roll <= cumulative) {
             selectedStarClass = sc;
             break;
         }
     }
 
-    const nameLen = Math.floor(rng() * 3) + 2;
-    let starName = '';
-    for (let i = 0; i < nameLen; i++) {
-        starName += getRandomItem(nameSyllables, rng);
-    }
-    starName = starName.charAt(0).toUpperCase() + starName.slice(1);
+    // THE VORTEX: Replaced the manual loop with a single engine call
+    const starName = generateName(rng, 'star');
 
-    const starSize = Math.floor(rng() * 10) + 5; // Canvas rendering size
+    const starSize = Math.floor(rng() * 10) + 5;
 
     // 3. Factions & Stations
     const faction = generateSystemFaction(rng);
@@ -72,17 +66,20 @@ export function synthesizeStar(coordinate) {
     }] : [];
 
     // 4. Generate Planets
-    const numPlanets = Math.floor(rng() * 9); // 0 to 8 planets
+    const numPlanets = Math.floor(rng() * 9);
     const planets = [];
+
+    // Tiny inline fallback for lifeless planets
+    const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
 
     for (let i = 0; i < numPlanets; i++) {
         const planetSeed = hashString(`${coordinate}_P${i}`);
         const pRng = mulberry32(planetSeed);
 
         // ROLL FOR PLANET TYPE USING WEIGHTS
-        const pRoll = pRng(); // Total weights equal exactly 1.0
+        const pRoll = pRng();
         let cumulativeP = 0;
-        let selectedPlanetObj = planetTypes[planetTypes.length - 1]; // Fallback
+        let selectedPlanetObj = planetTypes[planetTypes.length - 1];
 
         for (const pt of planetTypes) {
             cumulativeP += pt.weight;
@@ -93,23 +90,22 @@ export function synthesizeStar(coordinate) {
         }
 
         const planetType = selectedPlanetObj.type;
-
-        // ROLL FOR CIVILIZATION FIRST
         const hasCivilization = pRng() > 0.7;
 
+        // THE VORTEX: Replaced the planet naming loop
         let pName = '';
         if (hasCivilization) {
-            for (let j = 0; j < (Math.floor(pRng() * 2) + 2); j++) {
-                pName += getRandomItem(nameSyllables, pRng);
-            }
-            pName = pName.charAt(0).toUpperCase() + pName.slice(1);
+            // Dynamically pass the planet type so toxic planets sound different from paradise planets
+            pName = generateName(pRng, `planet_${planetType.toLowerCase()}`);
         } else {
             const suffix = romanNumerals[i] || (i + 1);
             pName = `${starName} ${suffix}`;
         }
 
         const numMoons = (planetType === 'Gas Giant') ? Math.floor(pRng() * 6) + 1 : Math.floor(pRng() * 3);
-        const moons = Array.from({ length: numMoons }, (_, mIdx) => `Moon ${mIdx + 1}`);
+
+        // THE VORTEX: Generating actual names for moons instead of "Moon 1"
+        const moons = Array.from({ length: numMoons }, () => generateName(pRng, 'moon'));
 
         planets.push({
             planetId: `${coordinate}_P${i}`,

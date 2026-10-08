@@ -1,14 +1,20 @@
 import { atmosphereProfiles } from '../libraries/atmospheres.js';
 import { weatherNames, temperatureNames, nightTemperatureNames, windNames, toxicityNames, radiationLevelNames } from '../libraries/conditions.js';
-import { behaviorTypes, lifeformTypes, biomes, faunaDensityByPlanetType, nameSyllables } from '../libraries/fauna.js';
-import { floraTypes, utilities, appearances, rarityTable, typeFloraPresence, prefixes, middles, suffixes } from '../libraries/flora.js';
-import { mineralNames, rarities, mineralPools } from '../libraries/resources.js';
+// Removed: nameSyllables
+import { behaviorTypes, lifeformTypes, biomes, faunaDensityByPlanetType } from '../libraries/fauna.js';
+// Removed: prefixes, middles, suffixes
+import { floraTypes, utilities, appearances, rarityTable, typeFloraPresence } from '../libraries/flora.js';
+// Removed: mineralNames
+import { rarities, mineralPools } from '../libraries/resources.js';
 import { economyNames } from '../libraries/economies.js';
 import { industryTypes } from '../libraries/industries.js';
 import { settlementThemes, settlementNames } from '../libraries/settlements.js';
 import { inhabitantList } from '../libraries/inhabitants.js';
 
 import { getRandomItem, getWeightedItem } from './randomUtils.js';
+
+// NEW: Bring in the linguistic engine
+import { generateName } from './proceduralLanguage.js';
 
 // ==========================================
 // ATMOSPHERE GENERATOR
@@ -87,13 +93,6 @@ export function generateFauna(planetType, rng) {
 
     const faunaList = [];
     for (let i = 0; i < speciesCount; i++) {
-        const nameLen = Math.floor(rng() * 3) + 2;
-        let speciesName = '';
-        for (let j = 0; j < nameLen; j++) {
-            speciesName += getRandomItem(nameSyllables, rng);
-        }
-        speciesName = speciesName.charAt(0).toUpperCase() + speciesName.slice(1);
-
         let typeObj = getRandomItem(lifeformTypes, rng);
         let biomeStr = getRandomItem(biomes, rng);
         const behaviorStr = getRandomItem(behaviorTypes, rng);
@@ -112,11 +111,13 @@ export function generateFauna(planetType, rng) {
             typeObj = getRandomItem(bizarreTypes, rng);
         }
 
-        // 2. Capitalize for the React frontend UI
+        // THE VORTEX: Generate a species name based on the planet's ecosystem!
+        // We pass the planetType so an Ice World creature gets a different dialect than a Volcanic one
+        const speciesName = generateName(rng, `species_${planetType.toLowerCase()}`);
+
         const behaviorUI = behaviorStr.charAt(0).toUpperCase() + behaviorStr.slice(1);
         const biomeUI = biomeStr.charAt(0).toUpperCase() + biomeStr.slice(1);
 
-        // 3. Physical traits
         const legOptions = [0, 1, 2, 4, 6, 8];
         const legs = (typeObj.name === 'Avian' || typeObj.name === 'Synthetic') ? 2 : getRandomItem(legOptions, rng);
         const laysEggs = typeObj.name === 'Mammal' ? false : rng() > 0.4;
@@ -151,20 +152,18 @@ export function generateFlora(planetType, rng) {
     const floraList = [];
 
     for (let i = 0; i < count; i++) {
-        const prefix = getRandomItem(prefixes, rng);
-        const middle = rng() > 0.5 ? getRandomItem(middles, rng) : '';
-        const suffix = getRandomItem(suffixes, rng);
+        // THE VORTEX: Procedural plant names
+        const plantName = generateName(rng, 'flora');
 
         let typeObj = getRandomItem(floraTypes, rng);
         let appearance = getRandomItem(appearances, rng);
 
-        // Apply special planet rules
         if (rules.marineOnly) typeObj = { name: 'Seaweed' };
         if (rules.specialAppearance) appearance = rules.specialAppearance;
         if (rules.synthetic) typeObj = { name: 'Synthetic Growth' };
 
         floraList.push({
-            name: `${prefix}${middle}${suffix}`,
+            name: plantName,
             type: typeObj.name,
             appearance: appearance,
             utility: getRandomItem(utilities, rng),
@@ -178,6 +177,9 @@ export function generateFlora(planetType, rng) {
 // ==========================================
 // RESOURCES GENERATOR
 // ==========================================
+// ==========================================
+// RESOURCES GENERATOR
+// ==========================================
 export function generateResources(planetType, rng) {
     const pool = mineralPools[planetType] || mineralPools['Rocky'];
     if (!pool || pool.length === 0) return [];
@@ -186,23 +188,15 @@ export function generateResources(planetType, rng) {
     const count = Math.floor(rng() * 4) + 2;
     const resourceList = [];
 
-    // Flat data arrays from mineralNames structure
-    const commonMins = mineralNames[0].common;
-    const uncommonMins = mineralNames[0].uncommon;
-    const rareMins = mineralNames[0].rare;
-
     for (let i = 0; i < count; i++) {
         // 1. Pick a base material from the planet's specific pool
         const baseMaterial = getRandomItem(pool, rng);
 
-        // 2. Pick a rarity deterministically using weighted selector
+        // 2. Pick a rarity deterministically
         const rarity = getWeightedItem(rng, rarities).name;
 
-        // 3. Pick a specific scifi mineral name based on that rarity
-        let specificName = '';
-        if (rarity === 'common') specificName = getRandomItem(commonMins, rng);
-        else if (rarity === 'uncommon') specificName = getRandomItem(uncommonMins, rng);
-        else specificName = getRandomItem(rareMins, rng);
+        // 3. THE VORTEX: Generate mineral names purely through math!
+        const specificName = generateName(rng, `mineral_${rarity}`);
 
         resourceList.push({
             baseMaterial: baseMaterial,
