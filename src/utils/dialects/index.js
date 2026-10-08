@@ -1,20 +1,19 @@
 // utils/dialects/index.js
-import { cosmicDialect } from './cosmic.js';
-import { botanicalDialect } from './botanical.js';
+import { botanicalDialect } from "./botanical.js";
+import { cosmicDialect } from "./cosmic.js";
+import { faunaDialect } from "./fauna.js";
 
 export const DIALECTS = {
-    cosmic: cosmicDialect,
-    botanical: botanicalDialect
+  cosmic: cosmicDialect,
+  botanical: botanicalDialect,
+  fauna: faunaDialect,
 };
 
 export const ENTITY_ROUTER = {
-    'star': 'cosmic',
-    'moon': 'cosmic',
-    // We can map planet types dynamically
-    'planet_paradise': 'cosmic',
-    'planet_barren': 'cosmic',
-    'planet_gas giant': 'cosmic',
-    'planet_ice world': 'cosmic',
-    'planet_volcanic': 'cosmic',
-    'flora': 'botanical'
+  star: "cosmic",
+  moon: "cosmic",
+  flora: "botanical",
+  species_rocky: "fauna",
+  "species_ice world": "fauna",
+  species_volcanic: "fauna",
 };

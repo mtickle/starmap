@@ -35,6 +35,3 @@ export const faunaDensityByPlanetType = {
     'Carbonaceous': 'moderate'
 };
 
-export const nameSyllables = [
-    'zor', 'vex', 'tal', 'nir', 'lux', 'garn', 'ska', 'dro', 'fel', 'mek', 'quor', 'zin', 'rax', 'yil', 'xen', 'um', 'ol', 'tra'
-];
