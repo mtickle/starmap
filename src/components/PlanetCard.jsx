@@ -116,50 +116,62 @@ const PlanetCard = ({ planet }) => {
             <div className="p-3 border-t border-gray-700 bg-gray-950/50 text-xs space-y-3">
               {planet.floraList?.length > 0 && (
                 <div>
-                  <span className="text-gray-500 font-semibold block mb-2">
-                    Flora:
-                  </span>
+
                   <ul className="space-y-2">
-                    {planet.floraList.map((f, fIdx) => (
-                      <li
-                        key={fIdx}
-                        className="bg-gray-800/40 p-2 rounded border border-green-900/30"
-                      >
-                        <div className="flex items-baseline justify-between gap-2">
-                          <span className="font-bold text-green-300">
-                            {f.name}
-                          </span>
-                          {f.rarity && (
-                            <span
-                              className={`text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded border ${
-                                f.rarity === "Rare"
-                                  ? "text-purple-400 bg-purple-950/60 border-purple-800/50"
-                                  : f.rarity === "Uncommon"
-                                  ? "text-blue-400 bg-blue-950/60 border-blue-800/50"
-                                  : "text-green-500 bg-green-950/60 border-green-800/50"
-                              }`}
+                    {planet.floraList?.length > 0 && (
+                      <div>
+                        <span className="text-gray-500 font-semibold block mb-2">
+                          Flora:
+                        </span>
+                        <ul className="space-y-2">
+                          {planet.floraList.map((f, fIdx) => (
+                            <li
+                              key={fIdx}
+                              className="bg-gray-800/40 p-2 rounded border border-green-900/30"
                             >
-                              {f.rarity}
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-[10px] text-gray-500 mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1 capitalize">
-                          {f.type && <span>{f.type}</span>}
-                          {f.type && f.appearance && (
-                            <span className="text-gray-700">•</span>
-                          )}
-                          {f.appearance && <span>{f.appearance}</span>}
-                          {(f.type || f.appearance) && f.utility && (
-                            <span className="text-gray-700">•</span>
-                          )}
-                          {f.utility && (
-                            <span className="text-green-700/80">
-                              {f.utility}
-                            </span>
-                          )}
-                        </div>
-                      </li>
-                    ))}
+                              <div className="flex items-baseline justify-between gap-2">
+                                <span className="font-bold text-green-300">
+                                  {f.name}
+                                </span>
+                                {f.rarity && (
+                                  <span
+                                    className={`text-[9px] uppercase tracking-widest px-1.5 py-0.5 rounded border ${f.rarity === "Rare"
+                                      ? "text-purple-400 bg-purple-950/60 border-purple-800/50"
+                                      : f.rarity === "Uncommon"
+                                        ? "text-blue-400 bg-blue-950/60 border-blue-800/50"
+                                        : "text-green-500 bg-green-950/60 border-green-800/50"
+                                      }`}
+                                  >
+                                    {f.rarity}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[10px] text-gray-500 mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1 capitalize">
+                                {f.type && <span>{f.type}</span>}
+                                {f.type && f.appearance && (
+                                  <span className="text-gray-700">•</span>
+                                )}
+                                {f.appearance && <span>{f.appearance}</span>}
+                                {(f.type || f.appearance) && f.utility && (
+                                  <span className="text-gray-700">•</span>
+                                )}
+                                {f.utility && (
+                                  <span className="text-green-700/80">
+                                    {f.utility}
+                                  </span>
+                                )}
+                              </div>
+                              {/* Aligned description block matching Fauna */}
+                              {f.description && (
+                                <p className="text-[10px] text-gray-400 italic mt-1.5 leading-tight border-l-2 border-green-900/50 pl-2">
+                                  "{f.description}"
+                                </p>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </ul>
                 </div>
               )}
@@ -209,38 +221,38 @@ const PlanetCard = ({ planet }) => {
         {(planet.settlements?.length > 0 ||
           planet.inhabitants ||
           planet.economy) && (
-          <details className="group bg-gray-900/80 rounded border border-gray-700">
-            <summary className="p-2 cursor-pointer text-xs font-semibold text-gray-400 hover:text-white hover:bg-gray-800 transition-colors list-none flex justify-between items-center">
-              Civilization & Trade
-              <span className="text-gray-600 group-open:rotate-180 transition-transform">
-                ▼
-              </span>
-            </summary>
-            <div className="p-3 border-t border-gray-700 bg-gray-950/50 text-xs space-y-3">
-              {planet.settlements?.length > 0 && (
-                <div>
-                  <span className="text-gray-500 block mb-1">
-                    Major Settlements:{" "}
-                  </span>
-                  <span className="text-orange-300">
-                    {planet.settlements
-                      .map(
-                        (s) => s.name || (typeof s === "string" ? s : "Unknown")
-                      )
-                      .join(", ")}
-                  </span>
-                </div>
-              )}
-              {planet.inhabitants &&
-                (!Array.isArray(planet.inhabitants) ||
-                  planet.inhabitants.length > 0) && (
+            <details className="group bg-gray-900/80 rounded border border-gray-700">
+              <summary className="p-2 cursor-pointer text-xs font-semibold text-gray-400 hover:text-white hover:bg-gray-800 transition-colors list-none flex justify-between items-center">
+                Civilization & Trade
+                <span className="text-gray-600 group-open:rotate-180 transition-transform">
+                  ▼
+                </span>
+              </summary>
+              <div className="p-3 border-t border-gray-700 bg-gray-950/50 text-xs space-y-3">
+                {planet.settlements?.length > 0 && (
                   <div>
                     <span className="text-gray-500 block mb-1">
-                      Inhabitants:{" "}
+                      Major Settlements:{" "}
                     </span>
-                    <span className="text-blue-300">
-                      {Array.isArray(planet.inhabitants)
-                        ? planet.inhabitants
+                    <span className="text-orange-300">
+                      {planet.settlements
+                        .map(
+                          (s) => s.name || (typeof s === "string" ? s : "Unknown")
+                        )
+                        .join(", ")}
+                    </span>
+                  </div>
+                )}
+                {planet.inhabitants &&
+                  (!Array.isArray(planet.inhabitants) ||
+                    planet.inhabitants.length > 0) && (
+                    <div>
+                      <span className="text-gray-500 block mb-1">
+                        Inhabitants:{" "}
+                      </span>
+                      <span className="text-blue-300">
+                        {Array.isArray(planet.inhabitants)
+                          ? planet.inhabitants
                             .map((i) => {
                               const name =
                                 i.inhabitantName ||
@@ -252,47 +264,45 @@ const PlanetCard = ({ planet }) => {
                               return `${name}${pop}`;
                             })
                             .join(", ")
-                        : `${
-                            planet.inhabitants.inhabitantName ||
-                            planet.inhabitants.name ||
-                            (typeof planet.inhabitants === "string"
-                              ? planet.inhabitants
-                              : "Unknown")
-                          }${
-                            planet.inhabitants.percentage
-                              ? ` (${planet.inhabitants.percentage}%)`
-                              : ""
+                          : `${planet.inhabitants.inhabitantName ||
+                          planet.inhabitants.name ||
+                          (typeof planet.inhabitants === "string"
+                            ? planet.inhabitants
+                            : "Unknown")
+                          }${planet.inhabitants.percentage
+                            ? ` (${planet.inhabitants.percentage}%)`
+                            : ""
                           }`}
-                    </span>
+                      </span>
+                    </div>
+                  )}
+                {(planet.economy || planet.industry) && (
+                  <div className="pt-2 border-t border-gray-800 flex flex-col gap-1">
+                    {planet.economy && (
+                      <div>
+                        <span className="text-gray-500">Economy: </span>
+                        <span className="text-green-400">
+                          {typeof planet.economy === "string"
+                            ? planet.economy
+                            : planet.economy.name}
+                        </span>
+                      </div>
+                    )}
+                    {planet.industry && (
+                      <div>
+                        <span className="text-gray-500">Industry: </span>
+                        <span className="text-yellow-400">
+                          {typeof planet.industry === "string"
+                            ? planet.industry
+                            : planet.industry.name}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 )}
-              {(planet.economy || planet.industry) && (
-                <div className="pt-2 border-t border-gray-800 flex flex-col gap-1">
-                  {planet.economy && (
-                    <div>
-                      <span className="text-gray-500">Economy: </span>
-                      <span className="text-green-400">
-                        {typeof planet.economy === "string"
-                          ? planet.economy
-                          : planet.economy.name}
-                      </span>
-                    </div>
-                  )}
-                  {planet.industry && (
-                    <div>
-                      <span className="text-gray-500">Industry: </span>
-                      <span className="text-yellow-400">
-                        {typeof planet.industry === "string"
-                          ? planet.industry
-                          : planet.industry.name}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </details>
-        )}
+              </div>
+            </details>
+          )}
 
         {/* 4. Lunar Satellites */}
         {planet.moons?.length > 0 && (

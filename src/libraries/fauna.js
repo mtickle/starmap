@@ -1,3 +1,4 @@
+// libraries/fauna.js
 export const behaviorTypes = [
     'peaceful', 'edible', 'hostile', 'territorial', 'skittish', 'parasitic', 'symbiotic', 'curious', 'sentient', 'pack hunter'
 ];
@@ -35,3 +36,21 @@ export const faunaDensityByPlanetType = {
     'Carbonaceous': 'moderate'
 };
 
+<<<<<<< HEAD
+=======
+// NEW: Fauna flavor and trait pools
+export const faunaAppearances = [
+    'bioluminescent', 'armored', 'scaled', 'translucent', 'furry',
+    'chitinous', 'feathered', 'slick', 'iridescent', 'spiked', 'gelatinous'
+];
+
+export const faunaTraits = [
+    'venomous stingers', 'a shimmering camouflage pattern', 'massive sensory horns',
+    'heavy bio-plating', 'multi-spectral eyes', 'a toxic scent gland',
+    'glowing thermal stripes', 'razor-sharp mandibles', 'dense vibration-sensing quills'
+];
+
+export const faunaRarityTable = [
+    'Common', 'Common', 'Common', 'Uncommon', 'Uncommon', 'Rare', 'Rare', 'Legendary'
+];
+>>>>>>> df71a8b (feat: Enhance flora and fauna generation with new traits and appearances; refactor dialects for improved modularity)

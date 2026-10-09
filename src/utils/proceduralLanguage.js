@@ -2,11 +2,11 @@
 import { DIALECTS, ENTITY_ROUTER } from './dialects/index.js';
 
 export const generateName = (rng, entityKey) => {
-    // 1. Look up the dialect. Fall back to 'cosmic' if it's missing.
-    const dialectName = ENTITY_ROUTER[entityKey] || 'cosmic';
+    // 1. Look up the dialect. Fall back to 'star' if it's missing.
+    const dialectName = ENTITY_ROUTER[entityKey] || 'star';
 
     // 2. Grab the actual arrays
-    const pool = DIALECTS[dialectName] || DIALECTS.cosmic;
+    const pool = DIALECTS[dialectName] || DIALECTS.star;
 
     // 3. Roll the math
     const start = pool.start[Math.floor(rng() * pool.start.length)];

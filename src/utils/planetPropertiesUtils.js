@@ -1,14 +1,14 @@
 import { atmosphereProfiles } from '../libraries/atmospheres.js';
 import { weatherNames, temperatureNames, nightTemperatureNames, windNames, toxicityNames, radiationLevelNames } from '../libraries/conditions.js';
 // Removed: nameSyllables
-import { behaviorTypes, lifeformTypes, biomes, faunaDensityByPlanetType } from '../libraries/fauna.js';
+import { behaviorTypes, lifeformTypes, biomes, faunaDensityByPlanetType, faunaAppearances, faunaTraits, faunaRarityTable } from '../libraries/fauna.js';
 // Removed: prefixes, middles, suffixes
-import { floraTypes, utilities, appearances, rarityTable, typeFloraPresence } from '../libraries/flora.js';
+import { floraTypes, utilities, appearances, rarityTable, typeFloraPresence, floraAppearances, floraTraits } from '../libraries/flora.js';
 // Removed: mineralNames
 import { rarities, mineralPools } from '../libraries/resources.js';
 import { economyNames } from '../libraries/economies.js';
 import { industryTypes } from '../libraries/industries.js';
-import { settlementThemes, settlementNames } from '../libraries/settlements.js';
+import { settlementThemes } from '../libraries/settlements.js';
 import { inhabitantList } from '../libraries/inhabitants.js';
 
 import { getRandomItem, getWeightedItem } from './randomUtils.js';
@@ -96,8 +96,10 @@ export function generateFauna(planetType, rng) {
         let typeObj = getRandomItem(lifeformTypes, rng);
         let biomeStr = getRandomItem(biomes, rng);
         const behaviorStr = getRandomItem(behaviorTypes, rng);
+        const appearanceStr = getRandomItem(faunaAppearances, rng);
+        const traitStr = getRandomItem(faunaTraits, rng);
+        const rarityStr = getRandomItem(faunaRarityTable, rng);
 
-        // 1. Enforce planetary ecosystem constraints
         if (density === 'aquaticOnly') {
             biomeStr = rng() > 0.5 ? 'marine' : 'amphibious';
         } else if (density === 'syntheticOnly') {
@@ -111,8 +113,6 @@ export function generateFauna(planetType, rng) {
             typeObj = getRandomItem(bizarreTypes, rng);
         }
 
-        // THE VORTEX: Generate a species name based on the planet's ecosystem!
-        // We pass the planetType so an Ice World creature gets a different dialect than a Volcanic one
         const speciesName = generateName(rng, `species_${planetType.toLowerCase()}`);
 
         const behaviorUI = behaviorStr.charAt(0).toUpperCase() + behaviorStr.slice(1);
@@ -122,7 +122,8 @@ export function generateFauna(planetType, rng) {
         const legs = (typeObj.name === 'Avian' || typeObj.name === 'Synthetic') ? 2 : getRandomItem(legOptions, rng);
         const laysEggs = typeObj.name === 'Mammal' ? false : rng() > 0.4;
 
-        const description = `A ${behaviorStr} ${typeObj.name.toLowerCase()} that prefers the ${biomeStr} biome.`;
+        // Clean fauna description using fauna-specific traits and appearance
+        const description = `A ${behaviorStr}, ${appearanceStr} ${typeObj.name.toLowerCase()} found in the ${biomeStr} biome, characterized by ${traitStr}.`;
 
         faunaList.push({
             name: speciesName,
@@ -131,6 +132,7 @@ export function generateFauna(planetType, rng) {
             biome: biomeUI,
             legs: legs,
             laysEggs: laysEggs,
+            rarity: rarityStr,
             description: description
         });
     }
@@ -157,17 +159,23 @@ export function generateFlora(planetType, rng) {
 
         let typeObj = getRandomItem(floraTypes, rng);
         let appearance = getRandomItem(appearances, rng);
+        const traitStr = getRandomItem(floraTraits, rng);
+        const rarityStr = getRandomItem(rarityTable, rng);
 
         if (rules.marineOnly) typeObj = { name: 'Seaweed' };
         if (rules.specialAppearance) appearance = rules.specialAppearance;
         if (rules.synthetic) typeObj = { name: 'Synthetic Growth' };
+
+        // Clean flora description matching the requested style
+        const description = `A ${appearance} ${typeObj.name.toLowerCase()} characterized by ${traitStr}.`;
 
         floraList.push({
             name: plantName,
             type: typeObj.name,
             appearance: appearance,
             utility: getRandomItem(utilities, rng),
-            rarity: getRandomItem(rarityTable, rng)
+            rarity: rarityStr,
+            description: description
         });
     }
 
@@ -285,22 +293,15 @@ export function generateInhabitants(planetType, hasInhabitants, rng) {
 // SETTLEMENT GENERATOR
 // ==========================================
 export function generateSettlements(isAdvancedCivilization, rng) {
-    // If you want "Tribal Clans" or "Primitive" inhabitants to have basic
-    // settlements (like Scavenger or Agrarian camps), you could change this 
-    // to check if (inhabitants) instead. For strict advanced cities only:
     if (!isAdvancedCivilization) return [];
 
     const numSettlements = Math.floor(rng() * 4) + 1;
     const settlements = [];
-    const availableNames = [...settlementNames];
     const themeKeys = Object.keys(settlementThemes);
 
     for (let i = 0; i < numSettlements; i++) {
-        let name = "Outpost";
-        if (availableNames.length > 0) {
-            const nameIdx = Math.floor(rng() * availableNames.length);
-            name = availableNames.splice(nameIdx, 1)[0];
-        }
+        // Procedurally generate a unique frontier settlement name
+        const name = generateName(rng, 'settlement');
 
         const themeName = getRandomItem(themeKeys, rng);
         const themeData = settlementThemes[themeName];

@@ -1,5 +1,4 @@
-// utils/dialects/cosmic.js
-export const cosmicDialect = {
+export const starDialect = {
     start: [
         'Zor', 'Kael', 'Drax', 'Nyx', 'Sol', 'Val', 'Aeg', 'Cor', 'Tyr',
         'Lum', 'Vex', 'Thal', 'Aeth', 'Pyr', 'Cyn', 'Ozy', 'Lun', 'Ely'

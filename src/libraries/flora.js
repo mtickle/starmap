@@ -48,3 +48,14 @@ export const jokes = [
     `Its pollen causes mild euphoria and uncontrollable dance moves.`,
     `Harvest with caution: last botanist grew a second shadow.`
 ];
+
+export const floraAppearances = [
+    'glowing', 'bioluminescent', 'twisting', 'translucent', 'vibrant', 'mossy', 'crystalline',
+    'blackened', 'shimmering', 'scaled', 'hairy', 'tubular', 'fan-like', 'drooping', 'spiked'
+];
+
+export const floraTraits = [
+    'emitting a soft, hypnotic hum', 'dripping with a sweet, glowing sap', 'pulsing with subtle bio-electric energy',
+    'sheltering clusters of dormant spores', 'emitting a sharp, ozone-like scent', 'whispering softly when the wind shifts',
+    'shimmering with prismatic light reflections', 'exuding a mild, intoxicating pollen', 'possessing exceptionally tough, fibrous tendrils'
+];

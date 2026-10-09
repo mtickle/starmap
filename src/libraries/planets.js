@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // libraries/planets.js
 
 export const PLANET_TYPES = {
@@ -13,6 +14,8 @@ export const PLANET_TYPES = {
   ARTIFICIAL: "Artificial",
 };
 
+=======
+>>>>>>> df71a8b (feat: Enhance flora and fauna generation with new traits and appearances; refactor dialects for improved modularity)
 export const planetTypes = [
   { type: PLANET_TYPES.ROCKY, color: "#A0AEC0", weight: 0.25 },
   { type: PLANET_TYPES.GAS_GIANT, color: "#F6AD55", weight: 0.2 },
