@@ -36,8 +36,6 @@ export const faunaDensityByPlanetType = {
     'Carbonaceous': 'moderate'
 };
 
-<<<<<<< HEAD
-=======
 // NEW: Fauna flavor and trait pools
 export const faunaAppearances = [
     'bioluminescent', 'armored', 'scaled', 'translucent', 'furry',
@@ -53,4 +51,3 @@ export const faunaTraits = [
 export const faunaRarityTable = [
     'Common', 'Common', 'Common', 'Uncommon', 'Uncommon', 'Rare', 'Rare', 'Legendary'
 ];
->>>>>>> df71a8b (feat: Enhance flora and fauna generation with new traits and appearances; refactor dialects for improved modularity)

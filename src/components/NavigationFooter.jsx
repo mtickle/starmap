@@ -19,6 +19,14 @@ const NavigationFooter = ({ visibleStars = [] }) => {
     }
   }, [visibleStars]);
 
+
+  const handleUniversalReset = () => {
+    if (window.confirm("Initiate Universal Reset? All localized star data and exploration history will be wiped.")) {
+      localStorage.clear();
+      window.location.reload();
+    }
+  };
+
   return (
     <>
       <div className="fixed bottom-0 left-0 w-full bg-gray-950 border-t border-gray-800 text-gray-400 p-2 px-6 flex justify-between items-center text-xs z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
@@ -45,6 +53,12 @@ const NavigationFooter = ({ visibleStars = [] }) => {
           </span>
 
           {/* The Trigger Button */}
+          <button
+            onClick={handleUniversalReset}
+            className="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-800/50 rounded transition-colors uppercase tracking-wider font-mono text-[10px]"
+          >
+            Universal Reset
+          </button>
           <button
             onClick={() => setShowAbout(true)}
             className="flex items-center gap-2 text-gray-400 hover:text-white bg-gray-900 hover:bg-gray-800 border border-gray-700 px-3 py-1 rounded transition-colors font-mono uppercase tracking-wider"
