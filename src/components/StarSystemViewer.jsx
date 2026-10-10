@@ -1,77 +1,15 @@
 import { useEffect, useState } from "react";
-import OrbitalMap from "./OrbitalMap"; // Import the OrbitalMap component
+import OrbitalMap from "./OrbitalMap";
 import PlanetCard from "./PlanetCard";
-
-// ==========================================
-// COMPONENT: Orbital Radar Map (Moved Outside)
-// ==========================================
-// export const OrbitalMap = ({ activeSystem }) => {
-//   const planets = activeSystem.planets || [];
-
-//   return (
-//     <div className="relative w-full aspect-square max-h-[600px] mx-auto bg-gray-900/50 rounded-xl border border-gray-800 overflow-hidden flex items-center justify-center shadow-[inset_0_0_100px_rgba(0,0,0,0.8)]">
-//       {/* Background Grid/Radar styling */}
-//       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
-
-//       {/* The Central Star */}
-//       <div
-//         className="absolute z-10 w-12 h-12 rounded-full"
-//         style={{
-//           background: `radial-gradient(circle at 40% 40%, #fff, ${activeSystem.color} 40%, #000 90%)`,
-//           boxShadow: `0 0 40px ${activeSystem.color}, 0 0 100px ${activeSystem.color}`,
-//         }}
-//       ></div>
-
-//       {/* Orbital Rings and Planets */}
-//       {planets.map((planet, idx) => {
-//         const ringSize = ((idx + 1) / (planets.length + 1)) * 90;
-//         const angle = (idx * 137.5) % 360;
-//         const planetSize = Math.max(12, Math.min(24, planet.gravity * 15));
-
-//         return (
-//           <div
-//             key={idx}
-//             className="absolute rounded-full border border-gray-700/60 border-dashed animate-[spin_120s_linear_infinite]"
-//             style={{
-//               width: `${ringSize}%`,
-//               height: `${ringSize}%`,
-//               animationDuration: `${(idx + 1) * 40}s`,
-//             }}
-//           >
-//             <div
-//               className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 group cursor-pointer"
-//               style={{ transform: `rotate(${angle}deg)` }}
-//             >
-//               <div
-//                 className="rounded-full shadow-[0_0_10px_rgba(0,0,0,0.8)] hover:scale-125 transition-transform border border-black/50"
-//                 style={{
-//                   width: `${planetSize}px`,
-//                   height: `${planetSize}px`,
-//                   background: `radial-gradient(circle at 30% 30%, ${planet.planetColor}, #000 80%)`,
-//                 }}
-//               ></div>
-//               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-gray-950/90 text-xs px-3 py-1.5 rounded border border-gray-700 pointer-events-none z-50">
-//                 <p className="font-bold text-white mb-0.5">
-//                   {planet.planetName}
-//                 </p>
-//                 <p className="text-gray-400">{planet.planetType}</p>
-//               </div>
-//             </div>
-//           </div>
-//         );
-//       })}
-//     </div>
-//   );
-// };
 
 // ==========================================
 // COMPONENT: Main Viewer Wrapper
 // ==========================================
 const StarSystemViewer = ({ activeSystem, onClose }) => {
   // --- STATE ---
-  const [viewMode, setViewMode] = useState("radar"); // Moved inside component
   const [homeId, setHomeId] = useState(null);
   const [showOverrideWarning, setShowOverrideWarning] = useState(false);
+  const [activeTab, setActiveTab] = useState("planets"); // 'planets', 'map', or 'data'
 
   useEffect(() => {
     try {
@@ -264,54 +202,79 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
         </div>
       </div>
 
-      {/* Restored Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Restored Sidebar */}
-        {/* <SystemSidebar system={activeSystem} /> */}
+      {/* Tab Navigation */}
+      <div className="flex bg-gray-900 border border-gray-700 rounded-lg p-1 w-fit mb-6">
+        <button
+          onClick={() => setActiveTab("planets")}
+          className={`px-5 py-1.5 text-xs font-semibold rounded uppercase tracking-wider transition-colors ${activeTab === "planets"
+              ? "bg-gray-700 text-white"
+              : "text-gray-500 hover:text-gray-300"
+            }`}
+        >
+          System Bodies
+        </button>
+        <button
+          onClick={() => setActiveTab("map")}
+          className={`px-5 py-1.5 text-xs font-semibold rounded uppercase tracking-wider transition-colors ${activeTab === "map"
+              ? "bg-gray-700 text-white"
+              : "text-gray-500 hover:text-gray-300"
+            }`}
+        >
+          Orbital Topology
+        </button>
+        <button
+          onClick={() => setActiveTab("data")}
+          className={`px-5 py-1.5 text-xs font-semibold rounded uppercase tracking-wider transition-colors ${activeTab === "data"
+              ? "bg-gray-700 text-white"
+              : "text-gray-500 hover:text-gray-300"
+            }`}
+        >
+          Raw Payload
+        </button>
+      </div>
 
-        <div className="lg:col-span-3 flex flex-col">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold text-white">
-              {viewMode === "radar" ? "System Radar" : "Planetary Data"}
-            </h2>
-            <div className="flex bg-gray-900 border border-gray-700 rounded-lg p-1">
-              <button
-                onClick={() => setViewMode("radar")}
-                className={`px-4 py-1 text-xs font-semibold rounded uppercase tracking-wider transition-colors ${
-                  viewMode === "radar"
-                    ? "bg-gray-700 text-white"
-                    : "text-gray-500 hover:text-gray-300"
-                }`}
-              >
-                Radar
-              </button>
-              <button
-                onClick={() => setViewMode("data")}
-                className={`px-4 py-1 text-xs font-semibold rounded uppercase tracking-wider transition-colors ${
-                  viewMode === "data"
-                    ? "bg-gray-700 text-white"
-                    : "text-gray-500 hover:text-gray-300"
-                }`}
-              >
-                Data
-              </button>
-            </div>
-          </div>
+      {/* Tab Content Area */}
+      <div className="w-full">
+        {/* TAB 1: PLANET CARDS */}
+        {activeTab === "planets" && (
+          <section className="flex flex-col gap-4">
+            {!activeSystem.planets || activeSystem.planets.length === 0 ? (
+              <div className="p-8 text-center text-gray-500 bg-gray-800 rounded-lg border border-gray-700 border-dashed">
+                No planetary bodies detected in this system.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {activeSystem.planets.map((planet, idx) => (
+                  <PlanetCard key={idx} planet={planet} />
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
-          {!activeSystem.planets || activeSystem.planets.length === 0 ? (
-            <div className="p-8 text-center text-gray-500 bg-gray-800 rounded-lg border border-gray-700 border-dashed">
-              No planetary bodies detected in this system.
-            </div>
-          ) : viewMode === "radar" ? (
-            <OrbitalMap activeSystem={activeSystem} />
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {activeSystem.planets.map((planet, idx) => (
-                <PlanetCard key={idx} planet={planet} />
-              ))}
-            </div>
-          )}
-        </div>
+        {/* TAB 2: ORBITAL MAP */}
+        {activeTab === "map" && (
+          <section className="flex flex-col gap-4">
+            {!activeSystem.planets || activeSystem.planets.length === 0 ? (
+              <div className="p-8 text-center text-gray-500 bg-gray-800 rounded-lg border border-gray-700 border-dashed">
+                Orbital topology unavailable (no bodies detected).
+              </div>
+            ) : (
+              <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-4 overflow-hidden relative min-h-[500px]">
+                <OrbitalMap activeSystem={activeSystem} />
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* TAB 3: RAW DATA VIEWER */}
+        {activeTab === "data" && (
+          <section className="bg-black/40 border border-gray-800 rounded-lg p-4">
+            <pre className="text-[10px] md:text-xs text-green-500/80 font-mono leading-relaxed overflow-auto max-h-[70vh]">
+              {JSON.stringify(activeSystem, null, 2)}
+            </pre>
+          </section>
+        )}
       </div>
     </div>
   );

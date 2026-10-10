@@ -1,5 +1,3 @@
-// libraries/flora.js
-
 export const floraTypes = [
     { type: 'tree', name: 'Tree' },
     { type: 'shrub', name: 'Shrub' },
@@ -13,11 +11,11 @@ export const floraTypes = [
     { type: 'coral-like', name: 'Coral-like' }
 ];
 
-export const utilities = [
+export const floraUtilities = [
     'Healing', 'Fuel', 'Food', 'Building Material', 'Ornamental', 'Fiber', 'Hallucinogen', 'Tech Component'
 ];
 
-export const appearances = [
+export const floraAppearances = [
     'glowing', 'bioluminescent', 'twisting', 'translucent', 'vibrant', 'mossy', 'crystalline',
     'blackened', 'shimmering', 'scaled', 'hairy', 'tubular', 'fan-like', 'drooping', 'spiked'
 ];
@@ -49,10 +47,7 @@ export const jokes = [
     `Harvest with caution: last botanist grew a second shadow.`
 ];
 
-export const floraAppearances = [
-    'glowing', 'bioluminescent', 'twisting', 'translucent', 'vibrant', 'mossy', 'crystalline',
-    'blackened', 'shimmering', 'scaled', 'hairy', 'tubular', 'fan-like', 'drooping', 'spiked'
-];
+
 
 export const floraTraits = [
     'emitting a soft, hypnotic hum', 'dripping with a sweet, glowing sap', 'pulsing with subtle bio-electric energy',

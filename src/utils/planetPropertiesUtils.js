@@ -3,7 +3,7 @@ import { weatherNames, temperatureNames, nightTemperatureNames, windNames, toxic
 // Removed: nameSyllables
 import { behaviorTypes, lifeformTypes, biomes, faunaDensityByPlanetType, faunaAppearances, faunaTraits, faunaRarityTable } from '../libraries/fauna.js';
 // Removed: prefixes, middles, suffixes
-import { floraTypes, utilities, appearances, rarityTable, typeFloraPresence, floraAppearances, floraTraits } from '../libraries/flora.js';
+import { floraTypes, floraUtilities, rarityTable, typeFloraPresence, floraAppearances, floraTraits } from '../libraries/flora.js';
 // Removed: mineralNames
 import { rarities, mineralPools } from '../libraries/resources.js';
 import { economyNames } from '../libraries/economies.js';
@@ -158,7 +158,7 @@ export function generateFlora(planetType, rng) {
         const plantName = generateName(rng, 'flora');
 
         let typeObj = getRandomItem(floraTypes, rng);
-        let appearance = getRandomItem(appearances, rng);
+        let appearance = getRandomItem(floraAppearances, rng);
         const traitStr = getRandomItem(floraTraits, rng);
         const rarityStr = getRandomItem(rarityTable, rng);
 
@@ -173,7 +173,7 @@ export function generateFlora(planetType, rng) {
             name: plantName,
             type: typeObj.name,
             appearance: appearance,
-            utility: getRandomItem(utilities, rng),
+            utility: getRandomItem(floraUtilities, rng),
             rarity: rarityStr,
             description: description
         });
