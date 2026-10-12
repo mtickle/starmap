@@ -1,19 +1,13 @@
 import { atmosphereProfiles } from '../libraries/atmospheres.js';
 import { weatherNames, temperatureNames, nightTemperatureNames, windNames, toxicityNames, radiationLevelNames } from '../libraries/conditions.js';
-// Removed: nameSyllables
 import { behaviorTypes, lifeformTypes, biomes, faunaDensityByPlanetType, faunaAppearances, faunaTraits, faunaRarityTable } from '../libraries/fauna.js';
-// Removed: prefixes, middles, suffixes
 import { floraTypes, floraUtilities, rarityTable, typeFloraPresence, floraAppearances, floraTraits } from '../libraries/flora.js';
-// Removed: mineralNames
 import { rarities, mineralPools } from '../libraries/resources.js';
 import { economyNames } from '../libraries/economies.js';
 import { industryTypes } from '../libraries/industries.js';
 import { settlementThemes } from '../libraries/settlements.js';
 import { inhabitantList } from '../libraries/inhabitants.js';
-
 import { getRandomItem, getWeightedItem } from './randomUtils.js';
-
-// NEW: Bring in the linguistic engine
 import { generateName } from './proceduralLanguage.js';
 
 // ==========================================
@@ -32,7 +26,6 @@ export function generateAtmosphere(planetType, rng) {
 // ==========================================
 // CONDITIONS GENERATOR
 // ==========================================
-// Modified your existing parallel array logic to use rng
 function getWeightedCondition(rng, options, weights) {
     const totalWeight = weights.reduce((sum, w) => sum + w, 0);
     const roll = rng() * totalWeight;
@@ -185,9 +178,6 @@ export function generateFlora(planetType, rng) {
 // ==========================================
 // RESOURCES GENERATOR
 // ==========================================
-// ==========================================
-// RESOURCES GENERATOR
-// ==========================================
 export function generateResources(planetType, rng) {
     const pool = mineralPools[planetType] || mineralPools['Rocky'];
     if (!pool || pool.length === 0) return [];
@@ -229,9 +219,6 @@ export function generateIndustry(isAdvancedCivilization, rng) {
     return getRandomItem(industryTypes, rng);
 }
 
-// ==========================================
-// INHABITANT GENERATOR
-// ==========================================
 // ==========================================
 // INHABITANT GENERATOR (Demographics)
 // ==========================================

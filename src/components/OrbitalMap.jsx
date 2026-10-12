@@ -3,9 +3,6 @@ import { useState } from "react";
 // ==========================================
 // PROCEDURAL TEXTURE ENGINE
 // ==========================================
-// ==========================================
-// PROCEDURAL TEXTURE ENGINE (V2: Rocky & Weather)
-// ==========================================
 const getPlanetTexture = (planet) => {
   // LAYER 1: Base 3D shading (Always on top)
   const shading = `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.85) 85%)`;
@@ -29,39 +26,32 @@ const getPlanetTexture = (planet) => {
   }
 
   // --- ATMOSPHERE & CLOUDS CHECK ---
-  // Does it have life? Or is it a known atmospheric type?
   const hasBiosphere = (planet.floraList?.length > 0) || (planet.faunaList?.length > 0);
   const hasAtmosphere = ["lush", "tropical", "toxic", "ice", "water", "marsh", "frozen", "paradise"].some(t => type.includes(t));
 
   if (hasBiosphere || hasAtmosphere) {
     // LAYER 2: Weather Systems (Slides just under the shadow, but over the surface)
-    // Creates sweeping, soft white atmospheric swirls
     layers.push(`radial-gradient(ellipse 80% 50% at 40% 30%, rgba(255,255,255,0.35) 0%, transparent 55%)`);
     layers.push(`radial-gradient(ellipse 60% 40% at 75% 70%, rgba(255,255,255,0.25) 0%, transparent 50%)`);
   }
 
   // --- ROCKY / TERRESTRIAL SURFACES ---
   if (variant === 0) {
-    // TEXTURE 0: Continents & Archipelagos (Large organic splotches)
     layers.push(`radial-gradient(circle at 20% 30%, rgba(0,0,0,0.3) 0%, transparent 35%)`);
     layers.push(`radial-gradient(circle at 75% 65%, rgba(255,255,255,0.2) 0%, transparent 45%)`);
     layers.push(`radial-gradient(circle at 80% 20%, rgba(0,0,0,0.2) 0%, transparent 25%)`);
   } else if (variant === 1) {
-    // TEXTURE 1: The Cratered Husk (Pockmarks and meteor impacts)
     layers.push(`radial-gradient(circle at 15% 45%, rgba(0,0,0,0.4) 0%, transparent 8%)`);
     layers.push(`radial-gradient(circle at 75% 25%, rgba(0,0,0,0.5) 0%, transparent 12%)`);
     layers.push(`radial-gradient(circle at 55% 80%, rgba(0,0,0,0.3) 0%, transparent 10%)`);
     layers.push(`radial-gradient(circle at 35% 15%, rgba(255,255,255,0.2) 0%, transparent 15%)`);
   } else {
-    // TEXTURE 2: Tectonic Fractures (Sharp diagonal ridges)
     layers.push(`linear-gradient(45deg, transparent 20%, rgba(0,0,0,0.3) 22%, transparent 24%, transparent 65%, rgba(255,255,255,0.2) 68%, transparent 70%)`);
     layers.push(`linear-gradient(-45deg, transparent 40%, rgba(0,0,0,0.2) 42%, transparent 45%)`);
   }
 
-  // Combine all stacked layers together
   return layers.join(", ");
 };
-
 
 // ==========================================
 // COMPONENT: Orbital Radar Map (With Textures)
@@ -74,6 +64,16 @@ export const OrbitalMap = ({ activeSystem }) => {
 
   return (
     <div className="relative flex justify-center items-center w-full bg-gray-900/50 rounded-xl border border-gray-800 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)] overflow-hidden p-6 min-h-[600px]">
+
+      {/* INJECT KEYFRAMES DIRECTLY TO ENSURE CONTINUOUS ORBIT */}
+      <style>
+        {`
+          @keyframes orbit-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+        `}
+      </style>
 
       {/* LAYER 1: 3D Orbital Map */}
       <div
@@ -112,10 +112,12 @@ export const OrbitalMap = ({ activeSystem }) => {
               >
                 <div
                   className="w-full h-full rounded-full border border-gray-700/60 border-dashed"
-                  style={{ animation: `spin ${orbitDuration}s linear infinite`, transformStyle: 'preserve-3d' }}
+                  // REPLACED 'spin' WITH 'orbit-spin'
+                  style={{ animation: `orbit-spin ${orbitDuration}s linear infinite`, transformStyle: 'preserve-3d' }}
                 >
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20" style={{ transformStyle: 'preserve-3d' }}>
-                    <div style={{ animation: `spin ${orbitDuration}s linear infinite reverse`, transformStyle: 'preserve-3d' }}>
+                    {/* REPLACED 'spin' WITH 'orbit-spin' */}
+                    <div style={{ animation: `orbit-spin ${orbitDuration}s linear infinite reverse`, transformStyle: 'preserve-3d' }}>
                       <div style={{ transform: `rotate(-${angle}deg)`, transformStyle: 'preserve-3d' }}>
                         <div style={{ transform: `rotateX(-${TILT_ANGLE}deg)` }}>
 
@@ -123,14 +125,13 @@ export const OrbitalMap = ({ activeSystem }) => {
                             onClick={() => setFocusedPlanet(planet)}
                             className="p-5 group relative flex items-center justify-center cursor-crosshair pointer-events-auto"
                           >
-                            {/* RADAR PLANET WITH PROCEDURAL TEXTURE */}
                             <div
                               className="rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.9)] group-hover:scale-125 transition-transform border border-black/50 hover:ring-2 hover:ring-white/50"
                               style={{
                                 width: `${planetSize}px`,
                                 height: `${planetSize}px`,
-                                backgroundColor: planet.planetColor, // The base core color
-                                backgroundImage: getPlanetTexture(planet), // The layered bands and shadows
+                                backgroundColor: planet.planetColor,
+                                backgroundImage: getPlanetTexture(planet),
                               }}
                             ></div>
                             <div className="absolute top-[75%] left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-gray-950/90 text-xs px-3 py-1.5 rounded border border-gray-700 pointer-events-none shadow-xl z-50">
@@ -152,7 +153,6 @@ export const OrbitalMap = ({ activeSystem }) => {
       {/* LAYER 2: Target Lock / Planet ID Card */}
       {focusedPlanet && (
         <div className="absolute inset-0 z-50 flex animate-[fadeIn_0.3s_ease-out]">
-
           <div className="w-1/2 h-full flex flex-col justify-center items-center bg-gradient-to-r from-gray-950 to-transparent relative">
             <button
               onClick={() => setFocusedPlanet(null)}
@@ -161,12 +161,11 @@ export const OrbitalMap = ({ activeSystem }) => {
               <span>←</span> Abort Lock
             </button>
 
-            {/* MACRO PLANET WITH PROCEDURAL TEXTURE */}
             <div
               className="w-64 h-64 rounded-full border border-black/50 animate-[pulse_4s_ease-in-out_infinite]"
               style={{
-                backgroundColor: focusedPlanet.planetColor, // Base color
-                backgroundImage: getPlanetTexture(focusedPlanet), // Scale-independent texture layers!
+                backgroundColor: focusedPlanet.planetColor,
+                backgroundImage: getPlanetTexture(focusedPlanet),
                 boxShadow: `inset -20px -20px 40px rgba(0,0,0,0.9), 0 0 60px ${focusedPlanet.planetColor}40`
               }}
             ></div>
@@ -178,7 +177,6 @@ export const OrbitalMap = ({ activeSystem }) => {
 
           <div className="w-1/2 h-full flex flex-col justify-center p-12 bg-gray-950/80 backdrop-blur-sm border-l border-gray-800/50">
             <div className="space-y-6">
-
               <div className="border-l-2 pl-4" style={{ borderColor: focusedPlanet.planetColor }}>
                 <h3 className="text-sm font-mono text-gray-400 uppercase tracking-widest mb-1">Classification</h3>
                 <p className="text-xl text-gray-200 font-semibold">{focusedPlanet.planetType}</p>
@@ -212,10 +210,8 @@ export const OrbitalMap = ({ activeSystem }) => {
                   </span>
                 </div>
               </div>
-
             </div>
           </div>
-
         </div>
       )}
     </div>
