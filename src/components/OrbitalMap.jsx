@@ -1,8 +1,59 @@
-import { useState, useMemo } from "react";
+import { getPlanetTexture } from "@utils/planetTextures.js";
+import { useMemo, useState } from "react";
 import PlanetOrbit from "./PlanetOrbit.jsx";
-import { getPlanetTexture } from "@utils/textureUtils.js";
-import DeepSpaceBackground from "./DeepSpaceBackground.jsx";
 
+// ==========================================
+// BACKGROUND STAR & NEBULA GENERATOR
+// ==========================================
+const DeepSpaceBackground = () => {
+  const { stars, nebulas } = useMemo(() => {
+    const generatedStars = Array.from({ length: 200 }).map(() => ({
+      cx: `${Math.random() * 100}%`,
+      cy: `${Math.random() * 100}%`,
+      r: Math.random() * 1.5 + 0.2,
+      opacity: Math.random() * 0.6 + 0.1,
+    }));
+
+    const generatedNebulas = [
+      { cx: "20%", cy: "30%", r: "150", fill: "rgba(100, 100, 255, 0.05)" },
+      { cx: "80%", cy: "70%", r: "200", fill: "rgba(255, 100, 100, 0.04)" },
+      { cx: "50%", cy: "50%", r: "250", fill: "rgba(150, 50, 200, 0.03)" },
+    ];
+    return { stars: generatedStars, nebulas: generatedNebulas };
+  }, []);
+
+  return (
+    <svg
+      className="absolute inset-0 w-full h-full pointer-events-none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter id="nebula-blur" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="40" />
+        </filter>
+      </defs>
+      {nebulas.map((neb, i) => (
+        <circle
+          key={`neb-${i}`}
+          cx={neb.cx}
+          cy={neb.cy}
+          r={neb.r}
+          fill={neb.fill}
+          filter="url(#nebula-blur)"
+        />
+      ))}
+      {stars.map((star, i) => (
+        <circle
+          key={`star-${i}`}
+          cx={star.cx}
+          cy={star.cy}
+          r={star.r}
+          fill={`rgba(255,255,255,${star.opacity})`}
+        />
+      ))}
+    </svg>
+  );
+};
 
 // ==========================================
 // COMPONENT: Orbital Radar Map (Main)
@@ -36,23 +87,44 @@ export const OrbitalMap = ({ activeSystem }) => {
 
       {/* ZOOM UI HUD */}
       <div className="absolute top-4 right-4 z-40 flex flex-col bg-gray-950/80 border border-gray-800 rounded shadow-lg backdrop-blur text-gray-400 font-mono text-center overflow-hidden">
-        <button onClick={() => setZoom((z) => Math.min(z + 0.2, 3.5))} className="hover:text-white hover:bg-gray-800 px-3 py-1.5 transition-colors border-b border-gray-800 text-lg leading-none">+</button>
-        <button onClick={() => setZoom(1)} className="hover:text-white hover:bg-gray-800 px-2 py-1.5 transition-colors border-b border-gray-800 text-[10px] uppercase font-bold tracking-wider" title="Reset View">Reset</button>
-        <button onClick={() => setZoom((z) => Math.max(z - 0.2, 0.3))} className="hover:text-white hover:bg-gray-800 px-3 py-1.5 transition-colors text-lg leading-none">-</button>
+        <button
+          onClick={() => setZoom((z) => Math.min(z + 0.2, 3.5))}
+          className="hover:text-white hover:bg-gray-800 px-3 py-1.5 transition-colors border-b border-gray-800 text-lg leading-none"
+        >
+          +
+        </button>
+        <button
+          onClick={() => setZoom(1)}
+          className="hover:text-white hover:bg-gray-800 px-2 py-1.5 transition-colors border-b border-gray-800 text-[10px] uppercase font-bold tracking-wider"
+          title="Reset View"
+        >
+          Reset
+        </button>
+        <button
+          onClick={() => setZoom((z) => Math.max(z - 0.2, 0.3))}
+          className="hover:text-white hover:bg-gray-800 px-3 py-1.5 transition-colors text-lg leading-none"
+        >
+          -
+        </button>
       </div>
 
       {/* LAYER 1: 3D Orbital Map */}
       <div
-        className={`relative w-full max-w-[500px] aspect-square flex items-center justify-center transition-[filter,opacity] duration-700 ease-in-out pointer-events-auto ${focusedPlanet ? "blur-md opacity-30 pointer-events-none" : "blur-0 opacity-100"
-          }`}
+        className={`relative w-full max-w-[500px] aspect-square flex items-center justify-center transition-[filter,opacity] duration-700 ease-in-out pointer-events-auto ${
+          focusedPlanet
+            ? "blur-md opacity-30 pointer-events-none"
+            : "blur-0 opacity-100"
+        }`}
         style={{ perspective: "1000px" }}
       >
         <div
           className="absolute inset-0 w-full h-full flex items-center justify-center"
           style={{
-            transform: `scale3d(${focusedPlanet ? zoom * 0.8 : zoom}, ${focusedPlanet ? zoom * 0.8 : zoom}, 1) rotateX(${TILT_ANGLE}deg)`,
+            transform: `scale3d(${focusedPlanet ? zoom * 0.8 : zoom}, ${
+              focusedPlanet ? zoom * 0.8 : zoom
+            }, 1) rotateX(${TILT_ANGLE}deg)`,
             transformStyle: "preserve-3d",
-            transition: "transform 0.1s ease-out"
+            transition: "transform 0.1s ease-out",
           }}
         >
           {/* Faint Orbital Grid Base */}
@@ -86,72 +158,199 @@ export const OrbitalMap = ({ activeSystem }) => {
       {/* LAYER 2: Target Lock / Planet ID Card */}
       {focusedPlanet && (
         <div className="absolute inset-0 z-50 flex animate-[fadeIn_0.3s_ease-out]">
-          <div className="w-1/2 h-full flex flex-col justify-center items-center bg-gradient-to-r from-gray-950 to-transparent relative">
+          <div className="w-1/2 h-full flex flex-col justify-center items-center bg-gradient-to-r from-gray-950 to-transparent relative overflow-hidden">
             <button
               onClick={() => setFocusedPlanet(null)}
-              className="absolute top-6 left-6 text-gray-400 hover:text-white flex items-center gap-2 font-mono text-xs uppercase tracking-widest transition-colors bg-gray-900/50 px-3 py-1.5 rounded border border-gray-700 hover:border-gray-500 backdrop-blur"
+              className="absolute top-6 left-6 text-gray-400 hover:text-white flex items-center gap-2 font-mono text-xs uppercase tracking-widest transition-colors bg-gray-900/50 px-3 py-1.5 rounded border border-gray-700 hover:border-gray-500 backdrop-blur z-50"
             >
               <span>←</span> Abort Lock
             </button>
 
+            {/* DYNAMIC TARGET LOCK 3D ORBITAL VIEW */}
             <div
-              className="w-64 h-64 rounded-full border border-black/50 animate-[pulse_4s_ease-in-out_infinite]"
-              style={{
-                backgroundColor: focusedPlanet.planetColor,
-                backgroundImage: getPlanetTexture(focusedPlanet),
-                boxShadow: `inset -20px -20px 40px rgba(0,0,0,0.9), 0 0 60px ${focusedPlanet.planetColor}40`
-              }}
-            ></div>
-            <div className="mt-8 text-center">
-              <div className="text-gray-500 font-mono text-xs mb-1 uppercase tracking-widest">Target Locked</div>
-              <div className="text-2xl font-bold text-white tracking-widest uppercase">{focusedPlanet.planetName}</div>
+              className="relative flex items-center justify-center w-[400px] h-[400px]"
+              style={{ perspective: "1000px" }}
+            >
+              {/* Universal Absolute Anchor to prevent flexbox/perspective offset artifacts */}
+              <div
+                className="absolute top-1/2 left-1/2 w-0 h-0"
+                style={{
+                  transform: `translate(-50%, -50%) rotateX(${TILT_ANGLE}deg)`,
+                  transformStyle: "preserve-3d",
+                }}
+              >
+                {/* Core Planet (Perfectly Centered & Counter-rotated to face the camera) */}
+                <div
+                  className="absolute top-1/2 left-1/2 rounded-full border border-black/50 z-20 shadow-[inset_-20px_-20px_40px_rgba(0,0,0,0.9)]"
+                  style={{
+                    width: "256px",
+                    height: "256px",
+                    transform: `translate(-50%, -50%) rotateX(-${TILT_ANGLE}deg)`,
+                    backgroundColor: focusedPlanet.planetColor,
+                    backgroundImage: getPlanetTexture(focusedPlanet),
+                    boxShadow: `0 0 60px ${focusedPlanet.planetColor}40`,
+                  }}
+                ></div>
+
+                {/* Orbiting Moons mapped directly around the Target Locked Planet */}
+                {focusedPlanet.moons?.map((moon, mIdx) => {
+                  // Pushed inner ring out to 340px (clearing the 256px planet perfectly)
+                  const moonRingSize = 340 + mIdx * 50;
+                  const moonAngle = (mIdx * 105) % 360;
+                  const moonDuration = 12 + mIdx * 8;
+                  const moonSize = 12 + (mIdx % 3) * 2;
+
+                  const isString = typeof moon === "string";
+                  const moonName = isString
+                    ? moon
+                    : moon.name || `Moon ${mIdx + 1}`;
+                  const moonColor = isString ? "#888" : moon.color || "#a1a1aa";
+
+                  return (
+                    <div
+                      key={mIdx}
+                      className="absolute top-1/2 left-1/2 pointer-events-none"
+                      style={{
+                        width: `${moonRingSize}px`,
+                        height: `${moonRingSize}px`,
+                        transform: `translate(-50%, -50%) rotate(${moonAngle}deg)`,
+                        transformStyle: "preserve-3d",
+                      }}
+                    >
+                      <div
+                        className="w-full h-full rounded-full border border-gray-500/40 border-dotted"
+                        style={{
+                          animation: `orbit-spin ${moonDuration}s linear infinite`,
+                          transformStyle: "preserve-3d",
+                        }}
+                      >
+                        <div
+                          className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30"
+                          style={{ transformStyle: "preserve-3d" }}
+                        >
+                          <div
+                            style={{
+                              animation: `orbit-spin ${moonDuration}s linear infinite reverse`,
+                              transformStyle: "preserve-3d",
+                            }}
+                          >
+                            <div
+                              style={{
+                                transform: `rotate(-${moonAngle}deg)`,
+                                transformStyle: "preserve-3d",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  transform: `rotateX(-${TILT_ANGLE}deg)`,
+                                }}
+                              >
+                                {/* MOON VISUAL */}
+                                <div
+                                  className="rounded-full shadow-[0_2px_6px_rgba(0,0,0,0.9)] border border-black/80 pointer-events-auto cursor-help"
+                                  style={{
+                                    width: `${moonSize}px`,
+                                    height: `${moonSize}px`,
+                                    backgroundColor: moonColor,
+                                    backgroundImage: `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, rgba(0,0,0,0.85) 85%)`,
+                                  }}
+                                  title={moonName}
+                                ></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="mt-8 text-center z-10">
+              <div className="text-gray-500 font-mono text-xs mb-1 uppercase tracking-widest">
+                Target Locked
+              </div>
+              <div className="text-2xl font-bold text-white tracking-widest uppercase">
+                {focusedPlanet.planetName}
+              </div>
             </div>
           </div>
 
           <div className="w-1/2 h-full flex flex-col justify-center p-12 bg-gray-950/80 backdrop-blur-sm border-l border-gray-800/50 overflow-y-auto">
             <div className="space-y-6">
-              <div className="border-l-2 pl-4" style={{ borderColor: focusedPlanet.planetColor }}>
-                <h3 className="text-sm font-mono text-gray-400 uppercase tracking-widest mb-1">Classification</h3>
-                <p className="text-xl text-gray-200 font-semibold">{focusedPlanet.planetType}</p>
+              <div
+                className="border-l-2 pl-4"
+                style={{ borderColor: focusedPlanet.planetColor }}
+              >
+                <h3 className="text-sm font-mono text-gray-400 uppercase tracking-widest mb-1">
+                  Classification
+                </h3>
+                <p className="text-xl text-gray-200 font-semibold">
+                  {focusedPlanet.planetType}
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gray-900/50 border border-gray-800 rounded p-3">
-                  <p className="text-[10px] text-gray-500 font-mono uppercase mb-1">Gravity Profile</p>
-                  <p className="text-lg text-gray-300 font-semibold">{focusedPlanet.gravity} G</p>
+                  <p className="text-[10px] text-gray-500 font-mono uppercase mb-1">
+                    Gravity Profile
+                  </p>
+                  <p className="text-lg text-gray-300 font-semibold">
+                    {focusedPlanet.gravity} G
+                  </p>
                 </div>
                 <div className="bg-gray-900/50 border border-gray-800 rounded p-3">
-                  <p className="text-[10px] text-gray-500 font-mono uppercase mb-1">Orbital Cycle</p>
-                  <p className="text-lg text-gray-300 font-semibold">{focusedPlanet.orbitalPeriod} Days</p>
+                  <p className="text-[10px] text-gray-500 font-mono uppercase mb-1">
+                    Orbital Cycle
+                  </p>
+                  <p className="text-lg text-gray-300 font-semibold">
+                    {focusedPlanet.orbitalPeriod} Days
+                  </p>
                 </div>
               </div>
 
               <div className="bg-gray-900/50 border border-gray-800 rounded p-4">
-                <h3 className="text-[10px] text-gray-500 font-mono uppercase mb-3 border-b border-gray-800 pb-2">Biosphere Scan</h3>
+                <h3 className="text-[10px] text-gray-500 font-mono uppercase mb-3 border-b border-gray-800 pb-2">
+                  Biosphere Scan
+                </h3>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm text-gray-400">Flora Strains:</span>
-                  <span className="text-green-400 font-mono">{focusedPlanet.floraList?.length || 0}</span>
+                  <span className="text-green-400 font-mono">
+                    {focusedPlanet.floraList?.length || 0}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm text-gray-400">Fauna Species:</span>
-                  <span className="text-teal-400 font-mono">{focusedPlanet.faunaList?.length || 0}</span>
+                  <span className="text-teal-400 font-mono">
+                    {focusedPlanet.faunaList?.length || 0}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-400">Rare Deposits:</span>
                   <span className="text-purple-400 font-mono">
-                    {focusedPlanet.resourceList?.filter(r => r.rarity === "Rare").length || 0}
+                    {focusedPlanet.resourceList?.filter(
+                      (r) => r.rarity === "Rare"
+                    ).length || 0}
                   </span>
                 </div>
               </div>
 
               {focusedPlanet.moons?.length > 0 && (
                 <div className="bg-gray-900/50 border border-gray-800 rounded p-4">
-                  <h3 className="text-[10px] text-gray-500 font-mono uppercase mb-3 border-b border-gray-800 pb-2">Satellite Bodies</h3>
+                  <h3 className="text-[10px] text-gray-500 font-mono uppercase mb-3 border-b border-gray-800 pb-2">
+                    Satellite Bodies
+                  </h3>
                   <div className="flex flex-col gap-2">
                     {focusedPlanet.moons.map((moon, mIdx) => (
-                      <div key={mIdx} className="flex justify-between items-center bg-gray-800/40 p-2 rounded border border-gray-700">
+                      <div
+                        key={mIdx}
+                        className="flex justify-between items-center bg-gray-800/40 p-2 rounded border border-gray-700"
+                      >
                         <span className="text-gray-300 font-semibold text-sm">
-                          {typeof moon === "string" ? moon : (moon.name || `Moon ${mIdx + 1}`)}
+                          {typeof moon === "string"
+                            ? moon
+                            : moon.name || `Moon ${mIdx + 1}`}
                         </span>
                         {typeof moon !== "string" && moon.theme && (
                           <span className="text-[9px] uppercase tracking-widest text-purple-400 bg-purple-950/60 px-1.5 py-0.5 rounded border border-purple-800/50">
