@@ -1,6 +1,8 @@
 import { getPlanetTexture } from "@utils/planetTextures.js";
 import { useMemo, useState } from "react";
 import PlanetOrbit from "./PlanetOrbit.jsx";
+import gasGiantTexture from "/textures/gas_giant_01.webp";
+
 
 // ==========================================
 // BACKGROUND STAR & NEBULA GENERATOR
@@ -110,19 +112,17 @@ export const OrbitalMap = ({ activeSystem }) => {
 
       {/* LAYER 1: 3D Orbital Map */}
       <div
-        className={`relative w-full max-w-[500px] aspect-square flex items-center justify-center transition-[filter,opacity] duration-700 ease-in-out pointer-events-auto ${
-          focusedPlanet
-            ? "blur-md opacity-30 pointer-events-none"
-            : "blur-0 opacity-100"
-        }`}
+        className={`relative w-full max-w-[500px] aspect-square flex items-center justify-center transition-[filter,opacity] duration-700 ease-in-out pointer-events-auto ${focusedPlanet
+          ? "blur-md opacity-30 pointer-events-none"
+          : "blur-0 opacity-100"
+          }`}
         style={{ perspective: "1000px" }}
       >
         <div
           className="absolute inset-0 w-full h-full flex items-center justify-center"
           style={{
-            transform: `scale3d(${focusedPlanet ? zoom * 0.8 : zoom}, ${
-              focusedPlanet ? zoom * 0.8 : zoom
-            }, 1) rotateX(${TILT_ANGLE}deg)`,
+            transform: `scale3d(${focusedPlanet ? zoom * 0.8 : zoom}, ${focusedPlanet ? zoom * 0.8 : zoom
+              }, 1) rotateX(${TILT_ANGLE}deg)`,
             transformStyle: "preserve-3d",
             transition: "transform 0.1s ease-out",
           }}
@@ -181,16 +181,23 @@ export const OrbitalMap = ({ activeSystem }) => {
               >
                 {/* Core Planet (Perfectly Centered & Counter-rotated to face the camera) */}
                 <div
-                  className="absolute top-1/2 left-1/2 rounded-full border border-black/50 z-20 shadow-[inset_-20px_-20px_40px_rgba(0,0,0,0.9)]"
+                  className="absolute top-1/2 left-1/2 rounded-full border border-black/50 z-20"
                   style={{
                     width: "256px",
                     height: "256px",
                     transform: `translate(-50%, -50%) rotateX(-${TILT_ANGLE}deg)`,
                     backgroundColor: focusedPlanet.planetColor,
-                    backgroundImage: getPlanetTexture(focusedPlanet),
-                    boxShadow: `0 0 60px ${focusedPlanet.planetColor}40`,
+                    backgroundImage: `url(${gasGiantTexture})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    boxShadow: `
+      inset -35px -35px 60px rgba(0, 0, 0, 0.95),
+      inset 10px 10px 25px rgba(255, 255, 255, 0.15),
+      0 0 60px ${focusedPlanet.planetColor}40
+    `,
                   }}
-                ></div>
+                />
 
                 {/* Orbiting Moons mapped directly around the Target Locked Planet */}
                 {focusedPlanet.moons?.map((moon, mIdx) => {

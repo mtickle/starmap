@@ -1,4 +1,5 @@
 import { getPlanetTexture } from "@utils/planetTextures.js";
+import gasGiantTexture from "/textures/gas_giant_01.webp";
 
 const PlanetOrbit = ({
   planet,
@@ -58,12 +59,16 @@ const PlanetOrbit = ({
                   >
                     {/* PLANET VISUAL */}
                     <div
-                      className="rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.9)] group-hover:scale-125 transition-transform border border-black/50 hover:ring-2 hover:ring-white/50 relative z-30"
+                      className="rounded-full group-hover:scale-125 transition-transform border border-black/50 hover:ring-2 hover:ring-white/50 relative z-30"
                       style={{
                         width: `${planetSize}px`,
                         height: `${planetSize}px`,
+                        backgroundImage: `url(${gasGiantTexture})`,
                         backgroundColor: planet.planetColor,
-                        backgroundImage: getPlanetTexture(planet),
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
+                        boxShadow: "inset -3px -3px 6px rgba(0,0,0,0.85), 0 2px 8px rgba(0,0,0,0.9)",
                       }}
                     ></div>
 
