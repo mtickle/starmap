@@ -1,8 +1,6 @@
 import { getPlanetTexture } from "@utils/planetTextures.js";
 import { useMemo, useState } from "react";
 import PlanetOrbit from "./PlanetOrbit.jsx";
-import gasGiantTexture from "/textures/gas_giant_01.webp";
-
 
 // ==========================================
 // BACKGROUND STAR & NEBULA GENERATOR
@@ -62,6 +60,7 @@ const DeepSpaceBackground = () => {
 // ==========================================
 export const OrbitalMap = ({ activeSystem }) => {
   const planets = activeSystem.planets || [];
+  console.log("🌍 Planet Array Check:", planets[0]);
   const [focusedPlanet, setFocusedPlanet] = useState(null);
   const [zoom, setZoom] = useState(1);
 
@@ -70,6 +69,8 @@ export const OrbitalMap = ({ activeSystem }) => {
   const handleWheel = (e) => {
     setZoom((prev) => Math.max(0.3, Math.min(prev - e.deltaY * 0.002, 3.5)));
   };
+
+  console.log("🪐 OrbitalMap Render: Active System:", activeSystem.name, "with", planets.length, "planets.");
 
   return (
     <div
@@ -187,15 +188,15 @@ export const OrbitalMap = ({ activeSystem }) => {
                     height: "256px",
                     transform: `translate(-50%, -50%) rotateX(-${TILT_ANGLE}deg)`,
                     backgroundColor: focusedPlanet.planetColor,
-                    backgroundImage: `url(${gasGiantTexture})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
+                    backgroundImage: `url(${getPlanetTexture(focusedPlanet.planetType, focusedPlanet.planetName)})`,
+                    backgroundSize: "200% 100%", // Stretches the 1:1 texture to 2:1 equirectangular
+                    backgroundRepeat: "repeat-x", // Ensures the image tiles horizontally
+                    animation: "spin-planet 25s linear infinite", // Adjust 25s to change rotation speed
                     boxShadow: `
-      inset -35px -35px 60px rgba(0, 0, 0, 0.95),
-      inset 10px 10px 25px rgba(255, 255, 255, 0.15),
-      0 0 60px ${focusedPlanet.planetColor}40
-    `,
+                      inset -35px -35px 60px rgba(0, 0, 0, 0.95),
+                      inset 10px 10px 25px rgba(255, 255, 255, 0.15),
+                      0 0 60px ${focusedPlanet.planetColor}40
+                    `,
                   }}
                 />
 

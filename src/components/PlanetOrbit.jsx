@@ -1,5 +1,5 @@
 import { getPlanetTexture } from "@utils/planetTextures.js";
-import gasGiantTexture from "/textures/gas_giant_01.webp";
+
 
 const PlanetOrbit = ({
   planet,
@@ -59,18 +59,22 @@ const PlanetOrbit = ({
                   >
                     {/* PLANET VISUAL */}
                     <div
-                      className="rounded-full group-hover:scale-125 transition-transform border border-black/50 hover:ring-2 hover:ring-white/50 relative z-30"
+                      className="rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.8)] border border-black/50"
                       style={{
                         width: `${planetSize}px`,
                         height: `${planetSize}px`,
-                        backgroundImage: `url(${gasGiantTexture})`,
                         backgroundColor: planet.planetColor,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat",
-                        boxShadow: "inset -3px -3px 6px rgba(0,0,0,0.85), 0 2px 8px rgba(0,0,0,0.9)",
+
+
+                        backgroundImage: `url(${getPlanetTexture(planet.planetType, planet.planetName)})`,
+                        backgroundSize: "200% 100%",
+                        backgroundRepeat: "repeat-x",
+                        animation: "spin-planet 15s linear infinite", // Spun faster for the zoomed-out view
+
+                        boxShadow: `inset -${planetSize / 4}px -${planetSize / 4}px ${planetSize / 2}px rgba(0,0,0,0.9)`
                       }}
-                    ></div>
+                      title={planet.planetName}
+                    />
 
                     {/* PLANET TOOLTIP */}
                     <div className="absolute top-[80%] left-1/2 -translate-x-1/2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-gray-950/90 text-xs px-3 py-1.5 rounded border border-gray-700 pointer-events-none shadow-xl z-50">

@@ -1,5 +1,6 @@
 import { planetNames, planetTypes } from '../libraries/planets.js';
 import { hashString, mulberry32, getWeightedItem, generateDeterministicUUID } from './randomUtils.js';
+import { getPlanetTexture } from '../utils/textureMap';
 
 // Import the expanded generators we built previously
 import {
@@ -34,13 +35,14 @@ export function synthesizePlanets(starId, starName, starCoordinate, rngStar) {
         const planetName = generatePlanetName(starName, i, availableUniqueNames, hasCivilization, rngPlanet);
         const isUniqueName = !planetName.includes(starName);
 
+        // Fetch the corresponding texture using the planet's name as a deterministic seed
+        const textureUrl = getPlanetTexture(planetTypeData.type, planetName);
 
         //Inhabitants
         const hasInhabitants = rngPlanet() > 0.6;
         const inhabitants = generateInhabitants(planetTypeData.type, hasInhabitants, rngPlanet);
 
         let isAdvancedCivilization = false;
-        // TWEAK: Check index [0] since inhabitants is now an array
         if (inhabitants && inhabitants.length > 0 && inhabitants[0].currentSociety) {
             const advancedSocieties = ['Civilization', 'Empire', 'Trade Guilds', 'Fallen Empire', 'Hive Mind'];
             isAdvancedCivilization = advancedSocieties.includes(inhabitants[0].currentSociety);
@@ -62,6 +64,7 @@ export function synthesizePlanets(starId, starName, starCoordinate, rngStar) {
             planetName: planetName,
             planetType: planetTypeData.type,
             planetColor: planetTypeData.color,
+            textureUrl: textureUrl,
             planetSize: planetSize,
             gravity: gravity,
             orbitRadius: orbitRadius,
@@ -80,9 +83,6 @@ export function synthesizePlanets(starId, starName, starCoordinate, rngStar) {
             // Civilization properties
             hasInhabitants: hasInhabitants,
             inhabitants: inhabitants,
-            // economy: generateEconomy(hasCivilization, rngPlanet),
-            // industry: generateIndustry(hasCivilization, rngPlanet),
-            // settlements: generateSettlements(hasCivilization, rngPlanet),
             economy: generateEconomy(isAdvancedCivilization, rngPlanet),
             industry: generateIndustry(isAdvancedCivilization, rngPlanet),
             settlements: generateSettlements(isAdvancedCivilization, rngPlanet),
@@ -115,45 +115,3 @@ function toRoman(num) {
     return roman[num - 1] || String(num);
 }
 
-// function generateMoons(starId, planetId, planetName, planetType, planetSize, rngPlanet) {
-//     // Heavily weighted toward fewer moons using Math.pow
-//     const numMoons = Math.floor(Math.pow(rngPlanet(), 2) * 13);
-//     const moons = [];
-
-//     // Moon types placeholder (Will be replaced by your moons.js library)
-//     const moonTypes = ["Barren", "Ice World", "Volcanic", "Dust"];
-
-//     for (let i = 0; i < numMoons; i++) {
-//         // Cascade the seed down to the moon level
-//         const moonSeed = hashString(`${planetId}_M${i}`);
-//         const rngMoon = mulberry32(moonSeed);
-
-//         const moonId = generateDeterministicUUID(rngMoon);
-
-//         const isNamed = rngMoon() < 0.3; // 30% chance for a unique name
-//         let moonName = `${planetName} ${toRoman(i + 1)}`;
-
-//         if (isNamed) {
-//             const nameIndex = Math.floor(rngMoon() * planetNames.length);
-//             moonName = planetNames[nameIndex];
-//         }
-
-//         const moonType = moonTypes[Math.floor(rngMoon() * moonTypes.length)];
-//         const moonSize = parseFloat((rngMoon() * 0.3 + 0.1).toFixed(2));
-
-//         moons.push({
-//             starId: starId,
-//             planetId: planetId,
-//             moonId: moonId,
-//             moonName: moonName,
-//             moonType: moonType,
-//             moonSize: moonSize,
-
-//             // Pass the rngMoon instance down to generate localized properties
-//             moonConditions: generateConditions(moonType, rngMoon),
-//             moonResources: generateResources(moonType, rngMoon)
-//         });
-//     }
-
-//     return moons;
-// }
