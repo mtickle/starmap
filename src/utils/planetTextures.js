@@ -1,89 +1,39 @@
-// utils/textureUtils.js
+// @utils/planetTextures.js
 
-export const getPlanetTexture = (planet) => {
-  const shading = `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.85) 85%)`;
+// 1. Tell Vite to find all the JPGs in your public textures folder
+const textureModules = import.meta.glob('/src/assets/textures/*.jpg', {
+  eager: true,
+  query: '?url',
+  import: 'default'
+});
 
-  const type = planet.planetType?.toLowerCase() || "";
-  const variant = (planet.planetName || "").length % 3;
+const textureLibrary = Object.keys(textureModules).reduce((acc, path) => {
+  const filename = path.split('/').pop();
+  const typeKey = filename.replace(/_\d+\.jpg$/, '').toLowerCase();
 
-  let layers = [shading];
+  // Vite will automatically compile these to the correct hashed URL for the browser
+  if (!acc[typeKey]) acc[typeKey] = [];
+  acc[typeKey].push(textureModules[path]);
 
-  // --- GAS GIANTS ---
-  if (type.includes("gas")) {
-    if (variant === 0) {
-      layers.push(
-        `repeating-linear-gradient(0deg, transparent 0%, rgba(0,0,0,0.2) 8%, transparent 15%, rgba(255,255,255,0.15) 20%, transparent 25%)`
-      );
-    } else if (variant === 1) {
-      layers.push(
-        `radial-gradient(ellipse 35% 20% at 70% 60%, rgba(0,0,0,0.4) 0%, transparent 60%)`
-      );
-      layers.push(
-        `linear-gradient(0deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.15) 30%, transparent 50%, rgba(255,255,255,0.1) 75%, rgba(0,0,0,0.2) 100%)`
-      );
-    } else {
-      layers.push(
-        `repeating-linear-gradient(0deg, rgba(0,0,0,0.3) 0%, transparent 5%, transparent 12%, rgba(255,255,255,0.2) 16%, rgba(255,255,255,0.05) 20%)`
-      );
-    }
-    return layers.join(", ");
-  }
+  return acc;
+}, {});
 
-  // --- ATMOSPHERE & CLOUDS CHECK ---
-  const hasBiosphere =
-    planet.floraList?.length > 0 || planet.faunaList?.length > 0;
-  const hasAtmosphere = [
-    "lush",
-    "tropical",
-    "toxic",
-    "ice",
-    "water",
-    "marsh",
-    "frozen",
-    "paradise",
-  ].some((t) => type.includes(t));
+console.log("📚 Loaded Procedural Textures:", textureLibrary);
 
-  if (hasBiosphere || hasAtmosphere) {
-    layers.push(
-      `radial-gradient(ellipse 80% 50% at 40% 30%, rgba(255,255,255,0.35) 0%, transparent 55%)`
-    );
-    layers.push(
-      `radial-gradient(ellipse 60% 40% at 75% 70%, rgba(255,255,255,0.25) 0%, transparent 50%)`
-    );
-  }
+export const getPlanetTexture = (planetType, planetName = "") => {
+  if (!planetType) return null;
 
-  // --- ROCKY / TERRESTRIAL SURFACES ---
-  if (variant === 0) {
-    layers.push(
-      `radial-gradient(circle at 20% 30%, rgba(0,0,0,0.3) 0%, transparent 35%)`
-    );
-    layers.push(
-      `radial-gradient(circle at 75% 65%, rgba(255,255,255,0.2) 0%, transparent 45%)`
-    );
-    layers.push(
-      `radial-gradient(circle at 80% 20%, rgba(0,0,0,0.2) 0%, transparent 25%)`
-    );
-  } else if (variant === 1) {
-    layers.push(
-      `radial-gradient(circle at 15% 45%, rgba(0,0,0,0.4) 0%, transparent 8%)`
-    );
-    layers.push(
-      `radial-gradient(circle at 75% 25%, rgba(0,0,0,0.5) 0%, transparent 12%)`
-    );
-    layers.push(
-      `radial-gradient(circle at 55% 80%, rgba(0,0,0,0.3) 0%, transparent 10%)`
-    );
-    layers.push(
-      `radial-gradient(circle at 35% 15%, rgba(255,255,255,0.2) 0%, transparent 15%)`
-    );
-  } else {
-    layers.push(
-      `linear-gradient(45deg, transparent 20%, rgba(0,0,0,0.3) 22%, transparent 24%, transparent 65%, rgba(255,255,255,0.2) 68%, transparent 70%)`
-    );
-    layers.push(
-      `linear-gradient(-45deg, transparent 40%, rgba(0,0,0,0.2) 42%, transparent 45%)`
-    );
-  }
+  // Normalize the type (e.g., "Gas Giant" -> "gas_giant")
+  const formattedKey = planetType.toLowerCase().replace(/\s+/g, '_');
+  const available = textureLibrary[formattedKey] || [];
 
-  return layers.join(", ");
+  // If we haven't generated a texture for this biome yet, return null so it falls back to a solid color
+  if (available.length === 0) return null;
+
+  // Use the planet's name to deterministically pick a texture from the array
+  // This ensures "Pyrium" always gets the exact same Arid texture every time
+  const seed = Math.abs([...planetName].reduce((acc, char) => acc + char.charCodeAt(0), 0));
+  const index = seed % available.length;
+
+  return available[index];
 };

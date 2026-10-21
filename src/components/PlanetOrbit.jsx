@@ -17,6 +17,7 @@ const PlanetOrbit = ({
   const angle = (idx * 137.5) % 360;
   const planetSize = Math.max(12, Math.min(24, planet.gravity * 15));
   const orbitDuration = (idx + 1) * 40;
+  const textureUrl = getPlanetTexture(planet.planetType, planet.planetName);
 
   return (
     <div
@@ -64,9 +65,7 @@ const PlanetOrbit = ({
                         width: `${planetSize}px`,
                         height: `${planetSize}px`,
                         backgroundColor: planet.planetColor,
-
-
-                        backgroundImage: `url(${getPlanetTexture(planet.planetType, planet.planetName)})`,
+                        backgroundImage: `url(${textureUrl})`,
                         backgroundSize: "200% 100%",
                         backgroundRepeat: "repeat-x",
                         animation: "spin-planet 15s linear infinite", // Spun faster for the zoomed-out view
