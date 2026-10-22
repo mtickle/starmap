@@ -1,6 +1,7 @@
 import { getPlanetTexture } from "@utils/planetTextures.js";
 
 
+
 const PlanetOrbit = ({
   planet,
   idx,
@@ -18,7 +19,7 @@ const PlanetOrbit = ({
   const planetSize = Math.max(12, Math.min(24, planet.gravity * 15));
   const orbitDuration = (idx + 1) * 40;
   const textureUrl = getPlanetTexture(planet.planetType, planet.planetName);
-
+  console.log(`PlanetOrbit: ${planet.planetName} | Texture URL: ${textureUrl}`);
   return (
     <div
       className="absolute inset-0 m-auto aspect-square pointer-events-none"
@@ -65,11 +66,13 @@ const PlanetOrbit = ({
                         width: `${planetSize}px`,
                         height: `${planetSize}px`,
                         backgroundColor: planet.planetColor,
-                        backgroundImage: `url(${textureUrl})`,
+
+                        // THE FIX IS HERE:
+                        backgroundImage: textureUrl ? `url(${textureUrl})` : "none",
+
                         backgroundSize: "200% 100%",
                         backgroundRepeat: "repeat-x",
-                        animation: "spin-planet 15s linear infinite", // Spun faster for the zoomed-out view
-
+                        animation: "spin-planet 15s linear infinite",
                         boxShadow: `inset -${planetSize / 4}px -${planetSize / 4}px ${planetSize / 2}px rgba(0,0,0,0.9)`
                       }}
                       title={planet.planetName}

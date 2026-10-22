@@ -1,6 +1,6 @@
-import { getPlanetTexture } from "@utils/planetTextures.js";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import PlanetOrbit from "./PlanetOrbit.jsx";
+import { getPlanetTexture, loadSupabaseTextures, subscribeToTextures } from "@utils/planetTextures.js";
 
 // ==========================================
 // BACKGROUND STAR & NEBULA GENERATOR
@@ -55,14 +55,47 @@ const DeepSpaceBackground = () => {
   );
 };
 
+const CloudWarningBanner = ({ texturesReady }) => {
+  const [showWarning, setShowWarning] = useState(false);
+
+  useEffect(() => {
+    // If textures haven't loaded after 5 seconds, surface the warning
+    const timer = setTimeout(() => {
+      if (!texturesReady) setShowWarning(true);
+    }, 500000);
+    return () => clearTimeout(timer);
+  }, [texturesReady]);
+
+  if (texturesReady || !showWarning) return null;
+
+  return (
+    <div className="absolute top-6 left-1/2 -translate-x-1/2 z-50 animate-[fadeIn_0.3s_ease-out]">
+      <div className="bg-red-950/80 border border-red-900 text-red-400 px-4 py-2 rounded shadow-[0_0_15px_rgba(220,38,38,0.3)] backdrop-blur flex items-center gap-3 text-xs font-mono uppercase tracking-widest">
+        <span className="text-lg leading-none">⚠️</span>
+        <span>CloudLink Offline: Experiencing Gateway Delays</span>
+      </div>
+    </div>
+  );
+};
+
 // ==========================================
 // COMPONENT: Orbital Radar Map (Main)
 // ==========================================
 export const OrbitalMap = ({ activeSystem }) => {
+  // Safety check in case the component mounts before activeSystem is ready
+  if (!activeSystem) return null;
+
   const planets = activeSystem.planets || [];
-  console.log("🌍 Planet Array Check:", planets[0]);
   const [focusedPlanet, setFocusedPlanet] = useState(null);
   const [zoom, setZoom] = useState(1);
+  const [texturesReady, setTexturesReady] = useState(false);
+
+  // Fetch the cloud textures on mount
+  useEffect(() => {
+    loadSupabaseTextures();
+    const unsubscribe = subscribeToTextures(() => setTexturesReady(true));
+    return unsubscribe;
+  }, []);
 
   const TILT_ANGLE = 60;
 
@@ -70,20 +103,24 @@ export const OrbitalMap = ({ activeSystem }) => {
     setZoom((prev) => Math.max(0.3, Math.min(prev - e.deltaY * 0.002, 3.5)));
   };
 
-  console.log("🪐 OrbitalMap Render: Active System:", activeSystem.name, "with", planets.length, "planets.");
-
   return (
     <div
       className="relative flex justify-center items-center w-full bg-gradient-to-b from-[#0a0a14] via-[#1a1a2e] to-[#0a0a14] rounded-xl border border-gray-800 shadow-[inset_0_0_100px_rgba(0,0,0,0.8)] overflow-hidden p-6 min-h-[600px]"
       onWheel={handleWheel}
     >
       <DeepSpaceBackground />
+      <CloudWarningBanner texturesReady={texturesReady} />
+
 
       <style>
         {`
           @keyframes orbit-spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+          }
+          @keyframes spin-planet {
+            from { background-position: 0% center; }
+            to { background-position: -200% center; }
           }
         `}
       </style>
@@ -113,9 +150,7 @@ export const OrbitalMap = ({ activeSystem }) => {
 
       {/* LAYER 1: 3D Orbital Map */}
       <div
-        className={`relative w-full max-w-[500px] aspect-square flex items-center justify-center transition-[filter,opacity] duration-700 ease-in-out pointer-events-auto ${focusedPlanet
-          ? "blur-md opacity-30 pointer-events-none"
-          : "blur-0 opacity-100"
+        className={`relative w-full max-w-[500px] aspect-square flex items-center justify-center transition-[filter,opacity] duration-700 ease-in-out pointer-events-auto ${focusedPlanet ? "blur-md opacity-30 pointer-events-none" : "blur-0 opacity-100"
           }`}
         style={{ perspective: "1000px" }}
       >
@@ -172,7 +207,6 @@ export const OrbitalMap = ({ activeSystem }) => {
               className="relative flex items-center justify-center w-[400px] h-[400px]"
               style={{ perspective: "1000px" }}
             >
-              {/* Universal Absolute Anchor to prevent flexbox/perspective offset artifacts */}
               <div
                 className="absolute top-1/2 left-1/2 w-0 h-0"
                 style={{
@@ -180,38 +214,41 @@ export const OrbitalMap = ({ activeSystem }) => {
                   transformStyle: "preserve-3d",
                 }}
               >
-                {/* Core Planet (Perfectly Centered & Counter-rotated to face the camera) */}
-                <div
-                  className="absolute top-1/2 left-1/2 rounded-full border border-black/50 z-20"
-                  style={{
-                    width: "256px",
-                    height: "256px",
-                    transform: `translate(-50%, -50%) rotateX(-${TILT_ANGLE}deg)`,
-                    backgroundColor: focusedPlanet.planetColor,
-                    backgroundImage: `url(${getPlanetTexture(focusedPlanet.planetType, focusedPlanet.planetName)})`,
-                    backgroundSize: "200% 100%", // Stretches the 1:1 texture to 2:1 equirectangular
-                    backgroundRepeat: "repeat-x", // Ensures the image tiles horizontally
-                    animation: "spin-planet 25s linear infinite", // Adjust 25s to change rotation speed
-                    boxShadow: `
-                      inset -35px -35px 60px rgba(0, 0, 0, 0.95),
-                      inset 10px 10px 25px rgba(255, 255, 255, 0.15),
-                      0 0 60px ${focusedPlanet.planetColor}40
-                    `,
-                  }}
-                />
+                {/* Core Planet */}
+                {(() => {
+                  const textureUrl = getPlanetTexture(focusedPlanet.planetType, focusedPlanet.planetName);
 
-                {/* Orbiting Moons mapped directly around the Target Locked Planet */}
+                  return (
+                    <div
+                      className="absolute top-1/2 left-1/2 rounded-full border border-black/50 z-20"
+                      style={{
+                        width: "256px",
+                        height: "256px",
+                        transform: `translate(-50%, -50%) rotateX(-${TILT_ANGLE}deg)`,
+                        backgroundColor: focusedPlanet.planetColor,
+                        backgroundImage: textureUrl ? `url(${textureUrl})` : "none",
+                        backgroundSize: "200% 100%",
+                        backgroundRepeat: "repeat-x",
+                        animation: "spin-planet 25s linear infinite",
+                        boxShadow: `
+                          inset -35px -35px 60px rgba(0, 0, 0, 0.95),
+                          inset 10px 10px 25px rgba(255, 255, 255, 0.15),
+                          0 0 60px ${focusedPlanet.planetColor}40
+                        `,
+                      }}
+                    />
+                  );
+                })()}
+
+                {/* Orbiting Moons */}
                 {focusedPlanet.moons?.map((moon, mIdx) => {
-                  // Pushed inner ring out to 340px (clearing the 256px planet perfectly)
                   const moonRingSize = 340 + mIdx * 50;
                   const moonAngle = (mIdx * 105) % 360;
                   const moonDuration = 12 + mIdx * 8;
                   const moonSize = 12 + (mIdx % 3) * 2;
 
                   const isString = typeof moon === "string";
-                  const moonName = isString
-                    ? moon
-                    : moon.name || `Moon ${mIdx + 1}`;
+                  const moonName = isString ? moon : moon.name || `Moon ${mIdx + 1}`;
                   const moonColor = isString ? "#888" : moon.color || "#a1a1aa";
 
                   return (
@@ -253,7 +290,6 @@ export const OrbitalMap = ({ activeSystem }) => {
                                   transform: `rotateX(-${TILT_ANGLE}deg)`,
                                 }}
                               >
-                                {/* MOON VISUAL */}
                                 <div
                                   className="rounded-full shadow-[0_2px_6px_rgba(0,0,0,0.9)] border border-black/80 pointer-events-auto cursor-help"
                                   style={{
@@ -337,9 +373,7 @@ export const OrbitalMap = ({ activeSystem }) => {
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-400">Rare Deposits:</span>
                   <span className="text-purple-400 font-mono">
-                    {focusedPlanet.resourceList?.filter(
-                      (r) => r.rarity === "Rare"
-                    ).length || 0}
+                    {focusedPlanet.resourceList?.filter((r) => r.rarity === "Rare").length || 0}
                   </span>
                 </div>
               </div>
@@ -356,9 +390,7 @@ export const OrbitalMap = ({ activeSystem }) => {
                         className="flex justify-between items-center bg-gray-800/40 p-2 rounded border border-gray-700"
                       >
                         <span className="text-gray-300 font-semibold text-sm">
-                          {typeof moon === "string"
-                            ? moon
-                            : moon.name || `Moon ${mIdx + 1}`}
+                          {typeof moon === "string" ? moon : moon.name || `Moon ${mIdx + 1}`}
                         </span>
                         {typeof moon !== "string" && moon.theme && (
                           <span className="text-[9px] uppercase tracking-widest text-purple-400 bg-purple-950/60 px-1.5 py-0.5 rounded border border-purple-800/50">
