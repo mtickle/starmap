@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import PlanetOrbit from "./PlanetOrbit.jsx";
+import StationOrbit from "./StationOrbit.jsx";
 import { getPlanetTexture, loadSupabaseTextures, subscribeToTextures } from "@utils/planetTextures.js";
 
 // ==========================================
@@ -176,6 +177,17 @@ export const OrbitalMap = ({ activeSystem }) => {
             }}
             title={`${activeSystem.name} (Class ${activeSystem.type})`}
           ></div>
+
+          {/* ADDED: Render Extracted Stations */}
+          {(activeSystem.stations || []).map((station, idx, arr) => (
+            <StationOrbit
+              key={`station-${idx}`}
+              station={station}
+              idx={idx}
+              totalStations={arr.length}
+              tiltAngle={TILT_ANGLE}
+            />
+          ))}
 
           {/* Render Extracted Planets */}
           {planets.map((planet, idx) => (
