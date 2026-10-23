@@ -17,29 +17,21 @@ export const generateStations = (faction, starId, starName, rngStar) => {
         const stationId = generateDeterministicUUID(rngStation);
         let stationName;
 
-        // Handle names whether the system has a faction or is Unclaimed
         const factionName = faction ? faction.name : "League of Unaligned Worlds";
 
         if (rngStation() < 0.7) {
-            // 70% chance of "Faction_Adjective Structure_Type"
             const adjArray = thematicAdjectives[factionName] || thematicAdjectives["League of Unaligned Worlds"];
             const adj = getRandomItem(adjArray, rngStation) || "Neutral";
-
             const suffixArray = stationNameSuffixes[factionName] || stationNameSuffixes["League of Unaligned Worlds"];
             const suffix = getRandomItem(suffixArray, rngStation) || "Outpost";
-
             stationName = `${adj} ${suffix}`;
         } else {
-            // 30% chance of "Star_Name [Prefix] Structure_Type"
             const prefix = getRandomItem(stationNamePrefixes, rngStation);
-
             const suffixArray = stationNameSuffixes[factionName] || stationNameSuffixes["League of Unaligned Worlds"];
             const suffix = getRandomItem(suffixArray, rngStation) || "Station";
-
             stationName = `${starName} ${prefix} ${suffix}`;
         }
 
-        // Determine size based on alignment
         let stationSize = 10;
         let alignment = faction ? faction.alignment : "Neutral";
 
@@ -51,7 +43,6 @@ export const generateStations = (faction, starId, starName, rngStar) => {
             stationSize = 15;
         }
 
-        // Determine visual type
         let stationType = 'general';
         if (faction) {
             if (factionName === "The Solar Accord") stationType = 'bureaucratic';
@@ -61,6 +52,34 @@ export const generateStations = (faction, starId, starName, rngStar) => {
             if (factionName === "The Vireli Swarm") stationType = 'biological';
         }
 
+        // --- NEW DETERMINISTIC ATTRIBUTES ---
+        const crew = Math.floor(stationSize * 15 * rngStation()) + 25;
+        const inhabitants = Math.floor(stationSize * 80 * rngStation());
+        const fuelLevel = Math.floor(rngStation() * 100); 
+        const storageCapacity = Math.floor(stationSize * 5000 * rngStation()) + 1000;
+        const dockingRings = Math.floor((stationSize / 4) + (rngStation() * 4)) + 1;
+
+        // Defensive Systems (Non-offensive)
+        const possibleDefenses = [
+            "Aegis Deflector Shields",
+            "Point-Defense Chaff Grids",
+            "ECM Jamming Array",
+            "Reinforced Ablative Plating",
+            "Thermal Decoy Launchers",
+            "Sensor Scramblers",
+            "EMP Hardening"
+        ];
+        
+        const defenseCount = Math.floor(rngStation() * 3) + 1; // 1 to 3 systems
+        const defenseSystems = [];
+        const availableDefenses = [...possibleDefenses];
+        
+        for (let j = 0; j < defenseCount; j++) {
+            const index = Math.floor(rngStation() * availableDefenses.length);
+            defenseSystems.push(availableDefenses[index]);
+            availableDefenses.splice(index, 1);
+        }
+
         stations.push({
             starId: starId,
             stationId: stationId,
@@ -68,7 +87,15 @@ export const generateStations = (faction, starId, starName, rngStar) => {
             stationSize: stationSize,
             stationType: stationType,
             factionId: faction ? faction.id : null,
-            factionColor: faction ? faction.color : '#888888'
+            factionColor: faction ? faction.color : '#888888',
+            
+            // Expanded metrics
+            crew,
+            inhabitants,
+            fuelLevel,
+            storageCapacity,
+            dockingRings,
+            defenseSystems
         });
     }
 

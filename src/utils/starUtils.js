@@ -1,5 +1,6 @@
 import { planetTypes } from "../libraries/planets.js";
 import { starClasses } from "../libraries/stars.js";
+import { generateStations } from './stationUtils.js';
 import { generateSystemFaction } from "./factionUtils.js";
 import {
   generateAtmosphere,
@@ -43,15 +44,7 @@ export function synthesizeStar(coordinate) {
   const faction = generateSystemFaction(rng);
   const hasStation = rng() > 0.4;
   const stations = hasStation
-    ? [
-        {
-          name: `${starName} Prime`,
-          type: getRandomItem(
-            ["Trading Post", "Pirate Den", "Research Hub"],
-            rng
-          ),
-        },
-      ]
+    ? generateStations(faction, coordinate, starName, rng)
     : [];
 
   // 4. Generate Planets
@@ -139,9 +132,9 @@ export function synthesizeStar(coordinate) {
     temperatureDesc: selectedStarClass.temp,
     economy: hasStation
       ? getRandomItem(
-          ["Booming", "Destitute", "Developing", "Black Market"],
-          rng
-        )
+        ["Booming", "Destitute", "Developing", "Black Market"],
+        rng
+      )
       : "None",
     faction: faction,
     stations: stations,
