@@ -24,7 +24,10 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
 
   // --- ACTIONS ---
   const handleSetHome = () => {
-    localStorage.setItem("homeSystem", JSON.stringify({ id: activeSystem.id }));
+    localStorage.setItem("homeSystem", JSON.stringify({
+      id: activeSystem.id,
+      name: activeSystem.name
+    }));
     setHomeId(activeSystem.id);
     setShowOverrideWarning(false);
   };
@@ -249,28 +252,28 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
                     {/* Metrics Grid */}
                     <div className="grid grid-cols-2 gap-3 z-10">
                       <div className="bg-gray-900/50 rounded p-2 border border-gray-700/50">
-                        <p className="text-[9px] text-gray-500 font-mono uppercase mb-0.5">Population</p>
+                        <p className="text-[14px] text-gray-500 font-mono uppercase mb-0.5">Population</p>
                         <p className="text-sm font-semibold text-gray-300">
-                          {station.crew || 0} <span className="text-[10px] text-gray-500 font-normal">Crew</span>
+                          {station.crew || 0} <span className="text-[14px] text-gray-500 font-normal">Crew</span>
                         </p>
-                        <p className="text-xs text-gray-400">
-                          {station.inhabitants || 0} <span className="text-[10px] text-gray-500 font-normal">Transit</span>
+                        <p className="text-sm font-semibold text-gray-300">
+                          {station.inhabitants || 0} <span className="text-[14px] text-gray-500 font-normal">Transit</span>
                         </p>
                       </div>
                       <div className="bg-gray-900/50 rounded p-2 border border-gray-700/50">
-                        <p className="text-[9px] text-gray-500 font-mono uppercase mb-0.5">Logistics</p>
+                        <p className="text-[14px] text-gray-500 font-mono uppercase mb-0.5">Logistics</p>
                         <p className="text-sm font-semibold text-gray-300">
-                          {station.dockingRings || 0} <span className="text-[10px] text-gray-500 font-normal">Rings</span>
+                          {station.dockingRings || 0} <span className="text-[14px] text-gray-500 font-normal">Docking Rings</span>
                         </p>
-                        <p className="text-xs text-gray-400">
-                          {(station.storageCapacity || 0).toLocaleString()} <span className="text-[10px] text-gray-500 font-normal">SCU</span>
+                        <p className="text-sm font-semibold text-gray-300">
+                          {(station.storageCapacity || 0).toLocaleString()} <span className="text-[14px] text-gray-500 font-normal">Storage Capacity (Eg)</span>
                         </p>
                       </div>
                     </div>
 
                     {/* Fuel Bar */}
                     <div className="z-10">
-                      <div className="flex justify-between text-[9px] font-mono uppercase text-gray-500 mb-1">
+                      <div className="flex justify-between text-[14px] font-mono uppercase text-gray-500 mb-1">
                         <span>Reserves (Fuel)</span>
                         <span className={station.fuelLevel < 25 ? "text-red-400" : "text-green-400"}>
                           {station.fuelLevel || 0}%
@@ -287,12 +290,12 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
                     {/* Defenses */}
                     {station.defenseSystems && station.defenseSystems.length > 0 && (
                       <div className="z-10 mt-1">
-                        <p className="text-[9px] text-gray-500 font-mono uppercase mb-1.5">Countermeasures</p>
+                        <p className="text-[14px] text-gray-500 font-mono uppercase mb-1.5">Countermeasures</p>
                         <div className="flex flex-wrap gap-1.5">
                           {station.defenseSystems.map((def, i) => (
                             <span
                               key={i}
-                              className="px-1.5 py-0.5 bg-blue-950/40 border border-blue-900/50 rounded text-[9px] text-blue-300 whitespace-nowrap"
+                              className="px-1.5 py-0.5 bg-blue-950/40 border border-blue-900/50 rounded text-[14px] text-blue-300 whitespace-nowrap"
                             >
                               {def}
                             </span>

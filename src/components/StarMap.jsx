@@ -5,6 +5,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import NavigationFooter from './NavigationFooter.jsx';
 import NavigationHeader from './NavigationHeader.jsx';
 
+// Cubic easing function for the slow-fast-slow cinematic pan
+const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
 const getStarTooltip = (star) => {
     if (!star) return null;
     return {
@@ -42,6 +45,7 @@ const StarMap = () => {
     // --- REFS ---
     const canvasRef = useRef(null);
     const animationFrameRef = useRef(null);
+    const panAnimationRef = useRef(null);
     const backgroundStars = useRef([]);
     const NEBULA_CLOUDS = useRef([]);
 
@@ -74,7 +78,11 @@ const StarMap = () => {
             }
         });
         resizeObserver.observe(container);
-        return () => resizeObserver.unobserve(container);
+
+        return () => {
+            resizeObserver.unobserve(container);
+            if (panAnimationRef.current) cancelAnimationFrame(panAnimationRef.current);
+        };
     }, []);
 
     // --- MOUSE HANDLERS ---
@@ -109,6 +117,46 @@ const StarMap = () => {
             localStorage.setItem('visitedStars', JSON.stringify(visited));
         }
     }, [isDragging, offsetX, offsetY, scale, stars]);
+
+    // --- NAVIGATION LOGIC ---
+    const animatePanTo = (targetX, targetY, duration = 1800) => {
+        if (panAnimationRef.current) cancelAnimationFrame(panAnimationRef.current);
+
+        const startTime = performance.now();
+        const startX = offsetX;
+        const startY = offsetY;
+
+        const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easedProgress = easeInOutCubic(progress);
+
+            setOffsetX(startX + (targetX - startX) * easedProgress);
+            setOffsetY(startY + (targetY - startY) * easedProgress);
+
+            if (progress < 1) {
+                panAnimationRef.current = requestAnimationFrame(animate);
+            }
+        };
+
+        panAnimationRef.current = requestAnimationFrame(animate);
+    };
+
+    const handleJumpToSystem = (systemId) => {
+        const coordRegex = /X:(-?\d+)_Y:(-?\d+)/;
+        const match = String(systemId).match(coordRegex);
+
+        if (match) {
+            const GRID_SPACING = 100;
+            const targetOffsetX = parseInt(match[1], 10) * -GRID_SPACING;
+            const targetOffsetY = parseInt(match[2], 10) * -GRID_SPACING;
+
+            animatePanTo(targetOffsetX, targetOffsetY, 1800);
+
+            setShowSystemMap(false);
+            setActiveSystem(null);
+        }
+    };
 
     // --- DRAWING LOGIC ---
     const drawScene = useCallback(() => {
@@ -203,15 +251,22 @@ const StarMap = () => {
 
     }, [stars, offsetX, offsetY, scale, hoveredStar]);
 
-    // --- ANIMATION LOOP ---
+    // --- STABLE ANIMATION LOOP REF ---
+    const drawSceneRef = useRef(drawScene);
+    useEffect(() => {
+        drawSceneRef.current = drawScene;
+    }, [drawScene]);
+
     useEffect(() => {
         const animate = () => {
-            drawScene();
+            if (drawSceneRef.current) {
+                drawSceneRef.current();
+            }
             animationFrameRef.current = requestAnimationFrame(animate);
         };
         animate();
         return () => cancelAnimationFrame(animationFrameRef.current);
-    }, [drawScene]);
+    }, []); // Runs once on mount, avoiding teardown/restart loops
 
     // --- RENDER ---
     return (
@@ -234,7 +289,7 @@ const StarMap = () => {
             </button>
 
             <NavigationHeader />
-            <NavigationFooter visibleStars={stars} />
+            <NavigationFooter visibleStars={stars} currentFocusId={activeSystem?.id} onJumpToSystem={handleJumpToSystem} />
 
             {hoveredStar && (
                 <div

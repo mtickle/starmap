@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import PlanetOrbit from "./PlanetOrbit.jsx";
 import StationOrbit from "./StationOrbit.jsx";
+import { loadStationTextures, subscribeToStationTextures } from '@utils/stationTextures.js'
 import { getPlanetTexture, loadSupabaseTextures, subscribeToTextures } from "@utils/planetTextures.js";
 
 // ==========================================
@@ -63,7 +64,7 @@ const CloudWarningBanner = ({ texturesReady }) => {
     // If textures haven't loaded after 5 seconds, surface the warning
     const timer = setTimeout(() => {
       if (!texturesReady) setShowWarning(true);
-    }, 500000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, [texturesReady]);
 
@@ -91,12 +92,42 @@ export const OrbitalMap = ({ activeSystem }) => {
   const [zoom, setZoom] = useState(1);
   const [texturesReady, setTexturesReady] = useState(false);
 
+
+  // Fetch the cloud textures on mount
   // Fetch the cloud textures on mount
   useEffect(() => {
-    loadSupabaseTextures();
-    const unsubscribe = subscribeToTextures(() => setTexturesReady(true));
-    return unsubscribe;
-  }, []);
+    let isMounted = true;
+
+    const initializeTextures = async () => {
+      try {
+        // Pass empty callbacks to prevent undefined invocation errors 
+        await loadSupabaseTextures(() => { });
+        await loadStationTextures();
+
+        if (isMounted) setTexturesReady(true);
+      } catch (error) {
+        console.error("Texture load failed:", error);
+      }
+    };
+
+    initializeTextures();
+
+    // 2. Set up live listeners
+    const unsubscribePlanets = subscribeToTextures(() => {
+      if (isMounted) setTexturesReady(true);
+    });
+
+    const unsubscribeStations = subscribeToStationTextures(() => {
+      if (isMounted) setTexturesReady(true);
+    });
+
+    // 3. Single cleanup function for React to call on unmount
+    return () => {
+      isMounted = false;
+      if (typeof unsubscribePlanets === 'function') unsubscribePlanets();
+      if (typeof unsubscribeStations === 'function') unsubscribeStations();
+    };
+  }, []); // <-- The empty dependency array is crucial. It stops the infinite loop.
 
   const TILT_ANGLE = 60;
 
@@ -177,6 +208,17 @@ export const OrbitalMap = ({ activeSystem }) => {
             }}
             title={`${activeSystem.name} (Class ${activeSystem.type})`}
           ></div>
+
+          {/* ADDED: Single Master Station Orbit Ring */}
+          {(activeSystem.stations?.length > 0) && (
+            <div
+              className="absolute inset-0 m-auto aspect-square pointer-events-none rounded-full border border-red-500/30 border-dashed"
+              style={{
+                width: "95%",
+                transformStyle: "preserve-3d",
+              }}
+            />
+          )}
 
           {/* ADDED: Render Extracted Stations */}
           {(activeSystem.stations || []).map((station, idx, arr) => (

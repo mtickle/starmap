@@ -44,18 +44,23 @@ export const generateStations = (faction, starId, starName, rngStar) => {
         }
 
         let stationType = 'general';
-        if (faction) {
+        if (faction && factionName !== "League of Unaligned Worlds") {
             if (factionName === "The Solar Accord") stationType = 'bureaucratic';
-            if (factionName === "The Obsidian Syndicate") stationType = 'covert';
-            if (factionName === "The Luma Ascendancy") stationType = 'scientific';
-            if (factionName === "The Ember Crown") stationType = 'military';
-            if (factionName === "The Vireli Swarm") stationType = 'biological';
+            else if (factionName === "The Obsidian Syndicate") stationType = 'covert';
+            else if (factionName === "The Luma Ascendancy") stationType = 'scientific';
+            else if (factionName === "The Ember Crown") stationType = 'military';
+            else if (factionName === "The Vireli Swarm") stationType = 'biological';
+        } else {
+            // Unaligned/Neutral stations pull from the civilian economy pool
+            const civilianThemes = ["industrial", "luxury", "mining", "research", "trade", "transportation", "general"];
+            const index = Math.floor(rngStation() * civilianThemes.length);
+            stationType = civilianThemes[index];
         }
 
         // --- NEW DETERMINISTIC ATTRIBUTES ---
         const crew = Math.floor(stationSize * 15 * rngStation()) + 25;
         const inhabitants = Math.floor(stationSize * 80 * rngStation());
-        const fuelLevel = Math.floor(rngStation() * 100); 
+        const fuelLevel = Math.floor(rngStation() * 100);
         const storageCapacity = Math.floor(stationSize * 5000 * rngStation()) + 1000;
         const dockingRings = Math.floor((stationSize / 4) + (rngStation() * 4)) + 1;
 
@@ -69,11 +74,11 @@ export const generateStations = (faction, starId, starName, rngStar) => {
             "Sensor Scramblers",
             "EMP Hardening"
         ];
-        
+
         const defenseCount = Math.floor(rngStation() * 3) + 1; // 1 to 3 systems
         const defenseSystems = [];
         const availableDefenses = [...possibleDefenses];
-        
+
         for (let j = 0; j < defenseCount; j++) {
             const index = Math.floor(rngStation() * availableDefenses.length);
             defenseSystems.push(availableDefenses[index]);
@@ -88,7 +93,7 @@ export const generateStations = (faction, starId, starName, rngStar) => {
             stationType: stationType,
             factionId: faction ? faction.id : null,
             factionColor: faction ? faction.color : '#888888',
-            
+
             // Expanded metrics
             crew,
             inhabitants,
