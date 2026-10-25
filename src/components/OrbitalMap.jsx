@@ -1,8 +1,15 @@
-import { useMemo, useState, useEffect } from "react";
+import {
+  getPlanetTexture,
+  loadSupabaseTextures,
+  subscribeToTextures,
+} from "@utils/planetTextures.js";
+import {
+  loadStationTextures,
+  subscribeToStationTextures,
+} from "@utils/stationTextures.js";
+import { useEffect, useMemo, useState } from "react";
 import PlanetOrbit from "./PlanetOrbit.jsx";
 import StationOrbit from "./StationOrbit.jsx";
-import { loadStationTextures, subscribeToStationTextures } from '@utils/stationTextures.js'
-import { getPlanetTexture, loadSupabaseTextures, subscribeToTextures } from "@utils/planetTextures.js";
 
 // ==========================================
 // BACKGROUND STAR & NEBULA GENERATOR
@@ -61,7 +68,6 @@ const CloudWarningBanner = ({ texturesReady }) => {
   const [showWarning, setShowWarning] = useState(false);
 
   useEffect(() => {
-    // If textures haven't loaded after 5 seconds, surface the warning
     const timer = setTimeout(() => {
       if (!texturesReady) setShowWarning(true);
     }, 5000);
@@ -84,25 +90,22 @@ const CloudWarningBanner = ({ texturesReady }) => {
 // COMPONENT: Orbital Radar Map (Main)
 // ==========================================
 export const OrbitalMap = ({ activeSystem }) => {
-  // Safety check in case the component mounts before activeSystem is ready
-  if (!activeSystem) return null;
-
-  const planets = activeSystem.planets || [];
   const [focusedPlanet, setFocusedPlanet] = useState(null);
   const [zoom, setZoom] = useState(1);
   const [texturesReady, setTexturesReady] = useState(false);
+  const [stationTextureCount, setStationTextureCount] = useState(0);
 
-
-  // Fetch the cloud textures on mount
-  // Fetch the cloud textures on mount
   useEffect(() => {
     let isMounted = true;
 
     const initializeTextures = async () => {
       try {
-        // Pass empty callbacks to prevent undefined invocation errors 
-        await loadSupabaseTextures(() => { });
-        await loadStationTextures();
+        await Promise.all([
+          loadSupabaseTextures(() => { }),
+          loadStationTextures((count) => {
+            if (isMounted) setStationTextureCount(count);
+          }),
+        ]);
 
         if (isMounted) setTexturesReady(true);
       } catch (error) {
@@ -112,23 +115,27 @@ export const OrbitalMap = ({ activeSystem }) => {
 
     initializeTextures();
 
-    // 2. Set up live listeners
     const unsubscribePlanets = subscribeToTextures(() => {
       if (isMounted) setTexturesReady(true);
     });
 
-    const unsubscribeStations = subscribeToStationTextures(() => {
-      if (isMounted) setTexturesReady(true);
+    const unsubscribeStations = subscribeToStationTextures((count) => {
+      if (isMounted) {
+        setStationTextureCount(count);
+        setTexturesReady(true);
+      }
     });
 
-    // 3. Single cleanup function for React to call on unmount
     return () => {
       isMounted = false;
-      if (typeof unsubscribePlanets === 'function') unsubscribePlanets();
-      if (typeof unsubscribeStations === 'function') unsubscribeStations();
+      if (typeof unsubscribePlanets === "function") unsubscribePlanets();
+      if (typeof unsubscribeStations === "function") unsubscribeStations();
     };
-  }, []); // <-- The empty dependency array is crucial. It stops the infinite loop.
+  }, []);
 
+  if (!activeSystem) return null;
+
+  const planets = activeSystem.planets || [];
   const TILT_ANGLE = 60;
 
   const handleWheel = (e) => {
@@ -142,7 +149,6 @@ export const OrbitalMap = ({ activeSystem }) => {
     >
       <DeepSpaceBackground />
       <CloudWarningBanner texturesReady={texturesReady} />
-
 
       <style>
         {`
@@ -182,7 +188,9 @@ export const OrbitalMap = ({ activeSystem }) => {
 
       {/* LAYER 1: 3D Orbital Map */}
       <div
-        className={`relative w-full max-w-[500px] aspect-square flex items-center justify-center transition-[filter,opacity] duration-700 ease-in-out pointer-events-auto ${focusedPlanet ? "blur-md opacity-30 pointer-events-none" : "blur-0 opacity-100"
+        className={`relative w-full max-w-[500px] aspect-square flex items-center justify-center transition-[filter,opacity] duration-700 ease-in-out pointer-events-auto ${focusedPlanet
+            ? "blur-md opacity-30 pointer-events-none"
+            : "blur-0 opacity-100"
           }`}
         style={{ perspective: "1000px" }}
       >
@@ -209,8 +217,8 @@ export const OrbitalMap = ({ activeSystem }) => {
             title={`${activeSystem.name} (Class ${activeSystem.type})`}
           ></div>
 
-          {/* ADDED: Single Master Station Orbit Ring */}
-          {(activeSystem.stations?.length > 0) && (
+          {/* Single Master Station Orbit Ring */}
+          {activeSystem.stations?.length > 0 && (
             <div
               className="absolute inset-0 m-auto aspect-square pointer-events-none rounded-full border border-red-500/30 border-dashed"
               style={{
@@ -220,10 +228,10 @@ export const OrbitalMap = ({ activeSystem }) => {
             />
           )}
 
-          {/* ADDED: Render Extracted Stations */}
+          {/* Render Extracted Stations */}
           {(activeSystem.stations || []).map((station, idx, arr) => (
             <StationOrbit
-              key={`station-${idx}`}
+              key={`station-${idx}-${stationTextureCount}`}
               station={station}
               idx={idx}
               totalStations={arr.length}
@@ -270,7 +278,10 @@ export const OrbitalMap = ({ activeSystem }) => {
               >
                 {/* Core Planet */}
                 {(() => {
-                  const textureUrl = getPlanetTexture(focusedPlanet.planetType, focusedPlanet.planetName);
+                  const textureUrl = getPlanetTexture(
+                    focusedPlanet.planetType,
+                    focusedPlanet.planetName
+                  );
 
                   return (
                     <div
@@ -280,7 +291,9 @@ export const OrbitalMap = ({ activeSystem }) => {
                         height: "256px",
                         transform: `translate(-50%, -50%) rotateX(-${TILT_ANGLE}deg)`,
                         backgroundColor: focusedPlanet.planetColor,
-                        backgroundImage: textureUrl ? `url(${textureUrl})` : "none",
+                        backgroundImage: textureUrl
+                          ? `url(${textureUrl})`
+                          : "none",
                         backgroundSize: "200% 100%",
                         backgroundRepeat: "repeat-x",
                         animation: "spin-planet 25s linear infinite",
@@ -302,7 +315,9 @@ export const OrbitalMap = ({ activeSystem }) => {
                   const moonSize = 12 + (mIdx % 3) * 2;
 
                   const isString = typeof moon === "string";
-                  const moonName = isString ? moon : moon.name || `Moon ${mIdx + 1}`;
+                  const moonName = isString
+                    ? moon
+                    : moon.name || `Moon ${mIdx + 1}`;
                   const moonColor = isString ? "#888" : moon.color || "#a1a1aa";
 
                   return (
@@ -427,7 +442,9 @@ export const OrbitalMap = ({ activeSystem }) => {
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-400">Rare Deposits:</span>
                   <span className="text-purple-400 font-mono">
-                    {focusedPlanet.resourceList?.filter((r) => r.rarity === "Rare").length || 0}
+                    {focusedPlanet.resourceList?.filter(
+                      (r) => r.rarity === "Rare"
+                    ).length || 0}
                   </span>
                 </div>
               </div>
@@ -444,7 +461,9 @@ export const OrbitalMap = ({ activeSystem }) => {
                         className="flex justify-between items-center bg-gray-800/40 p-2 rounded border border-gray-700"
                       >
                         <span className="text-gray-300 font-semibold text-sm">
-                          {typeof moon === "string" ? moon : moon.name || `Moon ${mIdx + 1}`}
+                          {typeof moon === "string"
+                            ? moon
+                            : moon.name || `Moon ${mIdx + 1}`}
                         </span>
                         {typeof moon !== "string" && moon.theme && (
                           <span className="text-[9px] uppercase tracking-widest text-purple-400 bg-purple-950/60 px-1.5 py-0.5 rounded border border-purple-800/50">

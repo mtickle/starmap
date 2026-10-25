@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -10,60 +10,92 @@ const stationCache = {
     biological: [],
     covert: [],
     bureaucratic: [],
-    general: []
+    industrial: [],
+    luxury: [],
+    mining: [],
+    research: [],
+    trade: [],
+    transportation: [],
+    general: [],
+    all: [], // Master fallback pool
 };
 
-export const loadStationTextures = async () => {
-    const { data, error } = await supabase.storage.from('station-textures').list();
+export const loadStationTextures = async (onComplete) => {
+    const { data, error } = await supabase.storage
+        .from("station-textures")
+        .list();
+    //console.log("📦 Raw Supabase station-textures list():", { data, error });
+
     if (error) {
-        console.error("Error loading station textures:", error);
+        console.error("❌ Error listing station-textures bucket:", error);
         return;
     }
 
-    // Clear existing cache arrays before reloading
-    Object.keys(stationCache).forEach(key => stationCache[key] = []);
+    // Reset cache arrays
+    Object.keys(stationCache).forEach((key) => {
+        stationCache[key] = [];
+    });
 
-    data.forEach(file => {
-        if (!file.name.endsWith('.jpg') && !file.name.endsWith('.png')) return;
+    (data || []).forEach((file) => {
+        if (!file.name || file.name === ".emptyFolderPlaceholder") return;
+        if (!file.name.endsWith(".jpg") && !file.name.endsWith(".png")) return;
 
-        // Parse theme from filename (e.g., "military_station_173000000.jpg")
-        const theme = file.name.split('_')[0].toLowerCase();
-        const { data: urlData } = supabase.storage.from('station-textures').getPublicUrl(file.name);
+        const theme = file.name.split("_")[0].toLowerCase();
+        const { data: urlData } = supabase.storage
+            .from("station-textures")
+            .getPublicUrl(file.name);
 
-        if (stationCache[theme] !== undefined) {
+        if (urlData?.publicUrl) {
+            if (!stationCache[theme]) {
+                stationCache[theme] = [];
+            }
             stationCache[theme].push(urlData.publicUrl);
-        } else {
-            stationCache.general.push(urlData.publicUrl);
+            stationCache.all.push(urlData.publicUrl);
         }
     });
+
+    // console.log(
+    //     `🛰️ Loaded ${stationCache.all.length} station textures across themes:`,
+    //     stationCache
+    // );
+    if (onComplete) onComplete(stationCache.all.length);
 };
 
-export const getStationTexture = (theme, stationId) => {
-    const normalizedTheme = theme?.toLowerCase() || 'general';
-    const textures = stationCache[normalizedTheme]?.length > 0
-        ? stationCache[normalizedTheme]
-        : stationCache['general'];
+export const getStationTexture = (theme, stationSeed) => {
+    if (stationCache.all.length === 0) return null;
 
-    if (!textures || textures.length === 0) return null;
-    if (!stationId) return textures[0];
+    const cleanTheme = (theme || "general").toLowerCase().trim().split(/\s+/)[0];
 
-    // Deterministic selection based on the stationId string
-    let hash = 0;
-    for (let i = 0; i < stationId.length; i++) {
-        hash = stationId.charCodeAt(i) + ((hash << 5) - hash);
+    let pool = stationCache[cleanTheme];
+    if (!pool || pool.length === 0) {
+        pool =
+            stationCache.general.length > 0 ? stationCache.general : stationCache.all;
     }
-    const index = Math.abs(hash) % textures.length;
-    return textures[index];
+
+    const seedStr = String(stationSeed || cleanTheme);
+    let hash = 0;
+    for (let i = 0; i < seedStr.length; i++) {
+        hash = seedStr.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    const index = Math.abs(hash) % pool.length;
+    return pool[index];
 };
 
 export const subscribeToStationTextures = (onUpdate) => {
-    const channel = supabase.channel('station-texture-changes')
+    const channel = supabase
+        .channel(`station-texture-changes-${Date.now()}`)
         .on(
-            'postgres_changes',
-            { event: '*', schema: 'storage', table: 'objects', filter: `bucket_id=eq.station-textures` },
+            "postgres_changes",
+            {
+                event: "*",
+                schema: "storage",
+                table: "objects",
+                filter: "bucket_id=eq.station-textures",
+            },
             () => {
-                loadStationTextures().then(() => {
-                    if (onUpdate) onUpdate();
+                loadStationTextures((count) => {
+                    if (onUpdate) onUpdate(count);
                 });
             }
         )

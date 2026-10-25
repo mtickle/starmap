@@ -30,7 +30,7 @@ export const fetchSystemDetails = async (star) => {
 
         // 3. If systemData is still null (because it was a 404), create it!
         if (!systemData) {
-            console.log(`System ${star.name} is undiscovered. Generating new system...`);
+            //console.log(`System ${star.name} is undiscovered. Generating new system...`);
 
             const postResponse = await fetch(`${baseUrl}/api/v1/systems`, {
                 method: 'POST',

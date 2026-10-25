@@ -1,6 +1,7 @@
 import { planetNames, planetTypes } from '../libraries/planets.js';
 import { hashString, mulberry32, getWeightedItem, generateDeterministicUUID } from './randomUtils.js';
-import { getPlanetTexture } from '../utils/textureMap';
+//import { getPlanetTexture } from '../utils/textureMap';
+import { getPlanetTexture } from '@utils/planetTextures.js';
 
 // Import the expanded generators we built previously
 import {

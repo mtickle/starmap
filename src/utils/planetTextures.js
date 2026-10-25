@@ -1,74 +1,98 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-let textureLibrary = null;
-let isLoading = false;
-let listeners = [];
-
-export const subscribeToTextures = (callback) => {
-  listeners.push(callback);
-  return () => { listeners = listeners.filter(cb => cb !== callback); };
+const textureCache = {
+  all: []
 };
 
-export const loadSupabaseTextures = async () => {
-  if (textureLibrary !== null || isLoading) return;
-  isLoading = true;
+export const loadSupabaseTextures = async (onComplete) => {
+  const { data, error } = await supabase.storage
+    .from("planet-textures")
+    .list("", {
+      limit: 1000,
+      offset: 0,
+      sortBy: { column: "name", order: "asc" },
+    });
 
-  try {
-    console.log("☁️ Supabase: Requesting file list from root bucket...");
-
-    // Pass no arguments to default to the root directory
-    const { data, error } = await supabase.storage.from('planet-textures').list();
-
-    if (error) throw error;
-
-    // Dump the raw array to the console so we can see exactly what Supabase handed back
-    console.log(`☁️ Supabase: Found ${data.length} files. Raw Data:`, data);
-
-    textureLibrary = data.reduce((acc, file) => {
-      // Skip hidden Supabase files like .emptyFolderPlaceholder
-      if (!file.name.includes('_')) return acc;
-
-      // Find the LAST underscore (right before the timestamp) and slice it there
-      const lastUnderscoreIdx = file.name.lastIndexOf('_');
-      const typeKey = file.name.substring(0, lastUnderscoreIdx).toLowerCase();
-
-      const publicUrl = supabase.storage.from('planet-textures').getPublicUrl(file.name).data.publicUrl;
-
-      if (!acc[typeKey]) acc[typeKey] = [];
-      acc[typeKey].push(publicUrl);
-      return acc;
-    }, {});
-
-    console.log("☁️ Supabase: Final Texture Library Dictionary:", textureLibrary);
-
-  } catch (err) {
-    console.error("❌ Supabase fetch failed:", err);
-    textureLibrary = {};
-  } finally {
-    isLoading = false;
-    listeners.forEach(cb => cb());
+  if (error) {
+    console.error("❌ Error listing planet-textures bucket:", error);
+    return;
   }
+
+  // Reset texture cache arrays
+  Object.keys(textureCache).forEach((key) => {
+    if (key !== 'all') textureCache[key] = [];
+  });
+  textureCache.all = [];
+
+  (data || []).forEach((file) => {
+    if (!file.name || file.name === ".emptyFolderPlaceholder") return;
+    if (!file.name.endsWith(".jpg") && !file.name.endsWith(".png") && !file.name.endsWith(".webp")) return;
+
+    const type = file.name.split("_")[0].toLowerCase();
+    const { data: urlData } = supabase.storage
+      .from("planet-textures")
+      .getPublicUrl(file.name);
+
+    if (urlData?.publicUrl) {
+      if (!textureCache[type]) {
+        textureCache[type] = [];
+      }
+      textureCache[type].push(urlData.publicUrl);
+      textureCache.all.push(urlData.publicUrl);
+    }
+  });
+
+  console.log("🗂️ Supabase: Final Texture Library Dictionary", textureCache);
+  if (onComplete) onComplete(textureCache.all.length);
 };
 
-export const getPlanetTexture = (planetType, planetName = "") => {
-  console.log(`[Texture Hook] Planet: ${planetName}, Type: ${planetType}, Library Ready: ${textureLibrary !== null}`);
+export const getPlanetTexture = (planetType, planetSeed) => {
+  if (!textureCache || textureCache.all.length === 0) return null;
 
-  if (!textureLibrary || !planetType) return null;
+  const cleanType = (planetType || "arid").toLowerCase().trim().replace(/\s+/g, "_");
 
-  const formattedKey = String(planetType).toLowerCase().replace(/\s+/g, '_');
-  const available = textureLibrary[formattedKey] || [];
+  let pool = textureCache[cleanType];
 
-  console.log(`[Texture Hook] 🔍 Seeking: '${formattedKey}'. Found: ${available.length} matching textures.`);
+  if (!pool || pool.length === 0) {
+    pool = textureCache.arid || textureCache.all;
+  }
 
-  if (available.length === 0) return null;
+  if (!pool || pool.length === 0) return null;
 
-  const seed = Math.abs([...planetName].reduce((acc, char) => acc + char.charCodeAt(0), 0));
-  const index = seed % available.length;
+  const seedStr = String(planetSeed || cleanType);
+  let hash = 0;
+  for (let i = 0; i < seedStr.length; i++) {
+    hash = seedStr.charCodeAt(i) + ((hash << 5) - hash);
+  }
 
-  return available[index];
+  const index = Math.abs(hash) % pool.length;
+  return pool[index];
+};
+
+export const subscribeToTextures = (onUpdate) => {
+  const channel = supabase
+    .channel(`planet-texture-changes-${Date.now()}`)
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "storage",
+        table: "objects",
+        filter: "bucket_id=eq.planet-textures",
+      },
+      () => {
+        loadSupabaseTextures((count) => {
+          if (onUpdate) onUpdate(count);
+        });
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
 };

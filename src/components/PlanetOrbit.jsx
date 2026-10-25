@@ -10,7 +10,7 @@ const PlanetOrbit = ({
   tiltAngle,
 }) => {
   const minRing = 25;
-  const maxRing = 95;
+  const maxRing = 82;
   const ringSize =
     totalPlanets === 1
       ? 60

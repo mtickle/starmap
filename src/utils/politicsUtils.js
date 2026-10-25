@@ -13,7 +13,7 @@ const galacticState = {
  * This function should be run ONLY ONCE when the server starts.
  */
 export const initializeGalacticPolitics = () => {
-    console.log("👑 Initializing Galactic Politics...");
+    //console.log("👑 Initializing Galactic Politics...");
 
     // Loop through every possible faction and assign it to an alliance.
     factions.forEach(faction => {

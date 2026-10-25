@@ -22,7 +22,7 @@ const NavigationFooter = ({ visibleStars = [], currentFocusId, onJumpToSystem })
 
   const handleGoHome = () => {
     if (homeSystem && homeSystem.id) {
-      console.log("Jumping to home system:", homeSystem.id);
+      //console.log("Jumping to home system:", homeSystem.id);
       if (onJumpToSystem) {
         onJumpToSystem(homeSystem.id);
       }
