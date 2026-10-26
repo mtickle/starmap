@@ -6,6 +6,8 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
 
     if (!planet) return null;
 
+    //console.log("Rendering UnifiedPlanetCard for planet:", planet);
+
     const toggleTab = (tabKey) => {
         setActiveScannerTab((prev) => (prev === tabKey ? null : tabKey));
     };
@@ -61,12 +63,13 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                         onClick={onClose}
                         className="absolute top-3 left-3 text-gray-300 hover:text-white flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest transition-colors bg-gray-950/80 px-3 py-1.5 rounded border border-gray-700 hover:border-gray-500 z-40"
                     >
-                        <span>←</span> Abort Lock
+                        <span>←</span>Close
                     </button>
                 )}
 
                 {/* Classification Badge */}
                 <div className="absolute top-3 right-3 z-30 flex items-center gap-2 bg-gray-950/85 border border-gray-700/80 px-3 py-1 rounded text-xs font-mono uppercase tracking-wider text-gray-200 backdrop-blur">
+
                     <span
                         className="w-2.5 h-2.5 rounded-full"
                         style={{
@@ -187,18 +190,18 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                 {/* Bottom Viewport Title Overlay */}
                 <div className="absolute bottom-3 left-4 right-4 flex justify-between items-end z-30 pointer-events-none">
                     <div>
-                        <div className="text-[10px] font-mono uppercase tracking-widest text-gray-400">
+                        {/* <div className="text-[10px] font-mono uppercase tracking-widest text-gray-400">
                             Planetary Body
-                        </div>
+                        </div> */}
                         <h3 className="text-xl font-bold text-white tracking-wide leading-tight">
                             {planet.planetName}
                         </h3>
                     </div>
-                    {hasMoons && (
+                    {/* {hasMoons && (
                         <span className="text-xs font-mono text-purple-300 bg-purple-950/70 border border-purple-700/60 px-2.5 py-0.5 rounded">
                             {moonCount} {moonCount === 1 ? "Moon" : "Moons"}
                         </span>
-                    )}
+                    )} */}
                 </div>
             </div>
 
@@ -206,6 +209,11 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
             <div className="p-5 flex flex-col justify-start gap-4">
                 {/* Status Pills */}
                 <div className="flex flex-wrap gap-2">
+                    {hasMoons && (
+                        <span className="px-2.5 py-1 rounded bg-purple-900/40 text-purple-300 text-xs uppercase tracking-wider font-semibold border border-purple-700/50">
+                            {moonCount} {moonCount === 1 ? "Moon" : "Moons"}
+                        </span>
+                    )}
                     {hasCiv ? (
                         <span className="px-2.5 py-1 rounded bg-blue-900/40 text-blue-300 text-xs uppercase tracking-wider font-semibold border border-blue-700/50">
                             Inhabited
@@ -252,7 +260,9 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                             Day Length
                         </p>
                         <p className="text-sm text-white font-bold">
-                            {planet.rotationalPeriod ? `${planet.rotationalPeriod}h` : "N/A"}
+                            {planet.rotationalPeriod || planet.rotationPeriod || planet.dayLength
+                                ? `${planet.rotationalPeriod || planet.rotationPeriod || planet.dayLength}h`
+                                : "N/A"}
                         </p>
                     </div>
                 </div>
@@ -265,8 +275,8 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                             type="button"
                             onClick={() => toggleTab("geo")}
                             className={`py-2 px-1.5 rounded text-xs font-semibold transition-colors flex items-center justify-center gap-1 ${activeScannerTab === "geo"
-                                    ? "bg-blue-950/80 text-blue-300 border border-blue-700/60"
-                                    : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"
+                                ? "bg-blue-950/80 text-blue-300 border border-blue-700/60"
+                                : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"
                                 }`}
                             title="Geological Scan"
                         >
@@ -280,10 +290,10 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                             disabled={!hasBiosphere}
                             onClick={() => toggleTab("bio")}
                             className={`py-2 px-1.5 rounded text-xs font-semibold transition-colors flex items-center justify-center gap-1 ${!hasBiosphere
-                                    ? "text-gray-700 cursor-not-allowed"
-                                    : activeScannerTab === "bio"
-                                        ? "bg-green-950/80 text-green-300 border border-green-700/60"
-                                        : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"
+                                ? "text-gray-700 cursor-not-allowed"
+                                : activeScannerTab === "bio"
+                                    ? "bg-green-950/80 text-green-300 border border-green-700/60"
+                                    : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"
                                 }`}
                             title="Biosphere Analysis"
                         >
@@ -297,10 +307,10 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                             disabled={!hasCiv}
                             onClick={() => toggleTab("civ")}
                             className={`py-2 px-1.5 rounded text-xs font-semibold transition-colors flex items-center justify-center gap-1 ${!hasCiv
-                                    ? "text-gray-700 cursor-not-allowed"
-                                    : activeScannerTab === "civ"
-                                        ? "bg-orange-950/80 text-orange-300 border border-orange-700/60"
-                                        : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"
+                                ? "text-gray-700 cursor-not-allowed"
+                                : activeScannerTab === "civ"
+                                    ? "bg-orange-950/80 text-orange-300 border border-orange-700/60"
+                                    : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"
                                 }`}
                             title="Civilization & Trade"
                         >
@@ -313,10 +323,10 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                             disabled={!hasMoons}
                             onClick={() => toggleTab("moons")}
                             className={`py-2 px-1.5 rounded text-xs font-semibold transition-colors flex items-center justify-center gap-1 ${!hasMoons
-                                    ? "text-gray-700 cursor-not-allowed"
-                                    : activeScannerTab === "moons"
-                                        ? "bg-purple-950/80 text-purple-300 border border-purple-700/60"
-                                        : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"
+                                ? "text-gray-700 cursor-not-allowed"
+                                : activeScannerTab === "moons"
+                                    ? "bg-purple-950/80 text-purple-300 border border-purple-700/60"
+                                    : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"
                                 }`}
                             title="Lunar Satellites"
                         >
@@ -384,10 +394,10 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                                             {f.rarity && (
                                                                 <span
                                                                     className={`text-[10px] uppercase tracking-widest px-2 py-0.5 rounded border ${f.rarity === "Rare"
-                                                                            ? "text-purple-300 bg-purple-950/60 border-purple-800/50"
-                                                                            : f.rarity === "Uncommon"
-                                                                                ? "text-blue-300 bg-blue-950/60 border-blue-800/50"
-                                                                                : "text-green-400 bg-green-950/60 border-green-800/50"
+                                                                        ? "text-purple-300 bg-purple-950/60 border-purple-800/50"
+                                                                        : f.rarity === "Uncommon"
+                                                                            ? "text-blue-300 bg-blue-950/60 border-blue-800/50"
+                                                                            : "text-green-400 bg-green-950/60 border-green-800/50"
                                                                         }`}
                                                                 >
                                                                     {f.rarity}

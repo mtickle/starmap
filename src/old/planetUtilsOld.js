@@ -92,6 +92,8 @@ export function synthesizePlanets(starId, starName, starCoordinate, rngStar) {
             moons: generateMoons(starId, planetId, planetName, planetTypeData.type, planetSize, rngPlanet)
         };
 
+        console.log(`Generated planet: ${planetName} (Type: ${planetTypeData.type}, Size: ${planetSize}, Gravity: ${gravity}, Orbit Radius: ${orbitRadius}, Orbital Period: ${orbitalPeriod}, Rotational Period: ${rotationalPeriod})`);
+
         planets.push(planet);
     }
 

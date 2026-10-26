@@ -46,7 +46,7 @@ export const loadSupabaseTextures = async (onComplete) => {
     }
   });
 
-  console.log("🗂️ Supabase: Final Texture Library Dictionary", textureCache);
+  //console.log("🗂️ Supabase: Final Texture Library Dictionary", textureCache);
   if (onComplete) onComplete(textureCache.all.length);
 };
 

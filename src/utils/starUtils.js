@@ -111,6 +111,7 @@ export function synthesizeStar(coordinate) {
       planetColor: selectedPlanetObj.color,
       gravity: (pRng() * 2 + 0.5).toFixed(2),
       orbitalPeriod: Math.floor(pRng() * 800) + 50,
+      rotationalPeriod: parseFloat((pRng() * 92 + 8).toFixed(1)),
       atmosphere: generateAtmosphere(planetType, pRng),
       conditions: generateConditions(planetType, pRng),
       faunaList: generateFauna(planetType, pRng),

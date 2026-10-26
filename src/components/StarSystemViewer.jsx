@@ -254,39 +254,39 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
       <div className="flex bg-gray-900 border border-gray-700 rounded-lg p-1 w-fit mb-6">
         <button
           onClick={() => setActiveTab("planets")}
-          className={`px-5 py-1.5 text-xs font-semibold rounded uppercase tracking-wider transition-colors ${activeTab === "planets"
+          className={`px-5 py-1.5 text-sm font-semibold rounded uppercase tracking-wider transition-colors ${activeTab === "planets"
             ? "bg-gray-700 text-white"
             : "text-gray-500 hover:text-gray-300"
             }`}
         >
-          System Bodies ({activeSystem.planets?.length || 0})
+          Planets ({activeSystem.planets?.length || 0})
         </button>
         <button
           onClick={() => setActiveTab("stations")}
-          className={`px-5 py-1.5 text-xs font-semibold rounded uppercase tracking-wider transition-colors ${activeTab === "stations"
+          className={`px-5 py-1.5 text-sm font-semibold rounded uppercase tracking-wider transition-colors ${activeTab === "stations"
             ? "bg-gray-700 text-white"
             : "text-gray-500 hover:text-gray-300"
             }`}
         >
-          Orbital Stations ({activeSystem.stations?.length || 0})
+          Stations ({activeSystem.stations?.length || 0})
         </button>
         <button
           onClick={() => setActiveTab("map")}
-          className={`px-5 py-1.5 text-xs font-semibold rounded uppercase tracking-wider transition-colors ${activeTab === "map"
+          className={`px-5 py-1.5 text-sm font-semibold rounded uppercase tracking-wider transition-colors ${activeTab === "map"
             ? "bg-gray-700 text-white"
             : "text-gray-500 hover:text-gray-300"
             }`}
         >
-          Orbital Topology
+          System Map
         </button>
         <button
           onClick={() => setActiveTab("data")}
-          className={`px-5 py-1.5 text-xs font-semibold rounded uppercase tracking-wider transition-colors ${activeTab === "data"
+          className={`px-5 py-1.5 text-sm font-semibold rounded uppercase tracking-wider transition-colors ${activeTab === "data"
             ? "bg-gray-700 text-white"
             : "text-gray-500 hover:text-gray-300"
             }`}
         >
-          Raw Payload
+          Data
         </button>
       </div>
 
