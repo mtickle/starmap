@@ -150,7 +150,7 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
 
           <div className="flex flex-wrap items-center gap-2 mt-3">
             {isHomeSystem && (
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-900/40 border border-yellow-600/60 text-xs shadow-[0_0_8px_rgba(202,138,4,0.2)]">
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-yellow-900/40 border border-yellow-600/60 text-sm shadow-[0_0_8px_rgba(202,138,4,0.2)]">
                 <span className="text-yellow-500">★</span>
                 <span className="text-yellow-400 font-bold uppercase tracking-wider">
                   Home System
@@ -158,7 +158,7 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
               </div>
             )}
 
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-800/80 border border-gray-700 text-xs">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-800/80 border border-gray-700 text-sm">
               <span className="text-gray-500">XYZ:</span>
               <span className="text-gray-300 font-mono tracking-wider">
                 {activeSystem.id}
@@ -166,7 +166,7 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
             </div>
 
             {distanceToHome !== null && (
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-950/40 border border-indigo-800/50 text-xs shadow-[0_0_8px_rgba(99,102,241,0.1)]">
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-950/40 border border-indigo-800/50 text-sm shadow-[0_0_8px_rgba(99,102,241,0.1)]">
                 <span className="text-indigo-500/70">Core Dist:</span>
                 <span className="text-indigo-300 font-mono font-semibold">
                   {distanceToHome} LY
@@ -174,32 +174,32 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
               </div>
             )}
 
-            <div className="flex items-center px-3 py-1 rounded-full bg-orange-950/40 border border-orange-800/50 text-xs text-orange-300 font-semibold">
+            <div className="flex items-center px-3 py-1 rounded-full bg-orange-950/40 border border-orange-800/50 text-sm text-orange-300 font-semibold">
               Class {activeSystem.type} Star
             </div>
 
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/40 border border-blue-800/50 text-xs">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/40 border border-blue-800/50 text-sm">
               <span className="text-blue-500/70">Control:</span>
               <span className="text-blue-300 font-semibold truncate max-w-[150px]">
                 {activeSystem.faction?.name || "Uncharted"}
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-800/80 border border-gray-700 text-xs">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-800/80 border border-gray-700 text-sm">
               <span className="text-gray-500">Planets:</span>
               <span className="text-gray-300 font-semibold">
                 {activeSystem.planets?.length || 0}
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-800/80 border border-gray-700 text-xs">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-800/80 border border-gray-700 text-sm">
               <span className="text-gray-500">Stations:</span>
               <span className="text-gray-300 font-semibold">
                 {activeSystem.stations?.length || 0}
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-950/40 border border-green-800/50 text-xs">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-950/40 border border-green-800/50 text-sm">
               <span className="text-green-500/70">Econ:</span>
               <span className="text-green-400 font-semibold">
                 {activeSystem.economy || "None"}
@@ -213,7 +213,8 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
           {isHomeSystem ? (
             <button
               onClick={handleRemoveHome}
-              className="px-3 py-1.5 bg-yellow-900/30 hover:bg-yellow-900/60 text-yellow-500 border border-yellow-700/50 rounded transition-colors text-[10px] uppercase tracking-widest font-bold flex items-center gap-1"
+              title="Remove this system as your Home System"
+              className="px-3 py-1.5 bg-yellow-900/30 hover:bg-yellow-900/60 text-yellow-500 border border-yellow-700/50 rounded transition-colors text-[14px] uppercase tracking-widest font-bold flex items-center gap-1"
             >
               <span>★</span> Clear Home
             </button>
@@ -235,7 +236,7 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
           ) : (
             <button
               onClick={requestSetHome}
-              className="px-3 py-1.5 bg-gray-800/50 hover:bg-gray-700 text-gray-400 border border-gray-700 rounded transition-colors text-[10px] uppercase tracking-widest font-bold flex items-center gap-1"
+              className="px-3 py-1.5 bg-gray-800/50 hover:bg-gray-700 text-gray-400 border border-gray-700 rounded transition-colors text-[14px] uppercase tracking-widest font-bold flex items-center gap-1"
             >
               <span>☆</span> Set Home
             </button>
@@ -243,7 +244,7 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
 
           <button
             onClick={onClose}
-            className="px-3 py-1.5 bg-red-950/50 hover:bg-red-900/80 text-red-400 border border-red-900/50 rounded transition-colors text-[10px] uppercase tracking-widest font-bold ml-2"
+            className="px-3 py-1.5 bg-red-950/50 hover:bg-red-900/80 text-red-400 border border-red-900/50 rounded transition-colors text-[14px] uppercase tracking-widest font-bold ml-2"
           >
             ✕ Close
           </button>

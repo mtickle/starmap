@@ -62,15 +62,10 @@ const NavigationFooter = ({ visibleStars = [], currentFocusId, onJumpToSystem })
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 w-full bg-gray-950 border-t border-gray-800 text-gray-400 p-2 px-6 flex justify-between items-center text-xs z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 w-full bg-gray-950 border-t border-gray-800 text-gray-400 p-2 px-6 flex justify-between items-center text-sm z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
 
         {/* Left Side: Sector Status */}
         <div className="flex items-center gap-4">
-          <span className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            Local Sector Link Active
-          </span>
-          <span className="text-gray-600">|</span>
           <span>
             Sensors detect <span className="text-white font-bold">{starsOnScreen}</span> stellar bodies in range
           </span>
@@ -86,8 +81,8 @@ const NavigationFooter = ({ visibleStars = [], currentFocusId, onJumpToSystem })
           {homeSystem && (
             <button
               onClick={handleGoHome}
-              className="flex items-center gap-2 px-3 py-1.5 bg-yellow-900/30 hover:bg-yellow-900/60 text-yellow-500 border border-yellow-700/50 rounded transition-colors text-[10px] uppercase tracking-widest font-bold"
-              title={`Coordinates: ${homeSystem.id}`}
+              className="flex items-center gap-2 px-3 py-1.5 bg-yellow-900/30 hover:bg-yellow-900/60 text-yellow-500 border border-yellow-700/50 rounded transition-colors text-[14px] uppercase tracking-widest font-bold"
+              title={`Return to Home System`}
             >
               <span className="text-sm leading-none">★</span>
               <div className="flex flex-col items-start text-left leading-tight">
@@ -101,7 +96,8 @@ const NavigationFooter = ({ visibleStars = [], currentFocusId, onJumpToSystem })
 
           <button
             onClick={handleUniversalReset}
-            className="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-800/50 rounded transition-colors uppercase tracking-wider font-mono text-[10px]"
+            className="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 text-red-400 border border-red-800/50 rounded transition-colors uppercase tracking-wider font-mono text-[14px]"
+            title="Clear all local star data and exploration history."
           >
             Universal Reset
           </button>
