@@ -175,7 +175,7 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
             )}
 
             <div className="flex items-center px-3 py-1 rounded-full bg-orange-950/40 border border-orange-800/50 text-sm text-orange-300 font-semibold">
-              Class {activeSystem.type} Star
+              Star Class: {activeSystem.type}
             </div>
 
             <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/40 border border-blue-800/50 text-sm">
