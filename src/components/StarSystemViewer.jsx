@@ -301,7 +301,7 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
                 No planetary bodies detected in this system.
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 items-start">
                 {activeSystem.planets.map((planet, idx) => (
                   <UnifiedPlanetCard
                     key={`${planet.planetId || idx}-${textureTick}`}
@@ -321,7 +321,7 @@ const StarSystemViewer = ({ activeSystem, onClose }) => {
                 No orbital stations detected in this sector.
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-start">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 items-start">
                 {activeSystem.stations.map((station, idx) => (
                   <StationCard
                     key={`station-${station.id || idx}-${textureTick}`}

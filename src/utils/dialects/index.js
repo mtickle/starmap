@@ -21,6 +21,8 @@ export const floraDialect = {
   end: ['plant', 'weed', 'root', 'vine', 'stem', 'blossom', 'bud', 'tree']
 };
 
+
+
 export const faunaDialect = {
   start: [
     'Zor', 'Vex', 'Tal', 'Nir', 'Lux', 'Garn', 'Ska', 'Dro', 'Fel',
@@ -35,6 +37,12 @@ export const faunaDialect = {
     'um', 'ol', 'tra', 'pod', 'ex', 'is',
     'isk', 'or', 'ah', 'us', 'ar', 'yx', 'ast', 'en'
   ]
+};
+
+export const moonDialect = {
+  start: ['Lun', 'Sel', 'Cres', 'Umb', 'Nyx', 'Phos', 'Tid', 'Apos', 'Pen', 'Syx', 'Kael', 'Myr', 'Io', 'Call'],
+  middle: ['ar', 'en', 'is', 'on', 'el', 'ith', 'ul', 'or', 'ix', 'ath'],
+  end: ['a', 'ia', 'eth', 'is', 'us', 'um', 'ion', 'yx']
 };
 
 export const planetDialect = {
@@ -102,12 +110,13 @@ export const DIALECTS = {
   fauna: faunaDialect,
   planet: planetDialect,
   mineral: mineralDialect,
+  moon: moonDialect,
   settlement: settlementDialect
 };
 
 export const ENTITY_ROUTER = {
   'star': 'star',
-  'moon': 'star',
+  'moon': 'moon',
   'flora': 'flora',
 
   // --- PLANETS ---

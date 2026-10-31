@@ -65,7 +65,8 @@ export function synthesizeStar(coordinate) {
   ];
 
   for (let i = 0; i < numPlanets; i++) {
-    const planetSeed = hashString(`${coordinate}_P${i}`);
+    const planetId = `${coordinate}_P${i}`;
+    const planetSeed = hashString(planetId); // Use it for the seed
     const pRng = mulberry32(planetSeed);
 
     // ROLL FOR PLANET TYPE USING WEIGHTS
@@ -100,12 +101,44 @@ export function synthesizeStar(coordinate) {
         : Math.floor(pRng() * 3);
 
     // THE VORTEX: Generating actual names for moons instead of "Moon 1"
-    const moons = Array.from({ length: numMoons }, () =>
-      generateName(pRng, "moon")
-    );
+    const moons = [];
+    for (let m = 0; m < numMoons; m++) {
+      const moonId = `${planetId}_M${m}`;
+      const mRng = mulberry32(hashString(moonId));
+
+      // Roll a type for the moon using the same planet library to support conditions
+      const mRoll = mRng();
+      let cumulativeM = 0;
+      let selectedMoonObj = planetTypes[planetTypes.length - 1];
+
+      for (const pt of planetTypes) {
+        cumulativeM += pt.weight;
+        if (mRoll <= cumulativeM) {
+          selectedMoonObj = pt;
+          break;
+        }
+      }
+
+      const moonType = selectedMoonObj.type;
+      const hasMoonCiv = mRng() > 0.85; // Lower probability for moon settlements
+
+      // Conditional Naming: Procedural name if inhabited, Roman numeral if barren
+      const moonName = hasMoonCiv
+        ? generateName(mRng, "moon")
+        : `${pName} ${toRoman(m + 1)}`;
+
+      moons.push({
+        moonId: moonId,
+        moonName: moonName,
+        moonType: moonType,
+        moonSize: parseFloat((mRng() * 0.3 + 0.05).toFixed(2)), // Scaling factor 
+        moonConditions: generateConditions(moonType, mRng),
+        moonSettlements: generateSettlements(hasMoonCiv, mRng),
+      });
+    }
 
     planets.push({
-      planetId: `${coordinate}_P${i}`,
+      planetId: planetId,
       planetName: pName,
       planetType: planetType,
       planetColor: selectedPlanetObj.color,
@@ -141,4 +174,9 @@ export function synthesizeStar(coordinate) {
     stations: stations,
     planets: planets,
   };
+}
+
+function toRoman(num) {
+  const romans = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+  return romans[num - 1] || `${num}`;
 }
