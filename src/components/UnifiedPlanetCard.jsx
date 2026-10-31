@@ -135,8 +135,9 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                 }}
                             >
                                 {/* Core Planet */}
+                                {/* Core Planet */}
                                 <div
-                                    className="absolute top-0 left-0 rounded-full border border-black/60 z-20 pointer-events-auto"
+                                    className="absolute top-0 left-0 rounded-full border border-black/60 z-20 pointer-events-auto overflow-hidden"
                                     style={{
                                         width: `${coreRenderSize}px`,
                                         height: `${coreRenderSize}px`,
@@ -145,16 +146,27 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                         backgroundImage: textureUrl ? `url(${textureUrl})` : "none",
                                         backgroundSize: "200% 100%",
                                         backgroundRepeat: "repeat-x",
-                                        //animation: "spin-planet 25s linear infinite",
                                         animation: `spin-planet ${spinDuration}s linear infinite`,
                                         boxShadow: `
-                                          inset -18px -18px 32px rgba(0, 0, 0, 0.95),
-                                          inset 6px 6px 14px rgba(255, 255, 255, 0.15),
-                                          0 0 35px ${planet.planetColor}40
+                                          inset -24px -24px 45px rgba(0, 0, 0, 0.98),
+                                          inset 10px 10px 20px rgba(255, 255, 255, 0.25),
+                                          0 0 45px ${planet.planetColor}60
                                         `,
                                     }}
                                     title={planet.planetName}
-                                />
+                                >
+                                    {/* 3D Spherical Lighting Overlay (Adds volumetric bulge without touching texture pixels) */}
+                                    <div
+                                        className="absolute inset-0 rounded-full pointer-events-none"
+                                        style={{
+                                            background: `
+                                                radial-gradient(circle at 32% 32%, rgba(255,255,255,0.3) 0%, transparent 55%),
+                                                radial-gradient(circle at 68% 68%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.95) 100%)
+                                            `,
+                                            mixBlendMode: "overlay"
+                                        }}
+                                    />
+                                </div>
 
                                 {/* Moon Orbits */}
                                 {/* Moon Orbits */}
