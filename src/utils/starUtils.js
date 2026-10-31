@@ -35,9 +35,7 @@ export function synthesizeStar(coordinate) {
     }
   }
 
-  // THE VORTEX: Replaced the manual loop with a single engine call
   const starName = generateName(rng, "star");
-
   const starSize = Math.floor(rng() * 10) + 5;
 
   // 3. Factions & Stations
@@ -51,25 +49,12 @@ export function synthesizeStar(coordinate) {
   const numPlanets = Math.floor(rng() * 9);
   const planets = [];
 
-  // Tiny inline fallback for lifeless planets
-  const romanNumerals = [
-    "I",
-    "II",
-    "III",
-    "IV",
-    "V",
-    "VI",
-    "VII",
-    "VIII",
-    "IX",
-  ];
-
   for (let i = 0; i < numPlanets; i++) {
     const planetId = `${coordinate}_P${i}`;
-    const planetSeed = hashString(planetId); // Use it for the seed
+    const planetSeed = hashString(planetId);
     const pRng = mulberry32(planetSeed);
 
-    // ROLL FOR PLANET TYPE USING WEIGHTS
+    // Roll for Planet Type
     const pRoll = pRng();
     let cumulativeP = 0;
     let selectedPlanetObj = planetTypes[planetTypes.length - 1];
@@ -85,28 +70,31 @@ export function synthesizeStar(coordinate) {
     const planetType = selectedPlanetObj.type;
     const hasCivilization = pRng() > 0.7;
 
-    // THE VORTEX: Replaced the planet naming loop
-    let pName = "";
-    if (hasCivilization) {
-      // Dynamically pass the planet type so toxic planets sound different from paradise planets
-      pName = generateName(pRng, `planet_${planetType.toLowerCase()}`);
+    // Naming Logic (Reusing toRoman helper)
+    const pName = hasCivilization
+      ? generateName(pRng, `planet_${planetType.toLowerCase()}`)
+      : `${starName} ${toRoman(i + 1)}`;
+
+    // Calculate gravity early so it can influence satellite capture
+    const gravityValue = pRng() * 2 + 0.5; // Ranges from 0.5G to 2.5G
+    const gravity = parseFloat(gravityValue.toFixed(2));
+
+    // Determine Moon Count based on Gravity & Type
+    let numMoons = 0;
+    if (planetType === "Gas Giant") {
+      numMoons = Math.floor(pRng() * 8) + 3; // Gas Giants capture 3 to 10 moons
     } else {
-      const suffix = romanNumerals[i] || i + 1;
-      pName = `${starName} ${suffix}`;
+      const maxMoons = Math.ceil(gravity * 2);
+      numMoons = Math.floor(pRng() * (maxMoons + 1));
     }
 
-    const numMoons =
-      planetType === "Gas Giant"
-        ? Math.floor(pRng() * 6) + 1
-        : Math.floor(pRng() * 3);
-
-    // THE VORTEX: Generating actual names for moons instead of "Moon 1"
+    // Generate Moons Array
     const moons = [];
     for (let m = 0; m < numMoons; m++) {
       const moonId = `${planetId}_M${m}`;
       const mRng = mulberry32(hashString(moonId));
 
-      // Roll a type for the moon using the same planet library to support conditions
+      // Roll Moon Type
       const mRoll = mRng();
       let cumulativeM = 0;
       let selectedMoonObj = planetTypes[planetTypes.length - 1];
@@ -120,9 +108,9 @@ export function synthesizeStar(coordinate) {
       }
 
       const moonType = selectedMoonObj.type;
-      const hasMoonCiv = mRng() > 0.85; // Lower probability for moon settlements
+      const hasMoonCiv = mRng() > 0.85;
 
-      // Conditional Naming: Procedural name if inhabited, Roman numeral if barren
+      // Conditional Moon Naming
       const moonName = hasMoonCiv
         ? generateName(mRng, "moon")
         : `${pName} ${toRoman(m + 1)}`;
@@ -131,7 +119,7 @@ export function synthesizeStar(coordinate) {
         moonId: moonId,
         moonName: moonName,
         moonType: moonType,
-        moonSize: parseFloat((mRng() * 0.3 + 0.05).toFixed(2)), // Scaling factor 
+        moonSize: parseFloat((mRng() * 0.3 + 0.05).toFixed(2)),
         moonConditions: generateConditions(moonType, mRng),
         moonSettlements: generateSettlements(hasMoonCiv, mRng),
       });
@@ -142,7 +130,7 @@ export function synthesizeStar(coordinate) {
       planetName: pName,
       planetType: planetType,
       planetColor: selectedPlanetObj.color,
-      gravity: (pRng() * 2 + 0.5).toFixed(2),
+      gravity: gravity.toFixed(2),
       orbitalPeriod: Math.floor(pRng() * 800) + 50,
       rotationalPeriod: parseFloat((pRng() * 92 + 8).toFixed(1)),
       atmosphere: generateAtmosphere(planetType, pRng),
@@ -157,6 +145,7 @@ export function synthesizeStar(coordinate) {
       moons: moons,
     });
   }
+
   return {
     id: coordinate,
     name: starName,
@@ -176,6 +165,7 @@ export function synthesizeStar(coordinate) {
   };
 }
 
+// --- HELPERS ---
 function toRoman(num) {
   const romans = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
   return romans[num - 1] || `${num}`;

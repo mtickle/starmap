@@ -19,6 +19,8 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
 
     if (!planet) return null;
 
+    console.log(planet)
+
     const toggleTab = (tabKey) => {
         setActiveScannerTab((prev) => (prev === tabKey ? null : tabKey));
     };
@@ -165,7 +167,7 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                     const moonName = isString ? moon : moon.moonName || moon.name || `Moon ${mIdx + 1}`;
                                     const moonColor = isString ? "#9ca3af" : moon.color || "#cbd5e1";
 
-                                    // Map the 0.05 - 0.35 float to CSS pixels (fallback for legacy data)
+                                    // Scale size from 4px to 16px based on gravity/mass
                                     const moonPixelSize = !isString && moon.moonSize
                                         ? Math.max(4, Math.floor(moon.moonSize * 45))
                                         : 8 + (mIdx % 3) * 2;
@@ -187,17 +189,23 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                                         <div style={{ transform: `rotate(-${moonAngle}deg)`, transformStyle: "preserve-3d" }}>
                                                             <div style={{ transform: `rotateX(-${tiltAngle}deg)` }}>
 
-                                                                {/* Injected moonPixelSize here */}
+                                                                {/* Expanded invisible hit area with onMouseEnter */}
                                                                 <div
-                                                                    className="rounded-full shadow-[0_2px_6px_rgba(0,0,0,0.95)] border border-black/80 pointer-events-auto cursor-help hover:scale-125 transition-transform"
-                                                                    style={{
-                                                                        width: `${moonPixelSize}px`,
-                                                                        height: `${moonPixelSize}px`,
-                                                                        backgroundColor: moonColor,
-                                                                        backgroundImage: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.5) 0%, rgba(0,0,0,0.85) 85%)",
-                                                                    }}
-                                                                    title={moonName}
-                                                                />
+                                                                    className="pointer-events-auto cursor-crosshair flex items-center justify-center p-3 -m-3 rounded-full group z-40"
+                                                                    onMouseEnter={() => setActiveScannerTab("moons")}
+                                                                    title={`Scan ${moonName}`}
+                                                                >
+                                                                    {/* The actual visible moon */}
+                                                                    <div
+                                                                        className="rounded-full shadow-[0_2px_6px_rgba(0,0,0,0.95)] border border-black/80 group-hover:scale-150 group-hover:border-purple-400 transition-all"
+                                                                        style={{
+                                                                            width: `${moonPixelSize}px`,
+                                                                            height: `${moonPixelSize}px`,
+                                                                            backgroundColor: moonColor,
+                                                                            backgroundImage: "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.5) 0%, rgba(0,0,0,0.85) 85%)",
+                                                                        }}
+                                                                    />
+                                                                </div>
 
                                                             </div>
                                                         </div>
@@ -428,6 +436,7 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                             )}
 
                             {/* PANEL E: MOONS */}
+                            {/* PANEL E: MOONS */}
                             {activeScannerTab === "moons" && (
                                 <div>
                                     <div className="text-xs font-mono uppercase tracking-wider text-purple-400 mb-2.5 pb-1.5 border-b border-gray-800">
@@ -436,30 +445,60 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                     <ul className="space-y-2.5">
                                         {planet.moons.map((moon, mIdx) => {
                                             const isString = typeof moon === "string";
-                                            const name = isString ? moon : moon.name || `Moon ${mIdx + 1}`;
+
+                                            // Correctly target moonName and moonType from the JSON schema
+                                            const name = isString ? moon : moon.moonName || moon.name || `Moon ${mIdx + 1}`;
+                                            const themeType = isString ? null : moon.moonType || moon.theme;
 
                                             return (
                                                 <li key={mIdx} className="bg-gray-900/70 p-3 rounded border border-purple-900/40">
                                                     <div className="flex items-baseline justify-between gap-2">
                                                         <span className="font-bold text-purple-300 text-sm">{name}</span>
-                                                        {!isString && moon.theme && <span className="text-[10px] uppercase tracking-widest text-purple-300 bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800/50">{moon.theme}</span>}
+                                                        {themeType && (
+                                                            <span className="text-[10px] uppercase tracking-widest text-purple-300 bg-purple-950/60 px-2 py-0.5 rounded border border-purple-800/50">
+                                                                {themeType}
+                                                            </span>
+                                                        )}
                                                     </div>
+
                                                     {!isString && (
-                                                        <div className="mt-2 space-y-1.5">
-                                                            {moon.settlement && (
+                                                        <div className="mt-2 space-y-2">
+                                                            {/* Render the new moonConditions object */}
+                                                            {moon.moonConditions && (
+                                                                <div className="bg-gray-950/50 p-2 rounded border border-gray-800/60 space-y-1">
+                                                                    <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1.5">Surface Telemetry</div>
+                                                                    {moon.moonConditions.weather && <div className="text-xs flex justify-between gap-3"><span className="text-gray-400">Weather:</span> <span className="text-blue-300 text-right">{moon.moonConditions.weather}</span></div>}
+                                                                    {moon.moonConditions.temperature && <div className="text-xs flex justify-between gap-3"><span className="text-gray-400">Day Temp:</span> <span className="text-amber-300 text-right">{moon.moonConditions.temperature}</span></div>}
+                                                                    {moon.moonConditions.nightTemperature && <div className="text-xs flex justify-between gap-3"><span className="text-gray-400">Night Temp:</span> <span className="text-indigo-300 text-right">{moon.moonConditions.nightTemperature}</span></div>}
+                                                                    {moon.moonConditions.toxicity && <div className="text-xs flex justify-between gap-3"><span className="text-gray-400">Toxicity:</span> <span className="text-green-400 text-right">{moon.moonConditions.toxicity}</span></div>}
+                                                                    {moon.moonConditions.radiation && <div className="text-xs flex justify-between gap-3"><span className="text-gray-400">Radiation:</span> <span className="text-red-400 text-right">{moon.moonConditions.radiation}</span></div>}
+                                                                </div>
+                                                            )}
+
+                                                            {/* Deduplicated Settlements Array */}
+                                                            {moon.moonSettlements && Object.values(moon.moonSettlements).length > 0 && (
+                                                                <div className="text-xs">
+                                                                    <span className="text-gray-400">Outposts: </span>
+                                                                    <span className="text-orange-300 font-medium">
+                                                                        {[...new Set(Object.values(moon.moonSettlements))].join(", ")}
+                                                                    </span>
+                                                                </div>
+                                                            )}
+
+                                                            {/* Fallbacks for older settlement schema */}
+                                                            {moon.settlement && (!moon.moonSettlements || moon.moonSettlements.length === 0) && (
                                                                 <div className="text-xs">
                                                                     <span className="text-gray-400">Outpost: </span>
                                                                     <span className="text-orange-300 font-medium">{moon.settlement}</span>
                                                                 </div>
                                                             )}
+
+                                                            {/* Legacy Economy / Industry fallback */}
                                                             {(moon.economy || moon.industry) && (
                                                                 <div className="text-xs flex flex-wrap items-center gap-x-4 gap-y-1">
                                                                     {moon.economy && <span><span className="text-gray-400">Econ: </span><span className="text-green-400">{typeof moon.economy === "string" ? moon.economy : moon.economy.name}</span></span>}
                                                                     {moon.industry && <span><span className="text-gray-400">Ind: </span><span className="text-yellow-400">{typeof moon.industry === "string" ? moon.industry : moon.industry.name}</span></span>}
                                                                 </div>
-                                                            )}
-                                                            {moon.description && (
-                                                                <p className="text-xs text-gray-300 italic mt-2 leading-relaxed border-l-2 border-purple-800/60 pl-2.5">"{moon.description}"</p>
                                                             )}
                                                         </div>
                                                     )}
