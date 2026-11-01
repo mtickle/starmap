@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getPlanetTexture } from "@utils/planetTextures.js";
+import { NEBULA_PRESETS, nebulaKeyframes } from "@utils/nebulaBackground.js";
 
 /**
  * UnifiedPlanetCard
@@ -18,8 +19,6 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
     const [activeScannerTab, setActiveScannerTab] = useState("geo");
 
     if (!planet) return null;
-
-    console.log(planet)
 
     const toggleTab = (tabKey) => {
         setActiveScannerTab((prev) => (prev === tabKey ? null : tabKey));
@@ -43,13 +42,10 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
     const faunaCount = planet.faunaList?.length || 0;
     const geoCount = planet.resourceList?.length || 0;
     const moonCount = planet.moons?.length || 0;
+
     // --- DYNAMIC SPIN CALCULATION ---
-    // Extract day length, falling back to 24 hours if undefined
     const rawDay = planet.rotationalPeriod || planet.rotationPeriod || planet.dayLength;
     const dayHours = parseFloat(rawDay) || 24;
-
-    // Map a standard 24-hour day to a 25-second animation.
-    // Clamp between 10s (max speed) and 120s (min speed) so the visual remains pleasant.
     const spinDuration = Math.max(10, Math.min(120, (dayHours / 24) * 25));
 
     const coreRenderSize = 170;
@@ -59,6 +55,7 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
         <div className="bg-gray-900/95 rounded-xl border border-gray-800 hover:border-gray-600 transition-colors overflow-hidden flex flex-col self-start w-full h-[28rem] shadow-xl backdrop-blur-sm">
             <style>
                 {`
+                  ${nebulaKeyframes}
                   @keyframes orbit-spin {
                     from { transform: rotate(0deg); }
                     to { transform: rotate(360deg); }
@@ -80,7 +77,7 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
 
                 {/* Right Side: Grouped Pills */}
                 <div className="flex items-center flex-wrap justify-end gap-2">
-                    <span className="px-2.5 py-1 rounded bg-gray-900/40 text-gray-300 text-[10px]     uppercase tracking-wider font-semibold border border-gray-700/50">
+                    <span className="px-2.5 py-1 rounded bg-gray-900/40 text-gray-300 text-[10px] uppercase tracking-wider font-semibold border border-gray-700/50">
                         {planet.planetType}
                     </span>
                     {hasMoons && (
@@ -116,12 +113,14 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
             </div>
 
             {/* 2. SPLIT BODY: Visuals/Stats (Left) + Tabs/Readout (Right) */}
-            <div className="flex flex-row flex-1 overflow-hidden bg-gradient-to-b from-[#07070f] via-[#121224] to-gray-900">
+            <div className="flex flex-row flex-1 overflow-hidden rounded-b-xl">
 
-                {/* --- Left Column (Fixed Width 288px) --- */}
-                <div className="w-96 flex flex-col border-r border-gray-800 shrink-0">
+                <div
+                    className="w-96 flex flex-col border-r border-gray-800/80 shrink-0 relative overflow-hidden"
+                    style={NEBULA_PRESETS.deepSpace}
+                >
 
-                    {/* Top: 3D Viewport & Floating Pills (Stretches to fill available space above stats) */}
+                    {/* Top: 3D Viewport & Moons */}
                     <div className="relative flex-1 flex flex-col items-center justify-center overflow-hidden">
                         <div
                             className="relative flex items-center justify-center w-full h-full -mt-3"
@@ -134,7 +133,6 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                     transformStyle: "preserve-3d",
                                 }}
                             >
-                                {/* Core Planet */}
                                 {/* Core Planet */}
                                 <div
                                     className="absolute top-0 left-0 rounded-full border border-black/60 z-20 pointer-events-auto overflow-hidden"
@@ -155,7 +153,7 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                     }}
                                     title={planet.planetName}
                                 >
-                                    {/* 3D Spherical Lighting Overlay (Adds volumetric bulge without touching texture pixels) */}
+                                    {/* 3D Spherical Lighting Overlay */}
                                     <div
                                         className="absolute inset-0 rounded-full pointer-events-none"
                                         style={{
@@ -169,7 +167,6 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                 </div>
 
                                 {/* Moon Orbits */}
-                                {/* Moon Orbits */}
                                 {planet.moons?.map((moon, mIdx) => {
                                     const moonRingSize = coreRenderSize + 36 + mIdx * 26;
                                     const moonAngle = (mIdx * 115) % 360;
@@ -179,7 +176,6 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                     const moonName = isString ? moon : moon.moonName || moon.name || `Moon ${mIdx + 1}`;
                                     const moonColor = isString ? "#9ca3af" : moon.color || "#cbd5e1";
 
-                                    // Scale size from 4px to 16px based on gravity/mass
                                     const moonPixelSize = !isString && moon.moonSize
                                         ? Math.max(4, Math.floor(moon.moonSize * 45))
                                         : 8 + (mIdx % 3) * 2;
@@ -200,14 +196,11 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                                     <div style={{ animation: `orbit-spin ${moonDuration}s linear infinite reverse`, transformStyle: "preserve-3d" }}>
                                                         <div style={{ transform: `rotate(-${moonAngle}deg)`, transformStyle: "preserve-3d" }}>
                                                             <div style={{ transform: `rotateX(-${tiltAngle}deg)` }}>
-
-                                                                {/* Expanded invisible hit area with onMouseEnter */}
                                                                 <div
                                                                     className="pointer-events-auto cursor-crosshair flex items-center justify-center p-3 -m-3 rounded-full group z-40"
                                                                     onMouseEnter={() => setActiveScannerTab("moons")}
                                                                     title={`Scan ${moonName}`}
                                                                 >
-                                                                    {/* The actual visible moon */}
                                                                     <div
                                                                         className="rounded-full shadow-[0_2px_6px_rgba(0,0,0,0.95)] border border-black/80 group-hover:scale-150 group-hover:border-purple-400 transition-all"
                                                                         style={{
@@ -218,7 +211,6 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                                                         }}
                                                                     />
                                                                 </div>
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -253,7 +245,7 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                 </div>
 
                 {/* --- Right Column (Flex-1, Scrollable Tray) --- */}
-                <div className="flex-1 flex flex-col p-3 bg-gray-900/50 overflow-hidden">
+                <div className="flex-1 flex flex-col p-3 overflow-hidden">
 
                     {/* Tab Navigation Grid */}
                     <div className="grid grid-cols-5 gap-1 bg-gray-950 p-1 rounded-lg border border-gray-800 font-mono shrink-0">
@@ -263,7 +255,6 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                             className={`py-2 px-1 rounded text-sm font-semibold transition-colors flex flex-col items-center justify-center gap-0.5 ${activeScannerTab === "geo" ? "bg-blue-950/80 text-blue-300 border border-blue-700/60" : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"}`}
                         >
                             <span>Geology</span>
-                            {/* <span className="text-[10px] opacity-75">({geoCount})</span> */}
                         </button>
                         <button
                             type="button"
@@ -272,7 +263,6 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                             className={`py-2 px-1 rounded text-sm font-semibold transition-colors flex flex-col items-center justify-center gap-0.5 ${!hasFlora ? "text-gray-700 cursor-not-allowed" : activeScannerTab === "flora" ? "bg-green-950/80 text-green-300 border border-green-700/60" : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"}`}
                         >
                             <span>Flora</span>
-                            {/* <span className="text-[10px] opacity-75">({floraCount})</span> */}
                         </button>
                         <button
                             type="button"
@@ -281,7 +271,6 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                             className={`py-2 px-1 rounded text-sm font-semibold transition-colors flex flex-col items-center justify-center gap-0.5 ${!hasFauna ? "text-gray-700 cursor-not-allowed" : activeScannerTab === "fauna" ? "bg-teal-950/80 text-teal-300 border border-teal-700/60" : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"}`}
                         >
                             <span>Fauna</span>
-                            {/* <span className="text-[10px] opacity-75">({faunaCount})</span> */}
                         </button>
                         <button
                             type="button"
@@ -290,16 +279,14 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                             className={`py-2 px-1 rounded text-sm font-semibold transition-colors flex flex-col items-center justify-center gap-0.5 ${!hasCiv ? "text-gray-700 cursor-not-allowed" : activeScannerTab === "civ" ? "bg-orange-950/80 text-orange-300 border border-orange-700/60" : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"}`}
                         >
                             <span>Society</span>
-                            {/* <span className="text-[10px] opacity-0">(-)</span> */}
                         </button>
                         <button
                             type="button"
                             disabled={!hasMoons}
                             onClick={() => toggleTab("moons")}
-                            className={`py-2 px-1 rounded text-sm  font-semibold transition-colors flex flex-col items-center justify-center gap-0.5 ${!hasMoons ? "text-gray-700 cursor-not-allowed" : activeScannerTab === "moons" ? "bg-purple-950/80 text-purple-300 border border-purple-700/60" : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"}`}
+                            className={`py-2 px-1 rounded text-sm font-semibold transition-colors flex flex-col items-center justify-center gap-0.5 ${!hasMoons ? "text-gray-700 cursor-not-allowed" : activeScannerTab === "moons" ? "bg-purple-950/80 text-purple-300 border border-purple-700/60" : "text-gray-400 hover:text-gray-200 hover:bg-gray-900"}`}
                         >
                             <span>Moons</span>
-                            {/* <span className="text-[10px] opacity-75">({moonCount})</span> */}
                         </button>
                     </div>
 
@@ -448,7 +435,6 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                             )}
 
                             {/* PANEL E: MOONS */}
-                            {/* PANEL E: MOONS */}
                             {activeScannerTab === "moons" && (
                                 <div>
                                     <div className="text-xs font-mono uppercase tracking-wider text-purple-400 mb-2.5 pb-1.5 border-b border-gray-800">
@@ -457,10 +443,12 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                     <ul className="space-y-2.5">
                                         {planet.moons.map((moon, mIdx) => {
                                             const isString = typeof moon === "string";
-
-                                            // Correctly target moonName and moonType from the JSON schema
                                             const name = isString ? moon : moon.moonName || moon.name || `Moon ${mIdx + 1}`;
                                             const themeType = isString ? null : moon.moonType || moon.theme;
+
+                                            const rawSettlements = moon.moonSettlements || moon.settlements || [];
+                                            const settlementsList = Array.isArray(rawSettlements) ? rawSettlements : Object.values(rawSettlements);
+                                            const outpostNames = settlementsList.map(s => typeof s === "string" ? s : s.name).filter(Boolean);
 
                                             return (
                                                 <li key={mIdx} className="bg-gray-900/70 p-3 rounded border border-purple-900/40">
@@ -475,7 +463,6 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
 
                                                     {!isString && (
                                                         <div className="mt-2 space-y-2">
-                                                            {/* Render the new moonConditions object */}
                                                             {moon.moonConditions && (
                                                                 <div className="bg-gray-950/50 p-2 rounded border border-gray-800/60 space-y-1">
                                                                     <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1.5">Surface Telemetry</div>
@@ -487,29 +474,12 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                                                                 </div>
                                                             )}
 
-                                                            {/* Deduplicated Settlements Array */}
-                                                            {moon.moonSettlements && Object.values(moon.moonSettlements).length > 0 && (
+                                                            {outpostNames.length > 0 && (
                                                                 <div className="text-xs">
                                                                     <span className="text-gray-400">Outposts: </span>
                                                                     <span className="text-orange-300 font-medium">
-                                                                        {[...new Set(Object.values(moon.moonSettlements))].join(", ")}
+                                                                        {outpostNames.join(", ")}
                                                                     </span>
-                                                                </div>
-                                                            )}
-
-                                                            {/* Fallbacks for older settlement schema */}
-                                                            {moon.settlement && (!moon.moonSettlements || moon.moonSettlements.length === 0) && (
-                                                                <div className="text-xs">
-                                                                    <span className="text-gray-400">Outpost: </span>
-                                                                    <span className="text-orange-300 font-medium">{moon.settlement}</span>
-                                                                </div>
-                                                            )}
-
-                                                            {/* Legacy Economy / Industry fallback */}
-                                                            {(moon.economy || moon.industry) && (
-                                                                <div className="text-xs flex flex-wrap items-center gap-x-4 gap-y-1">
-                                                                    {moon.economy && <span><span className="text-gray-400">Econ: </span><span className="text-green-400">{typeof moon.economy === "string" ? moon.economy : moon.economy.name}</span></span>}
-                                                                    {moon.industry && <span><span className="text-gray-400">Ind: </span><span className="text-yellow-400">{typeof moon.industry === "string" ? moon.industry : moon.industry.name}</span></span>}
                                                                 </div>
                                                             )}
                                                         </div>

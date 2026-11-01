@@ -4,13 +4,13 @@ import { useMapHandlers } from '@utils/mouseUtils.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import NavigationFooter from './NavigationFooter.jsx';
 import NavigationHeader from './NavigationHeader.jsx';
+import WelcomeModal from './WelcomeModal.jsx';
 
 // Cubic easing function for the slow-fast-slow cinematic pan
 const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
 const getStarTooltip = (star) => {
     if (!star) return null;
-
 
     const totalMoons = star.fullData?.planets?.reduce(
         (sum, planet) => sum + (planet.moons?.length || 0),
@@ -36,12 +36,68 @@ const StarMap = () => {
     const [scale, setScale] = useState(1);
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
-    const stars = useDeterministicStarField({
+    // --- FILTER STATE ---
+    const [filters, setFilters] = useState({
+        starClass: [],
+        faction: [],
+        hasCiv: false,
+        hasBiosphere: false,
+        hasRare: false,
+    });
+
+    const handleResetFilters = () => {
+        setFilters({
+            starClass: [],
+            faction: [],
+            hasCiv: false,
+            hasBiosphere: false,
+            hasRare: false,
+        });
+    };
+
+    const rawStars = useDeterministicStarField({
         offsetX,
         offsetY,
         canvasWidth: canvasSize.width,
         canvasHeight: canvasSize.height,
         scale,
+    });
+
+    // --- FILTER PREDICATE LOGIC ---
+    const stars = rawStars.filter((star) => {
+        const fullData = star.fullData || {};
+        const planets = fullData.planets || [];
+
+        // Star Class filter (e.g. O, B, A, F, G, K, M)
+        if (filters.starClass.length > 0 && !filters.starClass.includes(star.type)) {
+            return false;
+        }
+
+        // Faction filter
+        const starFactionName = star.faction?.name || 'Independent';
+        if (filters.faction.length > 0 && !filters.faction.includes(starFactionName)) {
+            return false;
+        }
+
+        // Civilization filter (Inhabited)
+        if (filters.hasCiv) {
+            const hasSettlementsOrCiv = planets.some(p => (p.settlements?.length > 0) || p.inhabitants || p.economy);
+            if (!hasSettlementsOrCiv) return false;
+        }
+
+        // Biosphere filter
+        if (filters.hasBiosphere) {
+            const hasBio = planets.some(p => (p.floraList?.length > 0) || (p.faunaList?.length > 0));
+            if (!hasBio) return false;
+        }
+
+        // Rare Deposits filter
+        if (filters.hasRare) {
+            const hasRareRes = planets.some(p => p.resourceList?.some(r => r.rarity?.toLowerCase() === 'rare'));
+            if (!hasRareRes) return false;
+        }
+
+        return true;
     });
 
     // --- UI & INTERACTION STATE ---
@@ -289,27 +345,27 @@ const StarMap = () => {
     // --- RENDER ---
     return (
         <div className="w-screen h-screen bg-black overflow-hidden relative font-mono text-white">
+
+            <WelcomeModal />
+
             <canvas
                 ref={canvasRef}
                 className="w-full h-full block cursor-crosshair touch-none"
                 {...mapHandlers}
                 onClick={handleClick}
             />
-            {/* <button
-                onClick={() => {
-                    setOffsetX(0);
-                    setOffsetY(0);
-                    setScale(1);
-                }}
-                className="absolute top-6 right-6 z-40 bg-gray-950/80 hover:bg-gray-800 text-gray-400 hover:text-white px-4 py-2 rounded border border-gray-800 shadow-lg backdrop-blur-sm transition-all text-xs tracking-wider uppercase font-semibold"
-            >
-                Recenter Map
-            </button> */}
 
-            <NavigationHeader setOffsetX={setOffsetX} setOffsetY={setOffsetY} setScale={setScale} />
+            <NavigationHeader
+                setOffsetX={setOffsetX}
+                setOffsetY={setOffsetY}
+                setScale={setScale}
+                filters={filters}
+                onFilterChange={setFilters}
+                onResetFilters={handleResetFilters}
+            />
             <NavigationFooter visibleStars={stars} currentFocusId={activeSystem?.id} onJumpToSystem={handleJumpToSystem} />
 
-                // --- TOOLTIP & SYSTEM VIEWER ---
+            {/* --- TOOLTIP & SYSTEM VIEWER --- */}
             {hoveredStar && (
                 <div
                     className="absolute z-40 pointer-events-none bg-gray-900/95 border border-gray-700 p-3 rounded-lg shadow-xl shadow-black/80 backdrop-blur-md transition-opacity duration-150"
