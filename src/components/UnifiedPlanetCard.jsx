@@ -15,7 +15,6 @@ import { NEBULA_PRESETS, nebulaKeyframes } from "@utils/nebulaBackground.js";
  * @param {Function} [props.onClose] - Optional callback to dismiss the card from a master-detail view.
  */
 const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
-    //const [activeScannerTab, setActiveScannerTab] = useState(null);
     const [activeScannerTab, setActiveScannerTab] = useState("geo");
 
     if (!planet) return null;
@@ -38,9 +37,6 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
     const hasRareRes = planet.resourceList?.some((res) => res.rarity?.toLowerCase() === "rare");
 
     const rareCount = planet.resourceList?.filter((r) => r.rarity?.toLowerCase() === "rare").length || 0;
-    const floraCount = planet.floraList?.length || 0;
-    const faunaCount = planet.faunaList?.length || 0;
-    const geoCount = planet.resourceList?.length || 0;
     const moonCount = planet.moons?.length || 0;
 
     // --- DYNAMIC SPIN CALCULATION ---
@@ -51,8 +47,8 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
     const coreRenderSize = 170;
 
     return (
-        // Root locked to a fixed height of 28rem (448px) to constrain the internal scroll
-        <div className="bg-gray-900/95 rounded-xl border border-gray-800 hover:border-gray-600 transition-colors overflow-hidden flex flex-col self-start w-full h-[28rem] shadow-xl backdrop-blur-sm">
+        // Root responsive height: auto on mobile/tablets, locked to 28rem on desktop
+        <div className="bg-gray-900/95 rounded-xl border border-gray-800 hover:border-gray-600 transition-colors overflow-hidden flex flex-col self-start w-full h-auto md:h-[28rem] shadow-xl backdrop-blur-sm">
             <style>
                 {`
                   ${nebulaKeyframes}
@@ -112,11 +108,12 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
 
             </div>
 
-            {/* 2. SPLIT BODY: Visuals/Stats (Left) + Tabs/Readout (Right) */}
-            <div className="flex flex-row flex-1 overflow-hidden rounded-b-xl">
+            {/* 2. SPLIT BODY: Responsive Stack on Tablet/Mobile, Split Row on Desktop */}
+            <div className="flex flex-col md:flex-row flex-1 overflow-hidden rounded-b-xl">
 
+                {/* --- Left Column (Full width on tablet/mobile, fixed 384px on desktop) with Nebula Background --- */}
                 <div
-                    className="w-96 flex flex-col border-r border-gray-800/80 shrink-0 relative overflow-hidden"
+                    className="w-full md:w-96 flex flex-col border-b md:border-b-0 md:border-r border-gray-800/80 shrink-0 relative overflow-hidden h-72 md:h-auto"
                     style={NEBULA_PRESETS.deepSpace}
                 >
 
@@ -224,7 +221,7 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                     </div>
 
                     {/* Bottom: Tightly Packed Core Stats Grid */}
-                    <div className="grid grid-cols-3 gap-1.5 p-3 bg-gray-950/80 border-t border-gray-800 shrink-0 font-mono">
+                    <div className="grid grid-cols-3 gap-1.5 p-3 bg-gray-950/90 border-t border-gray-800 shrink-0 font-mono z-20">
                         <div className="bg-gray-900 border border-gray-800 rounded p-1.5 text-center shadow-inner">
                             <p className="text-[14px] text-gray-500 uppercase tracking-wider mb-0.5">Gravity</p>
                             <p className="text-sm text-white font-bold">{planet.gravity} G</p>
@@ -245,7 +242,7 @@ const UnifiedPlanetCard = ({ planet, tiltAngle = 60, onClose }) => {
                 </div>
 
                 {/* --- Right Column (Flex-1, Scrollable Tray) --- */}
-                <div className="flex-1 flex flex-col p-3 overflow-hidden">
+                <div className="flex-1 flex flex-col p-3 bg-gray-900/95 overflow-hidden">
 
                     {/* Tab Navigation Grid */}
                     <div className="grid grid-cols-5 gap-1 bg-gray-950 p-1 rounded-lg border border-gray-800 font-mono shrink-0">
