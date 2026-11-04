@@ -222,8 +222,14 @@ const StarMap = () => {
 
         if (match) {
             const GRID_SPACING = 100;
-            const targetOffsetX = parseInt(match[1], 10) * -GRID_SPACING;
-            const targetOffsetY = parseInt(match[2], 10) * -GRID_SPACING;
+            const gridX = parseInt(match[1], 10);
+            const gridY = parseInt(match[2], 10);
+
+            const targetOffsetX = gridX * -GRID_SPACING;
+
+            // Positive addition shifts the viewport down, placing the star lower on the screen
+            const UI_VERTICAL_BIAS = 290;
+            const targetOffsetY = (gridY * -GRID_SPACING) + UI_VERTICAL_BIAS;
 
             animatePanTo(targetOffsetX, targetOffsetY, 1800);
 
@@ -231,7 +237,6 @@ const StarMap = () => {
             setActiveSystem(null);
         }
     };
-
     // --- DRAWING LOGIC ---
     const drawScene = useCallback(() => {
         const canvas = canvasRef.current;
